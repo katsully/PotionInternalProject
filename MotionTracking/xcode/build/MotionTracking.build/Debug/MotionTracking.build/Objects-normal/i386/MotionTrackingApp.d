@@ -1,6 +1,7 @@
 dependencies: \
   /Users/kathleen/PotionProject/MotionTracking/src/MotionTrackingApp.cpp \
   /Users/kathleen/Cinder/include/cinder/app/AppNative.h \
+  /Users/kathleen/Cinder/include/cinder/gl/Texture.h \
   /Users/kathleen/PotionProject/MotionTracking/xcode/Cinder-OpenNI/src/Cinder-OpenNI.h \
   /Users/kathleen/Cinder/boost/boost/ptr_container/ptr_vector.hpp \
   /Users/kathleen/Cinder/boost/boost/ptr_container/ptr_sequence_adapter.hpp \
