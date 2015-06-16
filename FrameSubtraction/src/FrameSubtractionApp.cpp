@@ -20,7 +20,16 @@ public:
     void setup();
     void keyDown( KeyEvent event );
     void prepareSettings( Settings* settings );
+    void update(openni::VideoFrameRef frame);
     void draw();
+    
+    cv::BackgroundSubtractorMOG mBSubtractor;
+    vector< vector<cv::Point> > mContours;
+    
+    bool mUpdateBackground;
+    gl::Texture mForegroundTexture, mBackgroundTexture;
+    
+    int mDrawMode;
 private:
     Channel16u mChannel;
     OpenNI::DeviceRef mDevice;
@@ -32,6 +41,16 @@ private:
 };
 
 void FrameSubtractionApp::setup(){
+    // setup for frame subtraction
+    mDrawMode = 0;
+    // we want to start with the background updating
+    mUpdateBackground = true;
+    
+    // make some textures to draw into
+    gl::Texture::Format fmt;
+    mForegroundTexture = gl::Texture(640, 480, fmt);
+    mBackgroundTexture = gl::Texture(640, 480, fmt);
+    
     mDeviceManager = OpenNI::DeviceManager::create();
     
     if( mDeviceManager->isInitialized() ){
@@ -55,11 +74,27 @@ void FrameSubtractionApp::onDepth( openni::VideoFrameRef frame, const OpenNI::De
 }
 
 void FrameSubtractionApp::keyDown( KeyEvent event ){
+    mDrawMode++;
+    if(mDrawMode > 2){
+        mDrawMode = 0;
+    }
 }
 
 void FrameSubtractionApp::prepareSettings( Settings* settings ){
     settings->setFrameRate( 60.0f );
     settings->setWindowSize( 800, 600 );
+}
+
+void FrameSubtractionApp::update(openni::VideoFrameRef frame){
+    if( getElapsedFrames() % 120 ){
+        mUpdateBackground = true;
+    }
+
+    // frame from Video ref can be converted to surface to make this code work but you need to pass a parameter to the update method
+    
+    cv::Mat working, newFrame, fgFrame;
+    OpenNI::toSurface16u( frame );
+//    newFrame = toOcv(mTexture);
 }
 
 void FrameSubtractionApp::draw()
