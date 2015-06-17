@@ -90,14 +90,37 @@ void FrameSubtractionApp::onDepth(openni::VideoFrameRef frame, const OpenNI::Dev
     cv::absdiff( mBackground, mInput, mSubtracted );
     
     mSubtracted.convertTo( mThreshold, CV_8UC1 );
-    cv::threshold( mThreshold, mThreshold, 240, 255, cv::THRESH_BINARY );
+    
+    // move zeros to the back of a temp array
+//    cv::Mat copyImg = mBackground;
+//    uint8* ptr = copyImg.datastart;
+//    uint8* ptr_end = copyImg.dataend;
+//    while (ptr < ptr_end) {
+//        if (*ptr == 0) { // swap if zero
+//            uint8 tmp = *ptr_end;
+//            *ptr_end = *ptr;
+//            *ptr = tmp;
+//            ptr_end--; // make array smaller
+//        } else {
+//            ptr++;
+//        }
+//    }
+    
+    // make a new matrix with only valid data
+ //   cv::Mat nz = cv::Mat(std::vector<uint8>(copyImg.datastart,ptr_end),true);
+    
+    // compute optimal Otsu threshold
+  //  double thresh = cv::threshold(nz,nz,0,255,CV_THRESH_BINARY | CV_THRESH_OTSU);
+    
+    // apply threshold
+  //  cv::threshold(mThreshold,mThreshold,thresh,255,CV_THRESH_BINARY_INV);
+    
+    cv::threshold( mThreshold, mThreshold, 230, 255, cv::THRESH_BINARY );
     
     cv::Mat contourOuput = mThreshold.clone();
     vector<vector<cv::Point> > contours;
     
     cv::findContours( contourOuput, contours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE );
-    
-    
     
     
     cout << "contours size: " << contours.size() << endl;
