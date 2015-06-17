@@ -28,6 +28,10 @@ class FrameSubtractionApp : public AppNative {
     vector< cv::Point2f > mPreviousFeautres, mFeatures;
     vector< uint8_t > mFeatureStatuses;
     
+    vector<vector<cv::Point> > contours;
+    cv::Mat contourImage;
+    cv::Scalar colors[3];
+    
     Color mColor;
     
     
@@ -91,9 +95,18 @@ void FrameSubtractionApp::onDepth(openni::VideoFrameRef frame, const OpenNI::Dev
     cv::absdiff( mPreviousFrame, mInput, mSubtracted );
     
     mSubtracted.convertTo( mThreshold, CV_8UC1 );
-    cv::threshold( mThreshold, mThreshold, 100 ,0, cv::THRESH_BINARY );
+    cv::threshold( mThreshold, mThreshold, 0 ,255, cv::THRESH_BINARY );
     
+    //cv::cvtColor( mThreshold, mThreshold, CV_RGB2GRAY );
+   // cv::threshold( mThreshold, mThreshold, 128, 255, CV_THRESH_BINARY );
     
+    cv::Mat contourOuput = mThreshold.clone();
+    cv::findContours( contourOuput, contours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE );
+    
+    contourImage = cv::Mat(mThreshold.size(), CV_8UC3, cv::Scalar(0,0,0));
+    colors[0] = cv::Scalar(255, 0, 0);
+    colors[1] = cv::Scalar(0, 255, 0);
+    colors[2] = cv::Scalar(0, 0, 255);
     
     if ( ci::app::getElapsedFrames() % 200 )
     {
@@ -152,6 +165,16 @@ void FrameSubtractionApp::draw()
         }
         gl::draw( mTextureDepth, mTextureDepth->getBounds(), getWindowBounds() );
     }
+    
+    for (size_t idx = 0; idx < contours.size(); idx++) {
+        cv::drawContours(contourImage, contours, idx, colors[idx % 3]);
+    }
+    
+   // cv::imshow("Input Image", image);
+//    cvMoveWindow("Input Image", 0, 0);
+//    cv::imshow("Contours", contourImage);
+//    cvMoveWindow("Contours", 200, 0);
+//    cv::waitKey(0);
 }
 
 CINDER_APP_NATIVE( FrameSubtractionApp, RendererGl )
