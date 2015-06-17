@@ -36,6 +36,7 @@ public:
     Perlin          mPerlin;
     
     float mappingMin, mappingMax;
+    float cameraVisionMin, cameraVisionMax;
     
 };
 
@@ -44,7 +45,7 @@ void vboMeshTest::setup()
     
     setWindowSize(1280, 720);
     //camera setup
-    mCamera.setPerspective( 60.0f, getWindowAspectRatio(), 5.0f, 3000.0f );
+    mCamera.setPerspective( 60.0f, getWindowAspectRatio(), 149.0f, 3000.0f );
     //std::cout<<getWindowAspectRatio()<<std::endl;
     mParams = params::InterfaceGl( "MeshTex", Vec2i( 225, 200 ) );
     mParams.addParam( "Rotation", &mSceneRotation );
@@ -52,14 +53,19 @@ void vboMeshTest::setup()
     mParams.addParam( "Eye pos", &mEye );
     mParams.addParam( "map min", &mappingMin );
     mParams.addParam( "map max", &mappingMax );
+    mParams.addParam( "vision min", &cameraVisionMin );
+    mParams.addParam( "vision max", &cameraVisionMax );
 
     
     mEye        = Vec3f( 0, 0, 150.0f );
     mCenter     = Vec3f(0, 0, 0);
     mUp         = Vec3f::yAxis();
     mSceneRotation = ci::Quatf(M_PI/2, 0, 0);
-    mappingMin  = 0.05;
+    //mappingMin  = 0.05;
+    mappingMin  = 0.1;
     mappingMax  = -1.5;
+    cameraVisionMin = 149.0f;
+    cameraVisionMax = 3000.0f;
     
     // setup the parameters of the Vbo
     int totalVertices = VERTICES_X * VERTICES_Z;
@@ -104,7 +110,8 @@ void vboMeshTest::setup()
 void vboMeshTest::update()
 {
     mCamera.lookAt(mEye,mCenter,mUp);
-    mCamera.setPerspective( 60.0f, mTexture->getAspectRatio(), 5.0f, 3000.0f );
+    //mCamera.setPerspective( 60.0f, mTexture->getAspectRatio(), 5.0f, 3000.0f );
+    mCamera.setPerspective( 60.0f, mTexture->getAspectRatio(), cameraVisionMin, cameraVisionMax );
 
     gl::setMatrices( mCamera );
     gl::rotate( mSceneRotation );
@@ -129,6 +136,15 @@ void vboMeshTest::update()
             if (dist.lengthSquared() < 0.03f) {
                 position.y += lmap<float>(dist.lengthSquared(), 0, 1, mappingMin, mappingMax);
             }
+            
+            
+            
+            /*//repulsion
+            Vec2f diff = Vec2f((relPos.x - mousePos.x)*0.1, (relPos.y - mousePos.y)*0.1);
+            position.x += diff.normalized().x * 0.1;
+            position.z += diff.normalized().y * 0.1;
+             */
+
             
             float nX = relPos.x * 0.002f;
             float nY = relPos.y * 0.002f;
@@ -162,14 +178,22 @@ void vboMeshTest::update()
             
             
             
-            
-            
             Vec2f relPos = Vec2f(lmap<float>(position.x, 0, 1, 0, getWindowWidth()), lmap<float>(position.z, 0, 1, 0, getWindowHeight()));
             Vec2f dist = Vec2f(std::abs(relPos.x - mousePos.x)/1000, std::abs(relPos.y - mousePos.y)/1000);
             if (dist.lengthSquared() < 0.03f) {
                 position.y += lmap<float>(dist.lengthSquared(), 0, 1, mappingMin, mappingMax);
                 
             }
+            
+//            Vec2f diff = Vec2f((relPos.x - mousePos.x)*0.1, (relPos.y - mousePos.y)*0.1);
+//                               position.x += diff.normalized().x * 0.1;
+//                               position.z += diff.normalized().y * 0.1;
+
+//            position.x += (relPos.x - mousePos.x)/10000;
+//            position.z += (relPos.y - mousePos.y)/10000;
+            
+            
+            
            
           // std::cout<< dist.lengthSquared()<<std::endl;
             
