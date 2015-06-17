@@ -28,11 +28,14 @@ class FrameSubtractionApp : public AppNative {
     vector< cv::Point2f > mPreviousFeautres, mFeatures;
     vector< uint8_t > mFeatureStatuses;
     
-    vector<vector<cv::Point> > contours;
     cv::Mat contourImage;
     cv::Scalar colors[3];
     
     Color mColor;
+    
+    cv::Mat mThreshold;
+    
+    cv::Mat mBackground;
     
     
  private:
@@ -71,6 +74,7 @@ void FrameSubtractionApp::setup(){
             mDevice->connectDepthEventHandler( &FrameSubtractionApp::onDepth, this);
             mDevice->connectColorEventHandler( &FrameSubtractionApp::onColor, this );
             mPreviousFrame = cv::Mat( 240,320, CV_16UC1 );
+            mBackground = cv::Mat( 240,320, CV_16UC1 );
             mDevice->start();
         }
     }
@@ -86,27 +90,33 @@ void FrameSubtractionApp::onDepth(openni::VideoFrameRef frame, const OpenNI::Dev
     cv::Mat mInput = toOcv( OpenNI::toChannel16u( frame ) );
     cv::Mat mInput8bit;
     cv::Mat mSubtracted;
-    cv::Mat mThreshold;
-    cv::Mat mThresholdCopy;
+    cv::Mat mOutput;
     
     
     
     // subtrackted depth
-    cv::absdiff( mPreviousFrame, mInput, mSubtracted );
+    cv::absdiff( mBackground, mInput, mSubtracted );
     
     mSubtracted.convertTo( mThreshold, CV_8UC1 );
-    cv::threshold( mThreshold, mThreshold, 0 ,255, cv::THRESH_BINARY );
-    
-    //cv::cvtColor( mThreshold, mThreshold, CV_RGB2GRAY );
-   // cv::threshold( mThreshold, mThreshold, 128, 255, CV_THRESH_BINARY );
+    cv::threshold( mThreshold, mThreshold, 240, 255, cv::THRESH_BINARY );
+//    
+//    cv::cvtColor( mThreshold, mThreshold, CV_RGB2GRAY );
+//    cv::threshold( mThreshold, mThreshold, 128, 255, CV_THRESH_BINARY );
     
     cv::Mat contourOuput = mThreshold.clone();
+    vector<vector<cv::Point> > contours;
+    
     cv::findContours( contourOuput, contours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE );
     
-    contourImage = cv::Mat(mThreshold.size(), CV_8UC3, cv::Scalar(0,0,0));
-    colors[0] = cv::Scalar(255, 0, 0);
-    colors[1] = cv::Scalar(0, 255, 0);
-    colors[2] = cv::Scalar(0, 0, 255);
+    
+    
+    
+    cout << "contours size: " << contours.size() << endl;
+    
+    //contourImage = cv::Mat(mThreshold.size(), CV_8UC3, cv::Scalar(0,0,0));
+//    colors[0] = cv::Scalar(255, 0, 0);
+//    colors[1] = cv::Scalar(0, 255, 0);
+//    colors[2] = cv::Scalar(0, 0, 255);
     
     if ( ci::app::getElapsedFrames() % 200 )
     {
@@ -118,11 +128,26 @@ void FrameSubtractionApp::onDepth(openni::VideoFrameRef frame, const OpenNI::Dev
     
     // convert to RGB color space, with some compensation
     //mInput.convertTo( mInput8bit, CV_8UC3, 0.1/1.0 );
-    mSubtracted.convertTo( mInput8bit, CV_8UC3, 0.1/1.0 );
     
+    // convert to RGB
+    cv::cvtColor( mThreshold,mThreshold, CV_GRAY2RGB );
+    
+    mThreshold.copyTo( mOutput );
+    
+    // draw all the contours
+    cv::drawContours( mOutput, contours, -1, cv::Scalar(0,255,0) );
+
+    
+    // convert the threshold to RGB
+    //mSubtracted.convertTo( mInput8bit, CV_8UC3, 0.1/1.0 );
+    
+    // save the current frame
     mInput.copyTo( mPreviousFrame );
     
-    mSurfaceDepth = Surface8u( fromOcv( mInput8bit ) );
+    // display the threshold image
+    mSurfaceDepth = Surface8u( fromOcv( mOutput ) );
+
+    //mSurfaceDepth = Surface8u( fromOcv( mInput8bit ) );
 }
 
 void FrameSubtractionApp::onColor(openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions){
@@ -136,6 +161,7 @@ void FrameSubtractionApp::update(){
 
 void FrameSubtractionApp::keyDown( KeyEvent event ){
     mColor = Color( randFloat(), randFloat(), randFloat() );
+    mPreviousFrame.copyTo( mBackground );
 }
 
 void FrameSubtractionApp::draw()
@@ -144,7 +170,7 @@ void FrameSubtractionApp::draw()
     // clear out the window with black
     gl::clear( Color( 0, 0, 0 ) );
     if( mTexture ){
-        gl::color( mColor );
+        //gl::color( mColor );
         gl::draw( mTexture, getWindowBounds() );
     }
     
@@ -166,15 +192,15 @@ void FrameSubtractionApp::draw()
         gl::draw( mTextureDepth, mTextureDepth->getBounds(), getWindowBounds() );
     }
     
-    for (size_t idx = 0; idx < contours.size(); idx++) {
-        cv::drawContours(contourImage, contours, idx, colors[idx % 3]);
-    }
+    //for (size_t idx = 0; idx < contours.size(); idx++) {
+      //  cv::drawContours(contourImage, contours, idx, colors[idx % 3]);
+//    }
     
-   // cv::imshow("Input Image", image);
-//    cvMoveWindow("Input Image", 0, 0);
-//    cv::imshow("Contours", contourImage);
-//    cvMoveWindow("Contours", 200, 0);
-//    cv::waitKey(0);
+  //  cv::imshow("Input Image", mThreshold);
+   // cvMoveWindow("Input Image", 0, 0);
+   // cv::imshow("Contours", contourImage);
+    //cvMoveWindow("Contours", 200, 0);
+    //cv::waitKey(0);
 }
 
 CINDER_APP_NATIVE( FrameSubtractionApp, RendererGl )

@@ -480,6 +480,8 @@
 					../blocks/OpenCV/lib/macosx/libopencv_ts.a,
 					../blocks/OpenCV/lib/macosx/libopencv_video.a,
 					../blocks/OpenCV/lib/macosx/libopencv_videostab.a,
+					../blocks/OpenCV/lib/macosx/libIlmImf.a,
+					../blocks/OpenCV/lib/macosx/libzlib.a,
 				);
 				PRODUCT_NAME = FrameSubtraction;
 				SYMROOT = ./build;
