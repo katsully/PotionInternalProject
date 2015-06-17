@@ -9,6 +9,7 @@
 #include "cinder/gl/gl.h"
 #include "Cinder-OpenNI.h"
 #include "CinderOpenCV.h"
+#include "cinder/Rand.h"
 
 
 using namespace ci;
@@ -19,12 +20,15 @@ class FrameSubtractionApp : public AppNative {
  public:
     void setup();
     void prepareSettings( Settings* settings );
+    void keyDown( KeyEvent event );
     void update();
     void draw();
     
     cv::Mat mPreviousFrame;
     vector< cv::Point2f > mPreviousFeautres, mFeatures;
     vector< uint8_t > mFeatureStatuses;
+    
+    Color mColor;
     
     
  private:
@@ -46,6 +50,7 @@ void FrameSubtractionApp::setup(){
     // Setup the parameters
 //    mParams = params::INterfaceGl("Parameters", Vec2i(200, 150) );
 //    mParams.addParam( "Picked Color", &mPickedColor, "readonly=1" );
+    mColor = Color::white();
     
     mDeviceManager = OpenNI::DeviceManager::create();
     
@@ -116,13 +121,17 @@ void FrameSubtractionApp::update(){
 
 }
 
+void FrameSubtractionApp::keyDown( KeyEvent event ){
+    mColor = Color( randFloat(), randFloat(), randFloat() );
+}
+
 void FrameSubtractionApp::draw()
 {
     gl::setViewport( getWindowBounds() );
     // clear out the window with black
     gl::clear( Color( 0, 0, 0 ) );
     if( mTexture ){
-        gl::color( Color::white() );
+        gl::color( mColor );
         gl::draw( mTexture, getWindowBounds() );
     }
     

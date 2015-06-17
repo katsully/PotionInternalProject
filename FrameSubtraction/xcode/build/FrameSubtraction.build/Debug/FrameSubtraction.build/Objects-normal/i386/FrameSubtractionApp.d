@@ -198,4 +198,5 @@ dependencies: \
   ../blocks/OpenCV/include/opencv2/highgui/highgui.hpp \
   ../blocks/OpenCV/include/opencv2/contrib/contrib.hpp \
   ../blocks/OpenCV/include/opencv2/contrib/retina.hpp \
-  ../blocks/OpenCV/include/opencv2/contrib/openfabmap.hpp
+  ../blocks/OpenCV/include/opencv2/contrib/openfabmap.hpp \
+  ../../../Downloads/cinder_0.8.6_mac/include/cinder/Rand.h
