@@ -12,6 +12,13 @@
 		00B784B40FF439BC000DE1D7 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */; };
 		00B784B50FF439BC000DE1D7 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B10FF439BC000DE1D7 /* AudioUnit.framework */; };
 		00B784B60FF439BC000DE1D7 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B20FF439BC000DE1D7 /* CoreAudio.framework */; };
+		140A3A071B31FD6F0092B33D /* libIlmImf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 140A3A001B31FD6F0092B33D /* libIlmImf.a */; };
+		140A3A081B31FD6F0092B33D /* liblibjasper.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 140A3A011B31FD6F0092B33D /* liblibjasper.a */; };
+		140A3A091B31FD6F0092B33D /* liblibjpeg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 140A3A021B31FD6F0092B33D /* liblibjpeg.a */; };
+		140A3A0A1B31FD6F0092B33D /* liblibpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 140A3A031B31FD6F0092B33D /* liblibpng.a */; };
+		140A3A0B1B31FD6F0092B33D /* liblibtiff.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 140A3A041B31FD6F0092B33D /* liblibtiff.a */; };
+		140A3A0C1B31FD6F0092B33D /* liblibwebp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 140A3A051B31FD6F0092B33D /* liblibwebp.a */; };
+		140A3A0D1B31FD6F0092B33D /* libzlib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 140A3A061B31FD6F0092B33D /* libzlib.a */; };
 		149E499D1B30D1640088F1FF /* libNiTE2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 149E49931B30D1640088F1FF /* libNiTE2.dylib */; };
 		149E499E1B30D1640088F1FF /* libOpenNI2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 149E49941B30D1640088F1FF /* libOpenNI2.dylib */; };
 		149E49CB1B30D1840088F1FF /* Cinder-OpenNI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 149E49A81B30D1840088F1FF /* Cinder-OpenNI.cpp */; };
@@ -53,6 +60,13 @@
 		00B784B10FF439BC000DE1D7 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
 		00B784B20FF439BC000DE1D7 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		140A3A001B31FD6F0092B33D /* libIlmImf.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libIlmImf.a; path = ../blocks/OpenCV/lib/macosx/libIlmImf.a; sourceTree = "<group>"; };
+		140A3A011B31FD6F0092B33D /* liblibjasper.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblibjasper.a; path = ../blocks/OpenCV/lib/macosx/liblibjasper.a; sourceTree = "<group>"; };
+		140A3A021B31FD6F0092B33D /* liblibjpeg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblibjpeg.a; path = ../blocks/OpenCV/lib/macosx/liblibjpeg.a; sourceTree = "<group>"; };
+		140A3A031B31FD6F0092B33D /* liblibpng.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblibpng.a; path = ../blocks/OpenCV/lib/macosx/liblibpng.a; sourceTree = "<group>"; };
+		140A3A041B31FD6F0092B33D /* liblibtiff.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblibtiff.a; path = ../blocks/OpenCV/lib/macosx/liblibtiff.a; sourceTree = "<group>"; };
+		140A3A051B31FD6F0092B33D /* liblibwebp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblibwebp.a; path = ../blocks/OpenCV/lib/macosx/liblibwebp.a; sourceTree = "<group>"; };
+		140A3A061B31FD6F0092B33D /* libzlib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libzlib.a; path = ../blocks/OpenCV/lib/macosx/libzlib.a; sourceTree = "<group>"; };
 		149E49931B30D1640088F1FF /* libNiTE2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libNiTE2.dylib; sourceTree = "<group>"; };
 		149E49941B30D1640088F1FF /* libOpenNI2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libOpenNI2.dylib; sourceTree = "<group>"; };
 		149E49951B30D1640088F1FF /* NiTE.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NiTE.ini; sourceTree = "<group>"; };
@@ -108,6 +122,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				140A3A071B31FD6F0092B33D /* libIlmImf.a in Frameworks */,
+				140A3A081B31FD6F0092B33D /* liblibjasper.a in Frameworks */,
+				140A3A091B31FD6F0092B33D /* liblibjpeg.a in Frameworks */,
+				140A3A0A1B31FD6F0092B33D /* liblibpng.a in Frameworks */,
+				140A3A0B1B31FD6F0092B33D /* liblibtiff.a in Frameworks */,
+				140A3A0C1B31FD6F0092B33D /* liblibwebp.a in Frameworks */,
+				140A3A0D1B31FD6F0092B33D /* libzlib.a in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				0091D8F90E81B9330029341E /* OpenGL.framework in Frameworks */,
 				149E499D1B30D1640088F1FF /* libNiTE2.dylib in Frameworks */,
@@ -323,6 +344,13 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				140A3A001B31FD6F0092B33D /* libIlmImf.a */,
+				140A3A011B31FD6F0092B33D /* liblibjasper.a */,
+				140A3A021B31FD6F0092B33D /* liblibjpeg.a */,
+				140A3A031B31FD6F0092B33D /* liblibpng.a */,
+				140A3A041B31FD6F0092B33D /* liblibtiff.a */,
+				140A3A051B31FD6F0092B33D /* liblibwebp.a */,
+				140A3A061B31FD6F0092B33D /* libzlib.a */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
@@ -430,6 +458,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					/Users/kathleen/PotionProject/FrameSubtraction/blocks/OpenCV/lib/macosx,
 				);
 				OTHER_LDFLAGS = (
 					"\"$(CINDER_PATH)/lib/libcinder_d.a\"",
@@ -480,6 +509,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					/Users/kathleen/PotionProject/FrameSubtraction/blocks/OpenCV/lib/macosx,
 				);
 				OTHER_LDFLAGS = (
 					"\"$(CINDER_PATH)/lib/libcinder.a\"",
