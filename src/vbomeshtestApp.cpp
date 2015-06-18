@@ -41,6 +41,8 @@ public:
     
     vector<float> timeDiff;
     vector<bool>  isTarget;
+    vector<float> timeDiff2;
+    vector<bool>  isTarget2;
     
 };
 
@@ -69,7 +71,7 @@ void vboMeshTest::setup()
     mappingMin  = 0.1;
     mappingMax  = -1.5;
     //cameraVisionMin = 14.0f;
-    cameraVisionMin = 149.0f;
+    cameraVisionMin = 135.0f;
     cameraVisionMax = 3000.0f;
     
     // setup the parameters of the Vbo
@@ -92,6 +94,8 @@ void vboMeshTest::setup()
             
             timeDiff.push_back(0);
             isTarget.push_back(false);
+            timeDiff2.push_back(0);
+            isTarget2.push_back(false);
             
             // create a quad for each vertex, except for along the bottom and right edges
             if( ( x + 1 < VERTICES_X ) && ( z + 1 < VERTICES_Z ) ) {
@@ -133,27 +137,24 @@ void vboMeshTest::setup()
 
 void vboMeshTest::update()
 {
+    //updateing camera parameters
     mCamera.lookAt(mEye,mCenter,mUp);
-    //mCamera.setPerspective( 60.0f, mTexture->getAspectRatio(), 5.0f, 3000.0f );
+              //mCamera.setPerspective( 60.0f, mTexture->getAspectRatio(), 5.0f, 3000.0f );
     mCamera.setPerspective( 60.0f, mTexture->getAspectRatio(), cameraVisionMin, cameraVisionMax );
 
     gl::setMatrices( mCamera );
     gl::rotate( mSceneRotation );
     
+    
+    //updating time
     float time = getElapsedSeconds();
-   
-  
-    
-    
-    
-    
     const float timeFreq = 5.0f;
     const float zFreq = 3.0f;
     const float xFreq = 7.0f;
     float offset = getElapsedSeconds() * timeFreq;
     
     
-    // dynmaically generate our new positions based on a simple sine wave
+    // dynmaically generate mesh
     gl::VboMesh::VertexIter iter = mVboMesh->mapVertexBuffer();
     for( int x = 0; x < VERTICES_X; ++x ) {
         for( int z = 0; z < VERTICES_Z; ++z ) {
@@ -161,6 +162,7 @@ void vboMeshTest::update()
             Vec3f position = Vec3f(Vec3f( x / (float)VERTICES_X, height/100.0f  , z / (float)VERTICES_Z)) ;
      
             
+            //calculate relative location to mouse
             Vec2f relPos = Vec2f(lmap<float>(position.x, 0, 1, 0, getWindowWidth()), lmap<float>(position.z, 0, 1, 0, getWindowHeight()));
             Vec2f dist = Vec2f(std::abs(relPos.x - mousePos.x)/1000, std::abs(relPos.y - mousePos.y)/1000);
             if (dist.lengthSquared() < 0.03f) {
@@ -176,14 +178,21 @@ void vboMeshTest::update()
             position.z += diff.normalized().y * 0.1;
              */
             
+            if (dist.lengthSquared() < 0.02f) {
+                position.y += 0.001f;
+                isTarget[x * VERTICES_Z + z] = true;
+                timeDiff[x * VERTICES_Z + z] = time;
+            }
             
+            // timer affecting mesh
             if ( (time - timeDiff[x * VERTICES_Z + z] ) < 5.f && isTarget[x * VERTICES_Z + z] == true) {
-                position.y += 0.01f + 1/  (time - timeDiff[x * VERTICES_Z + z] ) * 0.1;
+                position.y += 0.001f + 1/  (time - timeDiff[x * VERTICES_Z + z ] ) * 0.1;
             }else if ((time - timeDiff[x * VERTICES_Z + z]) >= 5.f){
                 isTarget[x * VERTICES_Z + z] = false;
             }
 
             
+            //perlin noise
             float nX = relPos.x * 0.002f;
             float nY = relPos.y * 0.002f;
             float nZ = app::getElapsedSeconds() * 0.1f;
@@ -193,9 +202,11 @@ void vboMeshTest::update()
             float noise = mPerlin.fBm(v);
             float noise2 = mPerlin.fBm(v2);
             
-            position -= Vec3f(1.f + noise * 0.1, 0, 0.5f + noise2 * 0.1);
+            //position and oscilation
+            position -= Vec3f(0.5f + noise * 0.1, 0, 0.5f + noise2 * 0.1);
             iter.setPosition( position);
             
+            //set RGBA
             if (dist.lengthSquared() < 0.03f){
                 iter.setColorRGBA(ColorA(1.f, 1.f, 1.f, dist.lengthSquared()));
             }else{
@@ -209,34 +220,34 @@ void vboMeshTest::update()
     
     gl::VboMesh::VertexIter iter2 = mVboMesh2->mapVertexBuffer();
    
+    
     for( int x = 0; x < VERTICES_X; ++x ) {
         for( int z = 0; z < VERTICES_Z; ++z ) {
             float height = sin( z / (float)VERTICES_Z * zFreq + x / (float)VERTICES_X * xFreq + offset ) / 5.0f;
             Vec3f position = Vec3f(Vec3f( x / (float)VERTICES_X, height/100.0f  , z / (float)VERTICES_Z));
             
             
-            
+            //get relative position to mouse
             Vec2f relPos = Vec2f(lmap<float>(position.x, 0, 1, 0, getWindowWidth()), lmap<float>(position.z, 0, 1, 0, getWindowHeight()));
             Vec2f dist = Vec2f(std::abs(relPos.x - mousePos.x)/1000, std::abs(relPos.y - mousePos.y)/1000);
-            float offset = lmap<float>(dist.lengthSquared(), 0, 1, mappingMin, mappingMax);
+            //float offset = lmap<float>(dist.lengthSquared(), 0, 1, mappingMin, mappingMax);
             
         
             
-            
-            if (dist.lengthSquared() < 0.03f) {
-                
-                
+            //activating points
+            if (dist.lengthSquared() < 0.01f) {
                 position.y += 0.2f;
-                isTarget[x * VERTICES_Z + z] = true;
-                timeDiff[x * VERTICES_Z + z] = time;
+                isTarget2[x * VERTICES_Z + z] = true;
+                timeDiff2[x * VERTICES_Z + z] = time;
             }
             
 
            
-            if ( (time - timeDiff[x * VERTICES_Z + z] ) < 5.f && isTarget[x * VERTICES_Z + z] == true) {
-                position.y += 0.01f + 1/  (time - timeDiff[x * VERTICES_Z + z] ) * 0.1;
-            }else if ((time - timeDiff[x * VERTICES_Z + z]) >= 5.f){
-                isTarget[x * VERTICES_Z + z] = false;
+            if ( (time - timeDiff2[x * VERTICES_Z + z] ) < 5.f && isTarget2[x * VERTICES_Z + z] == true) {
+                
+                position.y += 0.01f + 1/  (time - timeDiff2[x * VERTICES_Z + z] ) * 0.00001;
+            }else if ((time - timeDiff2[x * VERTICES_Z + z]) >= 5.f){
+                isTarget2[x * VERTICES_Z + z] = false;
             }
      
             
@@ -251,6 +262,7 @@ void vboMeshTest::update()
             std::cout<<diff.y<<std::endl;
              */
             
+            //Perlin
             float nX = relPos.x * 0.002f;
             float nY = relPos.y * 0.002f;
             float nZ = app::getElapsedSeconds() * 0.1f;
@@ -260,24 +272,23 @@ void vboMeshTest::update()
             float noise = mPerlin.fBm(v);
             float noise2 = mPerlin.fBm(v2);
             
-            
-            position -= Vec3f(0.f + noise * 0.1, 0, 0.5f + noise2 * 0.1);
+            //position and oscilation
+             position -= Vec3f(0.5f + noise * 0.1, 0, 0.5f + noise2 * 0.1);
+//            position -= Vec3f(0.f + noise * 0.1, 0, 0.5f + noise2 * 0.1);
             iter2.setPosition( position );
             
            // set color of mesh
-            if (dist.lengthSquared() < 0.03f){
-                iter2.setColorRGBA(ColorA(1.f, 1.f, 1.f, 1.f));
-                //iter2.setColorRGBA(ColorA(1.f, 1.f, 1.f, dist.lengthSquared()));
+            if (dist.lengthSquared() < 0.1f){
+                //iter2.setColorRGBA(ColorA(1.f, 1.f, 1.f, 1.f));
+                iter2.setColorRGBA(ColorA(1.f, 1.f, 1.f, dist.lengthSquared()/2));
             }else{
-                iter2.setColorRGBA(ColorA(1.f, 1.f, 1.f, 1.f));
+                iter2.setColorRGBA(ColorA(1.f, 1.f, 1.f, 0.05f));
             }
             
             
             ++iter2;
         }
     }
-    std::cout<<time - timeDiff[1]<<std::endl;
-    std::cout<<"is target"<<isTarget[1]<<std::endl;
     
     prevTime = time;
 
@@ -300,7 +311,7 @@ void vboMeshTest::draw()
     
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
-    gl::scale( Vec3f( 100, 100, 100) );
+    gl::scale( Vec3f( 150, 150, 150) );
     mTexture->enableAndBind();
     gl::draw( mVboMesh );
     mTexture->unbind();
