@@ -29,6 +29,9 @@ class FrameSubtractionApp : public AppNative {
     
     Color mColor;
     
+    cv::SimpleBlobDetector mDetector;
+    vector<cv::KeyPoint> mKeyPoints;
+    
     ParticleController mParticleController;
     
     
@@ -96,6 +99,8 @@ void FrameSubtractionApp::onDepth(openni::VideoFrameRef frame, const OpenNI::Dev
     cv::adaptiveThreshold(mThreshold, mThreshold, 255, cv::ADAPTIVE_THRESH_MEAN_C, cv::THRESH_BINARY_INV, 105, 1);
     //cv::threshold( mThreshold, mThreshold, 128, 255, cv::THRESH_BINARY );
     cv::dilate( mThreshold, mThreshold, cv::Mat(), cv::Point( -1, -1), 2, 1, 1 );
+    //cv::Mat kernel( 30, 30, CV_8UC1 );
+    // cv::erode( mThreshold, mThreshold, cv::Mat() );
     
     cv::Mat contourOuput = mThreshold.clone();
     vector<vector<cv::Point> > contours;
@@ -103,14 +108,14 @@ void FrameSubtractionApp::onDepth(openni::VideoFrameRef frame, const OpenNI::Dev
     cv::findContours( contourOuput, contours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE );
     
     
-    cout << "contours size: " << contours.size() << endl;
-    
-    if ( ci::app::getElapsedFrames() % 200 )
-    {
-        cout << "my type " << mInput.type() << endl;
-        cout << "my channels " << mInput.channels() << endl;
-        cout << "my size " << mInput.size() << endl;
-    }
+//    cout << "contours size: " << contours.size() << endl;
+//    
+//    if ( ci::app::getElapsedFrames() % 200 )
+//    {
+//        cout << "my type " << mInput.type() << endl;
+//        cout << "my channels " << mInput.channels() << endl;
+//        cout << "my size " << mInput.size() << endl;
+//    }
     
     // convert to RGB
     cv::cvtColor( mThreshold,mThreshold, CV_GRAY2RGB );
@@ -119,6 +124,10 @@ void FrameSubtractionApp::onDepth(openni::VideoFrameRef frame, const OpenNI::Dev
     
     // draw all the contours
     cv::drawContours( mOutput, contours, -1, cv::Scalar(0,255,0) );
+  
+//    cv::Mat imWithKeypoints;
+//    //blob detection
+//    cv::drawKeypoints(mThreshold, mKeyPoints, imWithKeypoints, cv::Scalar(0, 255, 0) );
     
     // save the current frame
     mInput.copyTo( mPreviousFrame );
@@ -138,7 +147,6 @@ void FrameSubtractionApp::update(){
 }
 
 void FrameSubtractionApp::keyDown( KeyEvent event ){
-    //mColor = Color( randFloat(), randFloat(), randFloat() );
     mPreviousFrame.copyTo( mBackground );
 }
 
@@ -147,10 +155,10 @@ void FrameSubtractionApp::draw()
     gl::setViewport( getWindowBounds() );
     // clear out the window with black
     gl::clear( Color( 0, 0, 0 ) );
-//    if( mTexture ){
-//        gl::color( mColor );
-//        gl::draw( mTexture, getWindowBounds() );
-//    }
+    if( mTexture ){
+    //    gl::color( mColor );
+        gl::draw( mTexture, getWindowBounds() );
+    }
 //
 //    if( mSurface ){
 //        if( mTexture ){

@@ -12,10 +12,11 @@
 Particle::Particle( Vec2f pos ){
     mPos = pos;
   //  mVel = vel;
-    mRadius = 5;
+    mRadius = 3;
 }
 
 void Particle::draw(){
-    gl::color(0, 0, 1);
+   // gl::setViewport( ci::app::getWindowBounds() );
+    gl::color(1, 1, 1);
     gl::drawSolidCircle( mPos, mRadius, 16);
 }
