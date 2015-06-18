@@ -10,7 +10,7 @@
 #include "Cinder-OpenNI.h"
 #include "CinderOpenCV.h"
 #include "cinder/Rand.h"
-
+#include "ParticleController.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -28,6 +28,8 @@ class FrameSubtractionApp : public AppNative {
     cv::Mat mBackground;
     
     Color mColor;
+    
+    ParticleController mParticleController;
     
     
  private:
@@ -49,7 +51,7 @@ void FrameSubtractionApp::setup(){
     // Setup the parameters
 //    mParams = params::INterfaceGl("Parameters", Vec2i(200, 150) );
 //    mParams.addParam( "Picked Color", &mPickedColor, "readonly=1" );
-    mColor = Color::white();
+    mColor = Color(1, 0, 0);
     
     mDeviceManager = OpenNI::DeviceManager::create();
     
@@ -91,31 +93,9 @@ void FrameSubtractionApp::onDepth(openni::VideoFrameRef frame, const OpenNI::Dev
     
     mSubtracted.convertTo( mThreshold, CV_8UC1 );
     
-    // move zeros to the back of a temp array
-//    cv::Mat copyImg = mBackground;
-//    uint8* ptr = copyImg.datastart;
-//    uint8* ptr_end = copyImg.dataend;
-//    while (ptr < ptr_end) {
-//        if (*ptr == 0) { // swap if zero
-//            uint8 tmp = *ptr_end;
-//            *ptr_end = *ptr;
-//            *ptr = tmp;
-//            ptr_end--; // make array smaller
-//        } else {
-//            ptr++;
-//        }
-//    }
-    
-    // make a new matrix with only valid data
- //   cv::Mat nz = cv::Mat(std::vector<uint8>(copyImg.datastart,ptr_end),true);
-    
-    // compute optimal Otsu threshold
-  //  double thresh = cv::threshold(nz,nz,0,255,CV_THRESH_BINARY | CV_THRESH_OTSU);
-    
-    // apply threshold
-  //  cv::threshold(mThreshold,mThreshold,thresh,255,CV_THRESH_BINARY_INV);
-    
-    cv::threshold( mThreshold, mThreshold, 230, 255, cv::THRESH_BINARY );
+    cv::adaptiveThreshold(mThreshold, mThreshold, 255, cv::ADAPTIVE_THRESH_MEAN_C, cv::THRESH_BINARY_INV, 105, 1);
+    //cv::threshold( mThreshold, mThreshold, 128, 255, cv::THRESH_BINARY );
+    cv::dilate( mThreshold, mThreshold, cv::Mat(), cv::Point( -1, -1), 2, 1, 1 );
     
     cv::Mat contourOuput = mThreshold.clone();
     vector<vector<cv::Point> > contours;
@@ -145,6 +125,7 @@ void FrameSubtractionApp::onDepth(openni::VideoFrameRef frame, const OpenNI::Dev
     
     // display the threshold image
     mSurfaceDepth = Surface8u( fromOcv( mOutput ) );
+    mParticleController.addParticles( mSurfaceDepth );
 }
 
 void FrameSubtractionApp::onColor(openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions){
@@ -157,7 +138,7 @@ void FrameSubtractionApp::update(){
 }
 
 void FrameSubtractionApp::keyDown( KeyEvent event ){
-    mColor = Color( randFloat(), randFloat(), randFloat() );
+    //mColor = Color( randFloat(), randFloat(), randFloat() );
     mPreviousFrame.copyTo( mBackground );
 }
 
@@ -166,28 +147,29 @@ void FrameSubtractionApp::draw()
     gl::setViewport( getWindowBounds() );
     // clear out the window with black
     gl::clear( Color( 0, 0, 0 ) );
-    if( mTexture ){
-        gl::color( mColor );
-        gl::draw( mTexture, getWindowBounds() );
-    }
-    
-    if( mSurface ){
-        if( mTexture ){
-            mTexture->update( mSurface );
-        } else {
-            mTexture = gl::Texture::create( mSurface );
-        }
-        gl::draw( mTexture, mTexture->getBounds(), getWindowBounds() );
-    }
-    
-    if( mSurfaceDepth ){
-        if( mTextureDepth ) {
-            mTextureDepth->update( mSurfaceDepth );
-        } else {
-            mTextureDepth = gl::Texture::create( mSurfaceDepth );
-        }
-        gl::draw( mTextureDepth, mTextureDepth->getBounds(), getWindowBounds() );
-    }
+//    if( mTexture ){
+//        gl::color( mColor );
+//        gl::draw( mTexture, getWindowBounds() );
+//    }
+//
+//    if( mSurface ){
+//        if( mTexture ){
+//            mTexture->update( mSurface );
+//        } else {
+//            mTexture = gl::Texture::create( mSurface );
+//        }
+//        gl::draw( mTexture, mTexture->getBounds(), getWindowBounds() );
+//    }
+//    
+//    if( mSurfaceDepth ){
+//        if( mTextureDepth ) {
+//            mTextureDepth->update( mSurfaceDepth );
+//        } else {
+//            mTextureDepth = gl::Texture::create( mSurfaceDepth );
+//        }
+//        gl::draw( mTextureDepth, mTextureDepth->getBounds(), getWindowBounds() );
+//    }
+    mParticleController.draw();
 }
 
 CINDER_APP_NATIVE( FrameSubtractionApp, RendererGl )

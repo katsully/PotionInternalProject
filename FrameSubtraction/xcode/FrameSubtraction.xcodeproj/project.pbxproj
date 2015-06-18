@@ -28,6 +28,8 @@
 		149E49D01B30D1B40088F1FF /* NiTE2 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 149E49961B30D1640088F1FF /* NiTE2 */; };
 		149E49D31B30D1B40088F1FF /* OpenNI.ini in CopyFiles */ = {isa = PBXBuildFile; fileRef = 149E49991B30D1640088F1FF /* OpenNI.ini */; };
 		149E49D41B30D1B40088F1FF /* OpenNI2 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 149E499A1B30D1640088F1FF /* OpenNI2 */; };
+		14A8DC3D1B332AA2000B2C86 /* ParticleController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14A8DC3B1B332AA2000B2C86 /* ParticleController.cpp */; };
+		14A8DC401B333023000B2C86 /* Particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14A8DC3E1B333023000B2C86 /* Particle.cpp */; };
 		5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
 		5323E6B60EAFCA7E003A9687 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B50EAFCA7E003A9687 /* QTKit.framework */; };
 		58DB823DC0AF430B9DC63A23 /* FrameSubtractionApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 16510DB3039F4B439929E51B /* FrameSubtractionApp.cpp */; };
@@ -104,6 +106,10 @@
 		149E49C71B30D1840088F1FF /* PS1080.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PS1080.h; sourceTree = "<group>"; };
 		149E49C81B30D1840088F1FF /* PSLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSLink.h; sourceTree = "<group>"; };
 		149E49CA1B30D1840088F1FF /* OniPlatformWin32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OniPlatformWin32.h; sourceTree = "<group>"; };
+		14A8DC3B1B332AA2000B2C86 /* ParticleController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleController.cpp; sourceTree = "<group>"; };
+		14A8DC3C1B332AA2000B2C86 /* ParticleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticleController.h; sourceTree = "<group>"; };
+		14A8DC3E1B333023000B2C86 /* Particle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Particle.cpp; sourceTree = "<group>"; };
+		14A8DC3F1B333023000B2C86 /* Particle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Particle.h; sourceTree = "<group>"; };
 		16510DB3039F4B439929E51B /* FrameSubtractionApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = FrameSubtractionApp.cpp; path = ../src/FrameSubtractionApp.cpp; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
@@ -158,6 +164,10 @@
 			isa = PBXGroup;
 			children = (
 				16510DB3039F4B439929E51B /* FrameSubtractionApp.cpp */,
+				14A8DC3B1B332AA2000B2C86 /* ParticleController.cpp */,
+				14A8DC3C1B332AA2000B2C86 /* ParticleController.h */,
+				14A8DC3E1B333023000B2C86 /* Particle.cpp */,
+				14A8DC3F1B333023000B2C86 /* Particle.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -429,6 +439,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				14A8DC3D1B332AA2000B2C86 /* ParticleController.cpp in Sources */,
+				14A8DC401B333023000B2C86 /* Particle.cpp in Sources */,
 				58DB823DC0AF430B9DC63A23 /* FrameSubtractionApp.cpp in Sources */,
 				149E49CB1B30D1840088F1FF /* Cinder-OpenNI.cpp in Sources */,
 			);

@@ -199,4 +199,6 @@ dependencies: \
   ../blocks/OpenCV/include/opencv2/contrib/contrib.hpp \
   ../blocks/OpenCV/include/opencv2/contrib/retina.hpp \
   ../blocks/OpenCV/include/opencv2/contrib/openfabmap.hpp \
-  ../../../Downloads/cinder_0.8.6_mac/include/cinder/Rand.h
+  ../../../Downloads/cinder_0.8.6_mac/include/cinder/Rand.h \
+  /Users/kathleen/PotionProject/FrameSubtraction/xcode/ParticleController.h \
+  /Users/kathleen/PotionProject/FrameSubtraction/xcode/Particle.h
