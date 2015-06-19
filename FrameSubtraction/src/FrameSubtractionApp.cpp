@@ -159,7 +159,7 @@ void FrameSubtractionApp::draw()
     //    gl::color( mColor );
         gl::draw( mTexture, getWindowBounds() );
     }
-//
+
 //    if( mSurface ){
 //        if( mTexture ){
 //            mTexture->update( mSurface );
@@ -177,7 +177,7 @@ void FrameSubtractionApp::draw()
 //        }
 //        gl::draw( mTextureDepth, mTextureDepth->getBounds(), getWindowBounds() );
 //    }
-    mParticleController.draw();
+   mParticleController.draw();
 }
 
 CINDER_APP_NATIVE( FrameSubtractionApp, RendererGl )

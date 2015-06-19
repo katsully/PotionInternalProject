@@ -1,8 +1,8 @@
 dependencies: \
-  /Users/kathleen/PotionProject/MotionTracking/src/MotionTrackingApp.cpp \
+  /Users/kathleen/PotionInternalProject/MotionTracking/src/MotionTrackingApp.cpp \
   /Users/kathleen/Cinder/include/cinder/app/AppNative.h \
   /Users/kathleen/Cinder/include/cinder/gl/Texture.h \
-  /Users/kathleen/PotionProject/MotionTracking/xcode/Cinder-OpenNI/src/Cinder-OpenNI.h \
+  /Users/kathleen/PotionInternalProject/MotionTracking/xcode/Cinder-OpenNI/src/Cinder-OpenNI.h \
   /Users/kathleen/Cinder/boost/boost/ptr_container/ptr_vector.hpp \
   /Users/kathleen/Cinder/boost/boost/ptr_container/ptr_sequence_adapter.hpp \
   /Users/kathleen/Cinder/boost/boost/ptr_container/detail/reversible_ptr_container.hpp \
@@ -154,20 +154,20 @@ dependencies: \
   /Users/kathleen/Cinder/boost/boost/math/special_functions/fpclassify.hpp \
   /Users/kathleen/Cinder/boost/boost/math/tools/real_cast.hpp \
   /Users/kathleen/Cinder/boost/boost/container/container_fwd.hpp \
-  /Users/kathleen/PotionProject/MotionTracking/xcode/Cinder-OpenNI/src/NiTE/NiTE.h \
-  /Users/kathleen/PotionProject/MotionTracking/xcode/Cinder-OpenNI/src/NiTE/NiteCAPI.h \
-  /Users/kathleen/PotionProject/MotionTracking/xcode/Cinder-OpenNI/src/OpenNI/OniPlatform.h \
-  /Users/kathleen/PotionProject/MotionTracking/xcode/Cinder-OpenNI/src/OpenNI/MacOSX/OniPlatformMacOSX.h \
-  /Users/kathleen/PotionProject/MotionTracking/xcode/Cinder-OpenNI/src/OpenNI/MacOSX/../Linux-x86/OniPlatformLinux-x86.h \
-  /Users/kathleen/PotionProject/MotionTracking/xcode/Cinder-OpenNI/src/OpenNI/OniCAPI.h \
-  /Users/kathleen/PotionProject/MotionTracking/xcode/Cinder-OpenNI/src/OpenNI/OniCTypes.h \
-  /Users/kathleen/PotionProject/MotionTracking/xcode/Cinder-OpenNI/src/OpenNI/OniCEnums.h \
-  /Users/kathleen/PotionProject/MotionTracking/xcode/Cinder-OpenNI/src/OpenNI/OniCProperties.h \
-  /Users/kathleen/PotionProject/MotionTracking/xcode/Cinder-OpenNI/src/OpenNI/OniVersion.h \
-  /Users/kathleen/PotionProject/MotionTracking/xcode/Cinder-OpenNI/src/NiTE/NiteCTypes.h \
-  /Users/kathleen/PotionProject/MotionTracking/xcode/Cinder-OpenNI/src/NiTE/NiteCEnums.h \
-  /Users/kathleen/PotionProject/MotionTracking/xcode/Cinder-OpenNI/src/NiTE/NiteVersion.h \
-  /Users/kathleen/PotionProject/MotionTracking/xcode/Cinder-OpenNI/src/OpenNI/OpenNI.h \
-  /Users/kathleen/PotionProject/MotionTracking/xcode/Cinder-OpenNI/src/OpenNI/OniProperties.h \
-  /Users/kathleen/PotionProject/MotionTracking/xcode/Cinder-OpenNI/src/OpenNI/OniEnums.h \
-  /Users/kathleen/PotionProject/MotionTracking/xcode/Cinder-OpenNI/src/NiTE/NiteEnums.h
+  /Users/kathleen/PotionInternalProject/MotionTracking/xcode/Cinder-OpenNI/src/NiTE/NiTE.h \
+  /Users/kathleen/PotionInternalProject/MotionTracking/xcode/Cinder-OpenNI/src/NiTE/NiteCAPI.h \
+  /Users/kathleen/PotionInternalProject/MotionTracking/xcode/Cinder-OpenNI/src/OpenNI/OniPlatform.h \
+  /Users/kathleen/PotionInternalProject/MotionTracking/xcode/Cinder-OpenNI/src/OpenNI/MacOSX/OniPlatformMacOSX.h \
+  /Users/kathleen/PotionInternalProject/MotionTracking/xcode/Cinder-OpenNI/src/OpenNI/MacOSX/../Linux-x86/OniPlatformLinux-x86.h \
+  /Users/kathleen/PotionInternalProject/MotionTracking/xcode/Cinder-OpenNI/src/OpenNI/OniCAPI.h \
+  /Users/kathleen/PotionInternalProject/MotionTracking/xcode/Cinder-OpenNI/src/OpenNI/OniCTypes.h \
+  /Users/kathleen/PotionInternalProject/MotionTracking/xcode/Cinder-OpenNI/src/OpenNI/OniCEnums.h \
+  /Users/kathleen/PotionInternalProject/MotionTracking/xcode/Cinder-OpenNI/src/OpenNI/OniCProperties.h \
+  /Users/kathleen/PotionInternalProject/MotionTracking/xcode/Cinder-OpenNI/src/OpenNI/OniVersion.h \
+  /Users/kathleen/PotionInternalProject/MotionTracking/xcode/Cinder-OpenNI/src/NiTE/NiteCTypes.h \
+  /Users/kathleen/PotionInternalProject/MotionTracking/xcode/Cinder-OpenNI/src/NiTE/NiteCEnums.h \
+  /Users/kathleen/PotionInternalProject/MotionTracking/xcode/Cinder-OpenNI/src/NiTE/NiteVersion.h \
+  /Users/kathleen/PotionInternalProject/MotionTracking/xcode/Cinder-OpenNI/src/OpenNI/OpenNI.h \
+  /Users/kathleen/PotionInternalProject/MotionTracking/xcode/Cinder-OpenNI/src/OpenNI/OniProperties.h \
+  /Users/kathleen/PotionInternalProject/MotionTracking/xcode/Cinder-OpenNI/src/OpenNI/OniEnums.h \
+  /Users/kathleen/PotionInternalProject/MotionTracking/xcode/Cinder-OpenNI/src/NiTE/NiteEnums.h

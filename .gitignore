@@ -27,5 +27,9 @@
 *.out
 *.app
 
-# .DS_Store
+# Xcode
 .DS_Store
+build/
+*.xcworkspace
+!default xcworkspace
+xcuserdata
