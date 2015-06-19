@@ -41,6 +41,7 @@ public:
     float mappingMin, mappingMax;
     float cameraVisionMin, cameraVisionMax;
     float time , timeCount, prevTime;
+    bool showLastLayer, showFrontLayer;
     
     vector<float> timeDiff;
     vector<bool>  isTarget;
@@ -64,17 +65,21 @@ void vboMeshTest::setup()
     mParams.addParam( "map max", &mappingMax );
     mParams.addParam( "vision min", &cameraVisionMin );
     mParams.addParam( "vision max", &cameraVisionMax );
+    mParams.addParam( "reveal", &showLastLayer );
+    mParams.addParam( "surface", &showFrontLayer );
 
     
     mEye        = Vec3f( 0, 0, 150.0f );
     mCenter     = Vec3f(0, 0, 0);
     mUp         = Vec3f::yAxis();
     mSceneRotation = ci::Quatf(M_PI/2, 0, 0);
+    showLastLayer = true;
+    showFrontLayer = true;
     //mappingMin  = 0.05;
     mappingMin  = 0.1;
     mappingMax  = -1.5;
     //cameraVisionMin = 14.0f;
-    cameraVisionMin = 147.0f;
+    cameraVisionMin = 146.5f;
     cameraVisionMax = 3000.0f;
     
     // setup the parameters of the Vbo
@@ -353,10 +358,15 @@ void vboMeshTest::draw()
     
     gl::scale( Vec3f( 180, 180, 180) );
     revealImage->enableAndBind();
-    gl::draw(mVboMesh3);
+    if (showLastLayer) {
+        gl::draw(mVboMesh3);
+    }
     revealImage->unbind();
     mTexture->enableAndBind();
-    gl::draw( mVboMesh );
+    if (showFrontLayer) {
+        gl::draw( mVboMesh );
+    }
+    
     mTexture->unbind();
     gl::draw( mVboMesh2 );
     mParams.draw();
