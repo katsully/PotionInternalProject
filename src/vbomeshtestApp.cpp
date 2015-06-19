@@ -25,10 +25,13 @@ public:
     void draw();
     void mouseMove(MouseEvent event);
     
-    static const int VERTICES_X = 40, VERTICES_Z = 40;
+    static const int VERTICES_X = 50, VERTICES_Z = 50;
     
-    gl::VboMeshRef	mVboMesh, mVboMesh2;
+    gl::VboMeshRef	mVboMesh, mVboMesh2 , mVboMesh3;
     gl::TextureRef	mTexture;
+    
+    gl::TextureRef  revealImage;
+    
     CameraPersp		mCamera;
     Vec3f           mEye, mCenter, mUp;
     Vec2f           mousePos, mouseRelPos;
@@ -71,7 +74,7 @@ void vboMeshTest::setup()
     mappingMin  = 0.1;
     mappingMax  = -1.5;
     //cameraVisionMin = 14.0f;
-    cameraVisionMin = 135.0f;
+    cameraVisionMin = 147.0f;
     cameraVisionMax = 3000.0f;
     
     // setup the parameters of the Vbo
@@ -128,11 +131,14 @@ void vboMeshTest::setup()
     
     // make a second Vbo that uses the statics from the first
     mVboMesh2 = gl::VboMesh::create( totalVertices, totalQuads * 4, mVboMesh->getLayout(), GL_POINTS, &mVboMesh->getIndexVbo(), &mVboMesh->getStaticVbo(), NULL );
+    mVboMesh3 = gl::VboMesh::create( totalVertices, totalQuads * 4, mVboMesh->getLayout(), GL_QUADS, &mVboMesh->getIndexVbo(), &mVboMesh->getStaticVbo(), NULL );
+    
     //mVboMesh2->setTexCoordOffset( 0, mVboMesh->getTexCoordOffset( 0 ) );
     
     
     
     mTexture = gl::Texture::create( loadImage( loadAsset("unnamed.jpg") ) );
+    revealImage = gl::Texture::create(loadImage(loadAsset("future_energy.jpg")));
 }
 
 void vboMeshTest::update()
@@ -159,13 +165,13 @@ void vboMeshTest::update()
     for( int x = 0; x < VERTICES_X; ++x ) {
         for( int z = 0; z < VERTICES_Z; ++z ) {
             float height = sin( z / (float)VERTICES_Z * zFreq + x / (float)VERTICES_X * xFreq + offset ) / 5.0f;
-            Vec3f position = Vec3f(Vec3f( x / (float)VERTICES_X, height/100.0f  , z / (float)VERTICES_Z)) ;
+            Vec3f position = Vec3f(Vec3f( x / (float)VERTICES_X, height/10000.0f  , z / (float)VERTICES_Z)) ;
      
             
             //calculate relative location to mouse
             Vec2f relPos = Vec2f(lmap<float>(position.x, 0, 1, 0, getWindowWidth()), lmap<float>(position.z, 0, 1, 0, getWindowHeight()));
             Vec2f dist = Vec2f(std::abs(relPos.x - mousePos.x)/1000, std::abs(relPos.y - mousePos.y)/1000);
-            if (dist.lengthSquared() < 0.03f) {
+            if (dist.lengthSquared() < 0.005f) {
                 position.y += lmap<float>(dist.lengthSquared(), 0, 1, mappingMin, mappingMax);
             }
             
@@ -178,15 +184,15 @@ void vboMeshTest::update()
             position.z += diff.normalized().y * 0.1;
              */
             
-            if (dist.lengthSquared() < 0.02f) {
-                position.y += 0.001f;
+            if (dist.lengthSquared() < 0.01f) {
+                position.y += 0.01f;
                 isTarget[x * VERTICES_Z + z] = true;
                 timeDiff[x * VERTICES_Z + z] = time;
             }
             
             // timer affecting mesh
-            if ( (time - timeDiff[x * VERTICES_Z + z] ) < 5.f && isTarget[x * VERTICES_Z + z] == true) {
-                position.y += 0.001f + 1/  (time - timeDiff[x * VERTICES_Z + z ] ) * 0.1;
+            if ( (time - timeDiff[x * VERTICES_Z + z] ) < 15.f && isTarget[x * VERTICES_Z + z] == true) {
+                position.y += 0.01f + 1/  (time - timeDiff[x * VERTICES_Z + z ] ) * 0.1;
             }else if ((time - timeDiff[x * VERTICES_Z + z]) >= 5.f){
                 isTarget[x * VERTICES_Z + z] = false;
             }
@@ -207,7 +213,7 @@ void vboMeshTest::update()
             iter.setPosition( position);
             
             //set RGBA
-            if (dist.lengthSquared() < 0.03f){
+            if (dist.lengthSquared() < 0.001f){
                 iter.setColorRGBA(ColorA(1.f, 1.f, 1.f, dist.lengthSquared()));
             }else{
                 iter.setColorRGBA(ColorA(1.f, 1.f, 1.f, 1.f));
@@ -290,6 +296,40 @@ void vboMeshTest::update()
         }
     }
     
+    // dynmaically generate mesh
+    gl::VboMesh::VertexIter iter3 = mVboMesh3->mapVertexBuffer();
+    for( int x = 0; x < VERTICES_X; ++x ) {
+        for( int z = 0; z < VERTICES_Z; ++z ) {
+            float height = sin( z / (float)VERTICES_Z * zFreq + x / (float)VERTICES_X * xFreq + offset ) / 5.0f;
+            Vec3f position = Vec3f(Vec3f( x / (float)VERTICES_X, height/10000.0f  , z / (float)VERTICES_Z)) ;
+            Vec2f relPos = Vec2f(lmap<float>(position.x, 0, 1, 0, getWindowWidth()), lmap<float>(position.z, 0, 1, 0, getWindowHeight()));
+         
+            
+       
+            
+            
+            //perlin noise
+            float nX = relPos.x * 0.001f;
+            float nY = relPos.y * 0.001f;
+            float nZ = app::getElapsedSeconds() * 0.1f + 999.f;
+            float nZ2 = app::getElapsedSeconds() * 0.1f + 1500.f;
+            Vec3f v( nX, nY, nZ );
+            Vec3f v2( nX, nY, nZ2 );
+            float noise = mPerlin.fBm(v);
+            float noise2 = mPerlin.fBm(v2);
+            
+            //position and oscilation
+            position -= Vec3f(0.5f + noise * 0.01, 0, 0.5f + noise2 * 0.01);
+            iter3.setPosition( position);
+            
+            //set RGBA
+            iter3.setColorRGBA(ColorA(1.f, 1.f, 1.f, .5f));
+            
+            ++iter3;
+        }
+    }
+
+    
     prevTime = time;
 
 }
@@ -305,18 +345,24 @@ void vboMeshTest::mouseMove(MouseEvent event){
 void vboMeshTest::draw()
 {
     // this pair of lines is the standard way to clear the screen in OpenGL
-    gl::clear( Color( 0.1f, 0.1f, 0.2f ) );
+    gl::clear( Color( 0.0f, 0.0f, 0.0f ) );
     
     glEnable(GL_BLEND);
     
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
-    gl::scale( Vec3f( 150, 150, 150) );
+    gl::scale( Vec3f( 180, 180, 180) );
+    revealImage->enableAndBind();
+    gl::draw(mVboMesh3);
+    revealImage->unbind();
     mTexture->enableAndBind();
     gl::draw( mVboMesh );
     mTexture->unbind();
     gl::draw( mVboMesh2 );
     mParams.draw();
+    
+   
+    
 }
 
 
