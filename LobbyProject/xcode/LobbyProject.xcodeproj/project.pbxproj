@@ -30,6 +30,7 @@
 		5323E6B60EAFCA7E003A9687 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B50EAFCA7E003A9687 /* QTKit.framework */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		A0BD627C424B4FC6B5CAB050 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AB3A719BE554833AC88E10E /* QuickTime.framework */; };
+		AB87599B1B38BF48003B3890 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AB87599A1B38BF48003B3890 /* libz.dylib */; };
 		D19FD4D130254193837AE4D2 /* LobbyProjectApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 21EE54D0A9454669926C1178 /* LobbyProjectApp.cpp */; };
 /* End PBXBuildFile section */
 
@@ -113,6 +114,7 @@
 		77B49C9CCF43441882DE1742 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7AB3A719BE554833AC88E10E /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = System/Library/Frameworks/QuickTime.framework; sourceTree = SDKROOT; };
 		8D1107320486CEB800E47090 /* LobbyProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LobbyProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AB87599A1B38BF48003B3890 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		CE05CF87CA584F509C7F06D0 /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = CinderApp.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; };
 		DE48FE9109D84E03A4B38194 /* LobbyProject_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = LobbyProject_Prefix.pch; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -122,6 +124,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB87599B1B38BF48003B3890 /* libz.dylib in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				0091D8F90E81B9330029341E /* OpenGL.framework in Frameworks */,
 				5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */,
@@ -355,6 +358,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AB87599A1B38BF48003B3890 /* libz.dylib */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 				7AB3A719BE554833AC88E10E /* QuickTime.framework */,
@@ -449,6 +453,7 @@
 		C01FCF4B08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CINDER_PATH = ../../../Cinder;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
@@ -466,29 +471,29 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/kathleen/Cinder/blocks/Cinder-OpenNI/lib",
-					"/Users/kathleen/Cinder/blocks/Cinder-OpenNI/lib/OpenNI2/Drivers",
+					"\"$(CINDER_PATH)/blocks/Cinder-OpenNI/lib\"",
+					"\"$(CINDER_PATH)/blocks/Cinder-OpenNI/lib/OpenNI2/Drivers\"",
 				);
 				OTHER_LDFLAGS = (
 					"\"$(CINDER_PATH)/lib/libcinder_d.a\"",
-					../blocks/OpenCV/lib/macosx/libopencv_calib3d.a,
-					../blocks/OpenCV/lib/macosx/libopencv_contrib.a,
-					../blocks/OpenCV/lib/macosx/libopencv_core.a,
-					../blocks/OpenCV/lib/macosx/libopencv_features2d.a,
-					../blocks/OpenCV/lib/macosx/libopencv_flann.a,
-					../blocks/OpenCV/lib/macosx/libopencv_gpu.a,
-					../blocks/OpenCV/lib/macosx/libopencv_imgproc.a,
-					../blocks/OpenCV/lib/macosx/libopencv_legacy.a,
-					../blocks/OpenCV/lib/macosx/libopencv_ml.a,
-					../blocks/OpenCV/lib/macosx/libopencv_nonfree.a,
-					../blocks/OpenCV/lib/macosx/libopencv_objdetect.a,
-					../blocks/OpenCV/lib/macosx/libopencv_ocl.a,
-					../blocks/OpenCV/lib/macosx/libopencv_photo.a,
-					../blocks/OpenCV/lib/macosx/libopencv_stitching.a,
-					../blocks/OpenCV/lib/macosx/libopencv_superres.a,
-					../blocks/OpenCV/lib/macosx/libopencv_ts.a,
-					../blocks/OpenCV/lib/macosx/libopencv_video.a,
-					../blocks/OpenCV/lib/macosx/libopencv_videostab.a,
+					"\"$(CINDER_PATH)/blocks/OpenCV/lib/macosx/libopencv_calib3d.a\"",
+					"\"$(CINDER_PATH)/blocks/OpenCV/lib/macosx/libopencv_contrib.a\"",
+					"\"$(CINDER_PATH)/blocks/OpenCV/lib/macosx/libopencv_core.a\"",
+					"\"$(CINDER_PATH)/blocks/OpenCV/lib/macosx/libopencv_features2d.a\"",
+					"\"$(CINDER_PATH)/blocks/OpenCV/lib/macosx/libopencv_flann.a\"",
+					"\"$(CINDER_PATH)/blocks/OpenCV/lib/macosx/libopencv_gpu.a\"",
+					"\"$(CINDER_PATH)/blocks/OpenCV/lib/macosx/libopencv_imgproc.a\"",
+					"\"$(CINDER_PATH)/blocks/OpenCV/lib/macosx/libopencv_legacy.a\"",
+					"\"$(CINDER_PATH)/blocks/OpenCV/lib/macosx/libopencv_ml.a\"",
+					"\"$(CINDER_PATH)/blocks/OpenCV/lib/macosx/libopencv_nonfree.a\"",
+					"\"$(CINDER_PATH)/blocks/OpenCV/lib/macosx/libopencv_objdetect.a\"",
+					"\"$(CINDER_PATH)/blocks/OpenCV/lib/macosx/libopencv_ocl.a\"",
+					"\"$(CINDER_PATH)/blocks/OpenCV/lib/macosx/libopencv_photo.a\"",
+					"\"$(CINDER_PATH)/blocks/OpenCV/lib/macosx/libopencv_stitching.a\"",
+					"\"$(CINDER_PATH)/blocks/OpenCV/lib/macosx/libopencv_superres.a\"",
+					"\"$(CINDER_PATH)/blocks/OpenCV/lib/macosx/libopencv_ts.a\"",
+					"\"$(CINDER_PATH)/blocks/OpenCV/lib/macosx/libopencv_video.a\"",
+					"\"$(CINDER_PATH)/blocks/OpenCV/lib/macosx/libopencv_videostab.a\"",
 				);
 				PRODUCT_NAME = LobbyProject;
 				SYMROOT = ./build;
@@ -499,6 +504,7 @@
 		C01FCF4C08A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CINDER_PATH = ../../../Cinder;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -517,8 +523,8 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/kathleen/Cinder/blocks/Cinder-OpenNI/lib",
-					"/Users/kathleen/Cinder/blocks/Cinder-OpenNI/lib/OpenNI2/Drivers",
+					"\"$(CINDER_PATH)/blocks/Cinder-OpenNI/lib\"",
+					"\"$(CINDER_PATH)/blocks/Cinder-OpenNI/lib/OpenNI2/Drivers\"",
 				);
 				OTHER_LDFLAGS = (
 					"\"$(CINDER_PATH)/lib/libcinder.a\"",
@@ -553,7 +559,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = i386;
-				CINDER_PATH = ../../../Downloads/cinder_0.8.6_mac;
+				CINDER_PATH = ../../../Cinder;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -570,7 +576,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = i386;
-				CINDER_PATH = ../../../Downloads/cinder_0.8.6_mac;
+				CINDER_PATH = ../../../Cinder;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
