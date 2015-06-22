@@ -1,0 +1,609 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0091D8F90E81B9330029341E /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0091D8F80E81B9330029341E /* OpenGL.framework */; };
+		00B784B30FF439BC000DE1D7 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784AF0FF439BC000DE1D7 /* Accelerate.framework */; };
+		00B784B40FF439BC000DE1D7 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */; };
+		00B784B50FF439BC000DE1D7 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B10FF439BC000DE1D7 /* AudioUnit.framework */; };
+		00B784B60FF439BC000DE1D7 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B20FF439BC000DE1D7 /* CoreAudio.framework */; };
+		146AF1856B1246B991B98A61 /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = CE05CF87CA584F509C7F06D0 /* CinderApp.icns */; };
+		148002841B386588003C5DCB /* libNiTE2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1480027A1B386588003C5DCB /* libNiTE2.dylib */; };
+		148002851B386588003C5DCB /* libOpenNI2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1480027B1B386588003C5DCB /* libOpenNI2.dylib */; };
+		1480045E1B3865DA003C5DCB /* Cinder-OpenNI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1480039E1B3865DA003C5DCB /* Cinder-OpenNI.cpp */; };
+		1480046C1B386624003C5DCB /* libNiTE2.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1480027A1B386588003C5DCB /* libNiTE2.dylib */; };
+		1480046D1B386624003C5DCB /* libOpenNI2.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1480027B1B386588003C5DCB /* libOpenNI2.dylib */; };
+		1480046E1B386624003C5DCB /* NiTE.ini in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1480027C1B386588003C5DCB /* NiTE.ini */; };
+		1480046F1B386624003C5DCB /* NiTE2 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1480027D1B386588003C5DCB /* NiTE2 */; };
+		148004701B386624003C5DCB /* OpenNI.ini in CopyFiles */ = {isa = PBXBuildFile; fileRef = 148002801B386588003C5DCB /* OpenNI.ini */; };
+		148004711B386625003C5DCB /* OpenNI2 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 148002811B386588003C5DCB /* OpenNI2 */; };
+		148004741B386B85003C5DCB /* VBOMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 148004721B386B85003C5DCB /* VBOMesh.cpp */; };
+		148004771B386C70003C5DCB /* FrameSubtraction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 148004751B386C70003C5DCB /* FrameSubtraction.cpp */; };
+		1480047A1B387345003C5DCB /* ParticleController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 148004781B387345003C5DCB /* ParticleController.cpp */; };
+		1480047D1B38737E003C5DCB /* Particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1480047B1B38737E003C5DCB /* Particle.cpp */; };
+		5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
+		5323E6B60EAFCA7E003A9687 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B50EAFCA7E003A9687 /* QTKit.framework */; };
+		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		A0BD627C424B4FC6B5CAB050 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AB3A719BE554833AC88E10E /* QuickTime.framework */; };
+		D19FD4D130254193837AE4D2 /* LobbyProjectApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 21EE54D0A9454669926C1178 /* LobbyProjectApp.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1480046B1B386609003C5DCB /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 6;
+			files = (
+				1480046C1B386624003C5DCB /* libNiTE2.dylib in CopyFiles */,
+				1480046D1B386624003C5DCB /* libOpenNI2.dylib in CopyFiles */,
+				1480046E1B386624003C5DCB /* NiTE.ini in CopyFiles */,
+				1480046F1B386624003C5DCB /* NiTE2 in CopyFiles */,
+				148004701B386624003C5DCB /* OpenNI.ini in CopyFiles */,
+				148004711B386625003C5DCB /* OpenNI2 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0091D8F80E81B9330029341E /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
+		00B784AF0FF439BC000DE1D7 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		00B784B10FF439BC000DE1D7 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
+		00B784B20FF439BC000DE1D7 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		1480027A1B386588003C5DCB /* libNiTE2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libNiTE2.dylib; path = "../../../Cinder/blocks/Cinder-OpenNI/lib/libNiTE2.dylib"; sourceTree = "<group>"; };
+		1480027B1B386588003C5DCB /* libOpenNI2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libOpenNI2.dylib; path = "../../../Cinder/blocks/Cinder-OpenNI/lib/libOpenNI2.dylib"; sourceTree = "<group>"; };
+		1480027C1B386588003C5DCB /* NiTE.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = NiTE.ini; path = "../../../Cinder/blocks/Cinder-OpenNI/lib/NiTE.ini"; sourceTree = "<group>"; };
+		1480027D1B386588003C5DCB /* NiTE2 */ = {isa = PBXFileReference; lastKnownFileType = folder; name = NiTE2; path = "../../../Cinder/blocks/Cinder-OpenNI/lib/NiTE2"; sourceTree = "<group>"; };
+		1480027E1B386588003C5DCB /* NiTE2.dll */ = {isa = PBXFileReference; lastKnownFileType = file; name = NiTE2.dll; path = "../../../Cinder/blocks/Cinder-OpenNI/lib/NiTE2.dll"; sourceTree = "<group>"; };
+		1480027F1B386588003C5DCB /* NiTE2.lib */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = NiTE2.lib; path = "../../../Cinder/blocks/Cinder-OpenNI/lib/NiTE2.lib"; sourceTree = "<group>"; };
+		148002801B386588003C5DCB /* OpenNI.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = OpenNI.ini; path = "../../../Cinder/blocks/Cinder-OpenNI/lib/OpenNI.ini"; sourceTree = "<group>"; };
+		148002811B386588003C5DCB /* OpenNI2 */ = {isa = PBXFileReference; lastKnownFileType = folder; name = OpenNI2; path = "../../../Cinder/blocks/Cinder-OpenNI/lib/OpenNI2"; sourceTree = "<group>"; };
+		148002821B386588003C5DCB /* OpenNI2.dll */ = {isa = PBXFileReference; lastKnownFileType = file; name = OpenNI2.dll; path = "../../../Cinder/blocks/Cinder-OpenNI/lib/OpenNI2.dll"; sourceTree = "<group>"; };
+		148002831B386588003C5DCB /* OpenNI2.lib */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = OpenNI2.lib; path = "../../../Cinder/blocks/Cinder-OpenNI/lib/OpenNI2.lib"; sourceTree = "<group>"; };
+		1480039E1B3865DA003C5DCB /* Cinder-OpenNI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "Cinder-OpenNI.cpp"; sourceTree = "<group>"; };
+		1480039F1B3865DA003C5DCB /* Cinder-OpenNI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Cinder-OpenNI.h"; sourceTree = "<group>"; };
+		148003A11B3865DA003C5DCB /* NiTE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NiTE.h; sourceTree = "<group>"; };
+		148003A21B3865DA003C5DCB /* NiteCAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NiteCAPI.h; sourceTree = "<group>"; };
+		148003A31B3865DA003C5DCB /* NiteCEnums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NiteCEnums.h; sourceTree = "<group>"; };
+		148003A41B3865DA003C5DCB /* NiteCTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NiteCTypes.h; sourceTree = "<group>"; };
+		148003A51B3865DA003C5DCB /* NiteEnums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NiteEnums.h; sourceTree = "<group>"; };
+		148003A61B3865DA003C5DCB /* NiteVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NiteVersion.h; sourceTree = "<group>"; };
+		148003A91B3865DA003C5DCB /* OniPlatformAndroid-Arm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OniPlatformAndroid-Arm.h"; sourceTree = "<group>"; };
+		148003AB1B3865DA003C5DCB /* OniDriverAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OniDriverAPI.h; sourceTree = "<group>"; };
+		148003AC1B3865DA003C5DCB /* OniDriverTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OniDriverTypes.h; sourceTree = "<group>"; };
+		148003AE1B3865DA003C5DCB /* OniPlatformLinux-Arm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OniPlatformLinux-Arm.h"; sourceTree = "<group>"; };
+		148003B01B3865DA003C5DCB /* OniPlatformLinux-x86.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OniPlatformLinux-x86.h"; sourceTree = "<group>"; };
+		148003B21B3865DA003C5DCB /* OniPlatformMacOSX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OniPlatformMacOSX.h; sourceTree = "<group>"; };
+		148003B31B3865DA003C5DCB /* OniCAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OniCAPI.h; sourceTree = "<group>"; };
+		148003B41B3865DA003C5DCB /* OniCEnums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OniCEnums.h; sourceTree = "<group>"; };
+		148003B51B3865DA003C5DCB /* OniCProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OniCProperties.h; sourceTree = "<group>"; };
+		148003B61B3865DA003C5DCB /* OniCTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OniCTypes.h; sourceTree = "<group>"; };
+		148003B71B3865DA003C5DCB /* OniEnums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OniEnums.h; sourceTree = "<group>"; };
+		148003B81B3865DA003C5DCB /* OniPlatform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OniPlatform.h; sourceTree = "<group>"; };
+		148003B91B3865DA003C5DCB /* OniProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OniProperties.h; sourceTree = "<group>"; };
+		148003BA1B3865DA003C5DCB /* OniVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OniVersion.h; sourceTree = "<group>"; };
+		148003BB1B3865DA003C5DCB /* OpenNI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenNI.h; sourceTree = "<group>"; };
+		148003BC1B3865DA003C5DCB /* PrimeSense.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrimeSense.h; sourceTree = "<group>"; };
+		148003BD1B3865DA003C5DCB /* PS1080.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PS1080.h; sourceTree = "<group>"; };
+		148003BE1B3865DA003C5DCB /* PSLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSLink.h; sourceTree = "<group>"; };
+		148003C01B3865DA003C5DCB /* OniPlatformWin32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OniPlatformWin32.h; sourceTree = "<group>"; };
+		148004721B386B85003C5DCB /* VBOMesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VBOMesh.cpp; sourceTree = "<group>"; };
+		148004731B386B85003C5DCB /* VBOMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VBOMesh.h; sourceTree = "<group>"; };
+		148004751B386C70003C5DCB /* FrameSubtraction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FrameSubtraction.cpp; sourceTree = "<group>"; };
+		148004761B386C70003C5DCB /* FrameSubtraction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FrameSubtraction.h; sourceTree = "<group>"; };
+		148004781B387345003C5DCB /* ParticleController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleController.cpp; sourceTree = "<group>"; };
+		148004791B387345003C5DCB /* ParticleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticleController.h; sourceTree = "<group>"; };
+		1480047B1B38737E003C5DCB /* Particle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Particle.cpp; sourceTree = "<group>"; };
+		1480047C1B38737E003C5DCB /* Particle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Particle.h; sourceTree = "<group>"; };
+		21EE54D0A9454669926C1178 /* LobbyProjectApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = LobbyProjectApp.cpp; path = ../src/LobbyProjectApp.cpp; sourceTree = "<group>"; };
+		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		36ED6AFE1FBF48959E257192 /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
+		5323E6B10EAFCA74003A9687 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = /System/Library/Frameworks/CoreVideo.framework; sourceTree = "<absolute>"; };
+		5323E6B50EAFCA7E003A9687 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
+		53D724D949B64982972ADB93 /* CinderOpenCV.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CinderOpenCV.h; path = ../blocks/OpenCV/include/CinderOpenCV.h; sourceTree = "<group>"; };
+		77B49C9CCF43441882DE1742 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7AB3A719BE554833AC88E10E /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = System/Library/Frameworks/QuickTime.framework; sourceTree = SDKROOT; };
+		8D1107320486CEB800E47090 /* LobbyProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LobbyProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE05CF87CA584F509C7F06D0 /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = CinderApp.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; };
+		DE48FE9109D84E03A4B38194 /* LobbyProject_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = LobbyProject_Prefix.pch; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D11072E0486CEB800E47090 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+				0091D8F90E81B9330029341E /* OpenGL.framework in Frameworks */,
+				5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */,
+				5323E6B60EAFCA7E003A9687 /* QTKit.framework in Frameworks */,
+				00B784B30FF439BC000DE1D7 /* Accelerate.framework in Frameworks */,
+				00B784B40FF439BC000DE1D7 /* AudioToolbox.framework in Frameworks */,
+				00B784B50FF439BC000DE1D7 /* AudioUnit.framework in Frameworks */,
+				148002841B386588003C5DCB /* libNiTE2.dylib in Frameworks */,
+				148002851B386588003C5DCB /* libOpenNI2.dylib in Frameworks */,
+				00B784B60FF439BC000DE1D7 /* CoreAudio.framework in Frameworks */,
+				A0BD627C424B4FC6B5CAB050 /* QuickTime.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		01B97315FEAEA392516A2CEA /* Blocks */ = {
+			isa = PBXGroup;
+			children = (
+				148002B31B3865D9003C5DCB /* Cinder-OpenNI */,
+				264D1D5CA3554AF48C666865 /* OpenCV */,
+			);
+			name = Blocks;
+			sourceTree = "<group>";
+		};
+		080E96DDFE201D6D7F000001 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				21EE54D0A9454669926C1178 /* LobbyProjectApp.cpp */,
+				148004721B386B85003C5DCB /* VBOMesh.cpp */,
+				148004731B386B85003C5DCB /* VBOMesh.h */,
+				148004751B386C70003C5DCB /* FrameSubtraction.cpp */,
+				148004761B386C70003C5DCB /* FrameSubtraction.h */,
+				148004781B387345003C5DCB /* ParticleController.cpp */,
+				148004791B387345003C5DCB /* ParticleController.h */,
+				1480047B1B38737E003C5DCB /* Particle.cpp */,
+				1480047C1B38737E003C5DCB /* Particle.h */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				00B784AF0FF439BC000DE1D7 /* Accelerate.framework */,
+				00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */,
+				00B784B10FF439BC000DE1D7 /* AudioUnit.framework */,
+				00B784B20FF439BC000DE1D7 /* CoreAudio.framework */,
+				5323E6B50EAFCA7E003A9687 /* QTKit.framework */,
+				5323E6B10EAFCA74003A9687 /* CoreVideo.framework */,
+				0091D8F80E81B9330029341E /* OpenGL.framework */,
+				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
+				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		148002B31B3865D9003C5DCB /* Cinder-OpenNI */ = {
+			isa = PBXGroup;
+			children = (
+				1480039D1B3865DA003C5DCB /* src */,
+			);
+			name = "Cinder-OpenNI";
+			path = "../../../Cinder/blocks/Cinder-OpenNI";
+			sourceTree = "<group>";
+		};
+		1480039D1B3865DA003C5DCB /* src */ = {
+			isa = PBXGroup;
+			children = (
+				1480039E1B3865DA003C5DCB /* Cinder-OpenNI.cpp */,
+				1480039F1B3865DA003C5DCB /* Cinder-OpenNI.h */,
+				148003A01B3865DA003C5DCB /* NiTE */,
+				148003A71B3865DA003C5DCB /* OpenNI */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		148003A01B3865DA003C5DCB /* NiTE */ = {
+			isa = PBXGroup;
+			children = (
+				148003A11B3865DA003C5DCB /* NiTE.h */,
+				148003A21B3865DA003C5DCB /* NiteCAPI.h */,
+				148003A31B3865DA003C5DCB /* NiteCEnums.h */,
+				148003A41B3865DA003C5DCB /* NiteCTypes.h */,
+				148003A51B3865DA003C5DCB /* NiteEnums.h */,
+				148003A61B3865DA003C5DCB /* NiteVersion.h */,
+			);
+			path = NiTE;
+			sourceTree = "<group>";
+		};
+		148003A71B3865DA003C5DCB /* OpenNI */ = {
+			isa = PBXGroup;
+			children = (
+				148003A81B3865DA003C5DCB /* Android-Arm */,
+				148003AA1B3865DA003C5DCB /* Driver */,
+				148003AD1B3865DA003C5DCB /* Linux-Arm */,
+				148003AF1B3865DA003C5DCB /* Linux-x86 */,
+				148003B11B3865DA003C5DCB /* MacOSX */,
+				148003B31B3865DA003C5DCB /* OniCAPI.h */,
+				148003B41B3865DA003C5DCB /* OniCEnums.h */,
+				148003B51B3865DA003C5DCB /* OniCProperties.h */,
+				148003B61B3865DA003C5DCB /* OniCTypes.h */,
+				148003B71B3865DA003C5DCB /* OniEnums.h */,
+				148003B81B3865DA003C5DCB /* OniPlatform.h */,
+				148003B91B3865DA003C5DCB /* OniProperties.h */,
+				148003BA1B3865DA003C5DCB /* OniVersion.h */,
+				148003BB1B3865DA003C5DCB /* OpenNI.h */,
+				148003BC1B3865DA003C5DCB /* PrimeSense.h */,
+				148003BD1B3865DA003C5DCB /* PS1080.h */,
+				148003BE1B3865DA003C5DCB /* PSLink.h */,
+				148003BF1B3865DA003C5DCB /* Win32 */,
+			);
+			path = OpenNI;
+			sourceTree = "<group>";
+		};
+		148003A81B3865DA003C5DCB /* Android-Arm */ = {
+			isa = PBXGroup;
+			children = (
+				148003A91B3865DA003C5DCB /* OniPlatformAndroid-Arm.h */,
+			);
+			path = "Android-Arm";
+			sourceTree = "<group>";
+		};
+		148003AA1B3865DA003C5DCB /* Driver */ = {
+			isa = PBXGroup;
+			children = (
+				148003AB1B3865DA003C5DCB /* OniDriverAPI.h */,
+				148003AC1B3865DA003C5DCB /* OniDriverTypes.h */,
+			);
+			path = Driver;
+			sourceTree = "<group>";
+		};
+		148003AD1B3865DA003C5DCB /* Linux-Arm */ = {
+			isa = PBXGroup;
+			children = (
+				148003AE1B3865DA003C5DCB /* OniPlatformLinux-Arm.h */,
+			);
+			path = "Linux-Arm";
+			sourceTree = "<group>";
+		};
+		148003AF1B3865DA003C5DCB /* Linux-x86 */ = {
+			isa = PBXGroup;
+			children = (
+				148003B01B3865DA003C5DCB /* OniPlatformLinux-x86.h */,
+			);
+			path = "Linux-x86";
+			sourceTree = "<group>";
+		};
+		148003B11B3865DA003C5DCB /* MacOSX */ = {
+			isa = PBXGroup;
+			children = (
+				148003B21B3865DA003C5DCB /* OniPlatformMacOSX.h */,
+			);
+			path = MacOSX;
+			sourceTree = "<group>";
+		};
+		148003BF1B3865DA003C5DCB /* Win32 */ = {
+			isa = PBXGroup;
+			children = (
+				148003C01B3865DA003C5DCB /* OniPlatformWin32.h */,
+			);
+			path = Win32;
+			sourceTree = "<group>";
+		};
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D1107320486CEB800E47090 /* LobbyProject.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		264D1D5CA3554AF48C666865 /* OpenCV */ = {
+			isa = PBXGroup;
+			children = (
+				49BBB0BADDDD47C689687E86 /* include */,
+			);
+			name = OpenCV;
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* LobbyProject */ = {
+			isa = PBXGroup;
+			children = (
+				01B97315FEAEA392516A2CEA /* Blocks */,
+				29B97315FDCFA39411CA2CEA /* Headers */,
+				080E96DDFE201D6D7F000001 /* Source */,
+				29B97317FDCFA39411CA2CEA /* Resources */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			name = LobbyProject;
+			sourceTree = "<group>";
+		};
+		29B97315FDCFA39411CA2CEA /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+				36ED6AFE1FBF48959E257192 /* Resources.h */,
+				DE48FE9109D84E03A4B38194 /* LobbyProject_Prefix.pch */,
+			);
+			name = Headers;
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				CE05CF87CA584F509C7F06D0 /* CinderApp.icns */,
+				1480027A1B386588003C5DCB /* libNiTE2.dylib */,
+				1480027B1B386588003C5DCB /* libOpenNI2.dylib */,
+				1480027C1B386588003C5DCB /* NiTE.ini */,
+				1480027D1B386588003C5DCB /* NiTE2 */,
+				1480027E1B386588003C5DCB /* NiTE2.dll */,
+				1480027F1B386588003C5DCB /* NiTE2.lib */,
+				148002801B386588003C5DCB /* OpenNI.ini */,
+				148002811B386588003C5DCB /* OpenNI2 */,
+				148002821B386588003C5DCB /* OpenNI2.dll */,
+				148002831B386588003C5DCB /* OpenNI2.lib */,
+				77B49C9CCF43441882DE1742 /* Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
+				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
+				7AB3A719BE554833AC88E10E /* QuickTime.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		49BBB0BADDDD47C689687E86 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				53D724D949B64982972ADB93 /* CinderOpenCV.h */,
+			);
+			name = include;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8D1107260486CEB800E47090 /* LobbyProject */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "LobbyProject" */;
+			buildPhases = (
+				8D1107290486CEB800E47090 /* Resources */,
+				8D11072C0486CEB800E47090 /* Sources */,
+				8D11072E0486CEB800E47090 /* Frameworks */,
+				1480046B1B386609003C5DCB /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LobbyProject;
+			productInstallPath = "$(HOME)/Applications";
+			productName = LobbyProject;
+			productReference = 8D1107320486CEB800E47090 /* LobbyProject.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+			};
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "LobbyProject" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 29B97314FDCFA39411CA2CEA /* LobbyProject */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8D1107260486CEB800E47090 /* LobbyProject */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D1107290486CEB800E47090 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				146AF1856B1246B991B98A61 /* CinderApp.icns in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D11072C0486CEB800E47090 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1480047A1B387345003C5DCB /* ParticleController.cpp in Sources */,
+				1480047D1B38737E003C5DCB /* Particle.cpp in Sources */,
+				148004741B386B85003C5DCB /* VBOMesh.cpp in Sources */,
+				1480045E1B3865DA003C5DCB /* Cinder-OpenNI.cpp in Sources */,
+				148004771B386C70003C5DCB /* FrameSubtraction.cpp in Sources */,
+				D19FD4D130254193837AE4D2 /* LobbyProjectApp.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		C01FCF4B08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = LobbyProject_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/kathleen/Cinder/blocks/Cinder-OpenNI/lib",
+					"/Users/kathleen/Cinder/blocks/Cinder-OpenNI/lib/OpenNI2/Drivers",
+				);
+				OTHER_LDFLAGS = (
+					"\"$(CINDER_PATH)/lib/libcinder_d.a\"",
+					../blocks/OpenCV/lib/macosx/libopencv_calib3d.a,
+					../blocks/OpenCV/lib/macosx/libopencv_contrib.a,
+					../blocks/OpenCV/lib/macosx/libopencv_core.a,
+					../blocks/OpenCV/lib/macosx/libopencv_features2d.a,
+					../blocks/OpenCV/lib/macosx/libopencv_flann.a,
+					../blocks/OpenCV/lib/macosx/libopencv_gpu.a,
+					../blocks/OpenCV/lib/macosx/libopencv_imgproc.a,
+					../blocks/OpenCV/lib/macosx/libopencv_legacy.a,
+					../blocks/OpenCV/lib/macosx/libopencv_ml.a,
+					../blocks/OpenCV/lib/macosx/libopencv_nonfree.a,
+					../blocks/OpenCV/lib/macosx/libopencv_objdetect.a,
+					../blocks/OpenCV/lib/macosx/libopencv_ocl.a,
+					../blocks/OpenCV/lib/macosx/libopencv_photo.a,
+					../blocks/OpenCV/lib/macosx/libopencv_stitching.a,
+					../blocks/OpenCV/lib/macosx/libopencv_superres.a,
+					../blocks/OpenCV/lib/macosx/libopencv_ts.a,
+					../blocks/OpenCV/lib/macosx/libopencv_video.a,
+					../blocks/OpenCV/lib/macosx/libopencv_videostab.a,
+				);
+				PRODUCT_NAME = LobbyProject;
+				SYMROOT = ./build;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		C01FCF4C08A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_FAST_MATH = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = LobbyProject_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"NDEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/kathleen/Cinder/blocks/Cinder-OpenNI/lib",
+					"/Users/kathleen/Cinder/blocks/Cinder-OpenNI/lib/OpenNI2/Drivers",
+				);
+				OTHER_LDFLAGS = (
+					"\"$(CINDER_PATH)/lib/libcinder.a\"",
+					../blocks/OpenCV/lib/macosx/libopencv_calib3d.a,
+					../blocks/OpenCV/lib/macosx/libopencv_contrib.a,
+					../blocks/OpenCV/lib/macosx/libopencv_core.a,
+					../blocks/OpenCV/lib/macosx/libopencv_features2d.a,
+					../blocks/OpenCV/lib/macosx/libopencv_flann.a,
+					../blocks/OpenCV/lib/macosx/libopencv_gpu.a,
+					../blocks/OpenCV/lib/macosx/libopencv_imgproc.a,
+					../blocks/OpenCV/lib/macosx/libopencv_legacy.a,
+					../blocks/OpenCV/lib/macosx/libopencv_ml.a,
+					../blocks/OpenCV/lib/macosx/libopencv_nonfree.a,
+					../blocks/OpenCV/lib/macosx/libopencv_objdetect.a,
+					../blocks/OpenCV/lib/macosx/libopencv_ocl.a,
+					../blocks/OpenCV/lib/macosx/libopencv_photo.a,
+					../blocks/OpenCV/lib/macosx/libopencv_stitching.a,
+					../blocks/OpenCV/lib/macosx/libopencv_superres.a,
+					../blocks/OpenCV/lib/macosx/libopencv_ts.a,
+					../blocks/OpenCV/lib/macosx/libopencv_video.a,
+					../blocks/OpenCV/lib/macosx/libopencv_videostab.a,
+				);
+				PRODUCT_NAME = LobbyProject;
+				STRIP_INSTALLED_PRODUCT = YES;
+				SYMROOT = ./build;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		C01FCF4F08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = i386;
+				CINDER_PATH = ../../../Downloads/cinder_0.8.6_mac;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/boost\"";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include ../blocks/OpenCV/include ../blocks/OpenCV/include/opencv2 ../blocks/QuickTime/include";
+			};
+			name = Debug;
+		};
+		C01FCF5008A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = i386;
+				CINDER_PATH = ../../../Downloads/cinder_0.8.6_mac;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/boost\"";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include ../blocks/OpenCV/include ../blocks/OpenCV/include/opencv2 ../blocks/QuickTime/include";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "LobbyProject" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4B08A954540054247B /* Debug */,
+				C01FCF4C08A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "LobbyProject" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4F08A954540054247B /* Debug */,
+				C01FCF5008A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}
