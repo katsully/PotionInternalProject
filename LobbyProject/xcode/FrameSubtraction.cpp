@@ -111,7 +111,7 @@ void FrameSubtraction::draw()
 {
     gl::setViewport( ci::app::getWindowBounds() );
     // clear out the window with black
-    gl::clear( Color( 0, 0, 0 ) );
+    // gl::clear( Color( 0, 0, 0 ) );
     if( mTexture ){
         //    gl::color( mColor );
         gl::draw( mTexture, ci::app::getWindowBounds() );
