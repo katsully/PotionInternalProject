@@ -49,6 +49,7 @@ void LobbyProjectApp::setup(){
     mTexture = gl::Texture::create(loadImage(loadResource("demo.jpg")));
     mFrameSubtraction.setup();
     myMesh = new Mesh(40, 40, mTexture, 0);
+    
 }
 
 void LobbyProjectApp::keyDown( KeyEvent event ){

@@ -31,12 +31,12 @@ public:
     
     int VERTICES_X, VERTICES_Y;
     
-    gl::VboMeshRef mVboMesh;
-    gl::TextureRef mTexture;
+    gl::VboMeshRef  mVboMesh;
+    gl::TextureRef  mTexture;
     
-    vector<float> timeDiff;
-    vector<bool>  isTarget;
-    Vec2f mousePos;
+    vector<float>   timeDiff;
+    vector<bool>    isTarget;
+    Vec2f           mousePos;
     Perlin          mPerlin;
     
     

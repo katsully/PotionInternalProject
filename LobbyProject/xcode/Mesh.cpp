@@ -7,6 +7,7 @@
 //
 
 #include "Mesh.h"
+#include "FrameSubtraction.h"
 
 Mesh::Mesh(int vertices_x, int vertices_y, gl::TextureRef &texture, int meshType){
     this->VERTICES_X = vertices_x;
@@ -32,7 +33,7 @@ Mesh::Mesh(int vertices_x, int vertices_y, gl::TextureRef &texture, int meshType
     }
     
     
-    
+
     
     
     
@@ -74,6 +75,11 @@ void Mesh::update(Vec2f &_mousePos){
     //    float offset = getElapsedSeconds() * timeFreq;
     float time = getElapsedSeconds();
     this->mousePos = _mousePos;
+    
+    
+//        for( list <Particle>::iterator p = FrameSubtraction().mParticleController.mParticles.begin(); p != FrameSubtraction().mParticleController.mParticles.end(); ++p){
+//            //Vec2f a = p->mPos;
+//        }
     
     //---generate movements
     gl::VboMesh::VertexIter iter = mVboMesh->mapVertexBuffer();
