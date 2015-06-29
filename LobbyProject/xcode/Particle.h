@@ -13,7 +13,7 @@ using namespace ci;
 class Particle {
 public:
     Particle();
-    Particle( Vec2f pos );
+    Particle( Vec2f pos , float _mRadius);
     void draw();
     
     Vec2f mPos;

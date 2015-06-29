@@ -15,5 +15,6 @@ public:
     void addParticles (ci::Surface8u surface );
     void draw();
     
+    float radius;
     std::list<Particle> mParticles;
 };

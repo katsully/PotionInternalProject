@@ -22,6 +22,7 @@
 		1480046F1B386624003C5DCB /* NiTE2 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1480027D1B386588003C5DCB /* NiTE2 */; };
 		148004701B386624003C5DCB /* OpenNI.ini in CopyFiles */ = {isa = PBXBuildFile; fileRef = 148002801B386588003C5DCB /* OpenNI.ini */; };
 		148004711B386625003C5DCB /* OpenNI2 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 148002811B386588003C5DCB /* OpenNI2 */; };
+		148004741B386B85003C5DCB /* Mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 148004721B386B85003C5DCB /* Mesh.cpp */; };
 		148004771B386C70003C5DCB /* FrameSubtraction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 148004751B386C70003C5DCB /* FrameSubtraction.cpp */; };
 		1480047A1B387345003C5DCB /* ParticleController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 148004781B387345003C5DCB /* ParticleController.cpp */; };
 		1480047D1B38737E003C5DCB /* Particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1480047B1B38737E003C5DCB /* Particle.cpp */; };
@@ -31,6 +32,7 @@
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		A0BD627C424B4FC6B5CAB050 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AB3A719BE554833AC88E10E /* QuickTime.framework */; };
 		AB87599B1B38BF48003B3890 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AB87599A1B38BF48003B3890 /* libz.dylib */; };
+		AB8AF3D21B3AF74000F8CFCF /* demo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AB8AF3D11B3AF74000F8CFCF /* demo.jpg */; };
 		D19FD4D130254193837AE4D2 /* LobbyProjectApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 21EE54D0A9454669926C1178 /* LobbyProjectApp.cpp */; };
 /* End PBXBuildFile section */
 
@@ -96,6 +98,8 @@
 		148003BD1B3865DA003C5DCB /* PS1080.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PS1080.h; sourceTree = "<group>"; };
 		148003BE1B3865DA003C5DCB /* PSLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSLink.h; sourceTree = "<group>"; };
 		148003C01B3865DA003C5DCB /* OniPlatformWin32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OniPlatformWin32.h; sourceTree = "<group>"; };
+		148004721B386B85003C5DCB /* Mesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Mesh.cpp; sourceTree = "<group>"; };
+		148004731B386B85003C5DCB /* Mesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mesh.h; sourceTree = "<group>"; };
 		148004751B386C70003C5DCB /* FrameSubtraction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FrameSubtraction.cpp; sourceTree = "<group>"; };
 		148004761B386C70003C5DCB /* FrameSubtraction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FrameSubtraction.h; sourceTree = "<group>"; };
 		148004781B387345003C5DCB /* ParticleController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleController.cpp; sourceTree = "<group>"; };
@@ -115,6 +119,7 @@
 		7AB3A719BE554833AC88E10E /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = System/Library/Frameworks/QuickTime.framework; sourceTree = SDKROOT; };
 		8D1107320486CEB800E47090 /* LobbyProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LobbyProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB87599A1B38BF48003B3890 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		AB8AF3D11B3AF74000F8CFCF /* demo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = demo.jpg; sourceTree = "<group>"; };
 		CE05CF87CA584F509C7F06D0 /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = CinderApp.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; };
 		DE48FE9109D84E03A4B38194 /* LobbyProject_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = LobbyProject_Prefix.pch; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -157,6 +162,8 @@
 				1484AC5C1B3AFE9900D0E117 /* Mesh.cpp */,
 				1484AC5D1B3AFE9900D0E117 /* Mesh.h */,
 				21EE54D0A9454669926C1178 /* LobbyProjectApp.cpp */,
+				148004721B386B85003C5DCB /* Mesh.cpp */,
+				148004731B386B85003C5DCB /* Mesh.h */,
 				148004751B386C70003C5DCB /* FrameSubtraction.cpp */,
 				148004761B386C70003C5DCB /* FrameSubtraction.h */,
 				148004781B387345003C5DCB /* ParticleController.cpp */,
@@ -339,6 +346,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				AB8AF3D11B3AF74000F8CFCF /* demo.jpg */,
 				CE05CF87CA584F509C7F06D0 /* CinderApp.icns */,
 				1480027A1B386588003C5DCB /* libNiTE2.dylib */,
 				1480027B1B386588003C5DCB /* libOpenNI2.dylib */,
@@ -427,6 +435,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB8AF3D21B3AF74000F8CFCF /* demo.jpg in Resources */,
 				146AF1856B1246B991B98A61 /* CinderApp.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -441,6 +450,7 @@
 				1484AC5E1B3AFE9900D0E117 /* Mesh.cpp in Sources */,
 				1480047A1B387345003C5DCB /* ParticleController.cpp in Sources */,
 				1480047D1B38737E003C5DCB /* Particle.cpp in Sources */,
+				148004741B386B85003C5DCB /* Mesh.cpp in Sources */,
 				1480045E1B3865DA003C5DCB /* Cinder-OpenNI.cpp in Sources */,
 				148004771B386C70003C5DCB /* FrameSubtraction.cpp in Sources */,
 				D19FD4D130254193837AE4D2 /* LobbyProjectApp.cpp in Sources */,

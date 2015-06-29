@@ -49,6 +49,7 @@ void LobbyProjectApp::setup(){
     mTexture = gl::Texture::create(loadImage(loadResource("demo.jpg")));
     mFrameSubtraction.setup();
     myMesh = new Mesh(40, 40, mTexture, 0);
+    
 }
 
 void LobbyProjectApp::keyDown( KeyEvent event ){
@@ -65,8 +66,14 @@ void LobbyProjectApp::update()
     mCamera.lookAt(mEye, mCenter, mUp);
     gl::setMatrices( mCamera );
     gl::rotate( mSceneRot);
+    myMesh->getParticle(mFrameSubtraction.mParticleController.mParticles);
     myMesh->update(mousePos);
-    myMesh->update(mousePos);
+    
+    
+
+    
+      
+    
 }
 
 void LobbyProjectApp::draw()
