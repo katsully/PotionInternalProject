@@ -66,8 +66,14 @@ void LobbyProjectApp::update()
     mCamera.lookAt(mEye, mCenter, mUp);
     gl::setMatrices( mCamera );
     gl::rotate( mSceneRot);
+    myMesh->getParticle(mFrameSubtraction.mParticleController.mParticles);
     myMesh->update(mousePos);
-    myMesh->update(mousePos);
+    
+    
+
+    
+      
+    
 }
 
 void LobbyProjectApp::draw()

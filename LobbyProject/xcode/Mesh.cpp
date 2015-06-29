@@ -9,6 +9,8 @@
 #include "Mesh.h"
 #include "FrameSubtraction.h"
 
+
+
 Mesh::Mesh(int vertices_x, int vertices_y, gl::TextureRef &texture, int meshType){
     this->VERTICES_X = vertices_x;
     this->VERTICES_Y = vertices_y;
@@ -66,6 +68,21 @@ Mesh::Mesh(int vertices_x, int vertices_y, gl::TextureRef &texture, int meshType
     
 }
 
+void Mesh::getParticle(std::list<Particle> &_mParticles){
+    this->mParticles = _mParticles;
+    particlePos.clear();
+    particleRad.clear();
+    //-----> copy particle list from main cpp
+    for (list <Particle>::iterator p = mParticles.begin() ; p!= mParticles.end(); p++) {
+        particlePos.push_back(p->mPos);
+        particleRad.push_back(p->mRadius);
+        
+    }
+    //std::cout<< particleRad[10]<<std::endl;
+    
+    
+}
+
 
 void Mesh::update(Vec2f &_mousePos){
     
@@ -77,16 +94,43 @@ void Mesh::update(Vec2f &_mousePos){
     this->mousePos = _mousePos;
     
     
-//        for( list <Particle>::iterator p = FrameSubtraction().mParticleController.mParticles.begin(); p != FrameSubtraction().mParticleController.mParticles.end(); ++p){
+//    
+//        for( list <Particle>::iterator p = FrameSubtraction.mParticleController.mParticles.begin(); p != FrameSubtraction().mParticleController.mParticles.end(); ++p){
 //            //Vec2f a = p->mPos;
 //        }
-    
-    //---generate movements
+        //---generate movements
     gl::VboMesh::VertexIter iter = mVboMesh->mapVertexBuffer();
     for( int x = 0; x < VERTICES_X; ++x ) {
         for( int y = 0; y < VERTICES_Y; ++y ) {
-            //float height = sin( y / (float)VERTICES_Y * yFreq  + x / (float)VERTICES_X * xFreq + offset  ) / 1000.0f;
             Vec3f position = Vec3f(Vec3f( x / (float)VERTICES_X, y / (float)VERTICES_Y, 0.f));
+            Vec2f pPos;
+
+//            if ((x * VERTICES_Y + y)/2< particlePos.size() - 1) {
+//                pPos = particlePos[x*VERTICES_Y];
+//            }
+//            
+//            Vec2f relativePPos =  Vec2f(lmap<float>(pPos.x, 0, 1280, 0, getWindowWidth()), lmap<float>(pPos.y, 0, 480, 0, getWindowWidth()));
+//            Vec2f diffPP = relativePPos;
+//            if (diffPP.length()> 0.5f ) {
+//               // position.z -=diffPP.length()/10;
+//            }
+            
+            
+            
+            for (int i = 0 ; i < particlePos.size() - 1; i ++) {
+                Vec2f diff = Vec2f((particlePos[i].x * 1.8 - position.x), (particlePos[i].y * 1.8 - position.y));
+                //std::cout<<diff.length()<<std::endl;
+                if (diff.length() < 0.2) {
+                    position.z -= particleRad[i] * 1.4;
+                    
+                    
+                    
+                }
+                
+            }
+ 
+  
+           // std::cout<<offsetP<<std::endl;
             
             //calculate relative location to mouse
             Vec2f relPos = Vec2f(lmap<float>(position.x, 0, 1, 0, getWindowWidth()), lmap<float>(position.y, 0, 1, 0, getWindowHeight()));
@@ -121,12 +165,13 @@ void Mesh::update(Vec2f &_mousePos){
             
             // ----> position adjustment
             position -= Vec3f(0.5 + noise * 0.05, 0.5 + noise2 * 0.05, 0 );
+        
             iter.setPosition(position);
             ++iter;
-        }
+       }
     }
     
-    std::cout<< mousePos<<std::endl;
+  //  std::cout<< mousePos<<std::endl;
     
 }
 

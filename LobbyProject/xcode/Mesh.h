@@ -14,6 +14,8 @@
 #include "cinder/gl/Vbo.h"
 #include "cinder/gl/Texture.h"
 #include "cinder/Perlin.h"
+#include "Particle.h"
+
 
 
 
@@ -26,6 +28,7 @@ class Mesh{
 public:
     Mesh(int vertices_x, int vertices_y, gl::TextureRef &texture,  int meshType);
     
+    void getParticle(std::list<Particle> &_mParticles);
     void update(Vec2f &_mousePos);
     void draw();
     
@@ -36,6 +39,12 @@ public:
     
     vector<float>   timeDiff;
     vector<bool>    isTarget;
+    vector<float>   timeDiffCam;
+    vector<bool>    isTargetCam;
+    vector<Vec2f>   particlePos;
+    vector<float>   particleRad;
+    std::list<Particle> mParticles;
+    
     Vec2f           mousePos;
     Perlin          mPerlin;
     
