@@ -26,7 +26,6 @@
 		148004771B386C70003C5DCB /* FrameSubtraction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 148004751B386C70003C5DCB /* FrameSubtraction.cpp */; };
 		1480047A1B387345003C5DCB /* ParticleController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 148004781B387345003C5DCB /* ParticleController.cpp */; };
 		1480047D1B38737E003C5DCB /* Particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1480047B1B38737E003C5DCB /* Particle.cpp */; };
-		1484AC5E1B3AFE9900D0E117 /* Mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1484AC5C1B3AFE9900D0E117 /* Mesh.cpp */; };
 		5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
 		5323E6B60EAFCA7E003A9687 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B50EAFCA7E003A9687 /* QTKit.framework */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -106,8 +105,6 @@
 		148004791B387345003C5DCB /* ParticleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticleController.h; sourceTree = "<group>"; };
 		1480047B1B38737E003C5DCB /* Particle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Particle.cpp; sourceTree = "<group>"; };
 		1480047C1B38737E003C5DCB /* Particle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Particle.h; sourceTree = "<group>"; };
-		1484AC5C1B3AFE9900D0E117 /* Mesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Mesh.cpp; sourceTree = "<group>"; };
-		1484AC5D1B3AFE9900D0E117 /* Mesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mesh.h; sourceTree = "<group>"; };
 		21EE54D0A9454669926C1178 /* LobbyProjectApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = LobbyProjectApp.cpp; path = ../src/LobbyProjectApp.cpp; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
@@ -159,8 +156,6 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				1484AC5C1B3AFE9900D0E117 /* Mesh.cpp */,
-				1484AC5D1B3AFE9900D0E117 /* Mesh.h */,
 				21EE54D0A9454669926C1178 /* LobbyProjectApp.cpp */,
 				148004721B386B85003C5DCB /* Mesh.cpp */,
 				148004731B386B85003C5DCB /* Mesh.h */,
@@ -447,7 +442,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1484AC5E1B3AFE9900D0E117 /* Mesh.cpp in Sources */,
 				1480047A1B387345003C5DCB /* ParticleController.cpp in Sources */,
 				1480047D1B38737E003C5DCB /* Particle.cpp in Sources */,
 				148004741B386B85003C5DCB /* Mesh.cpp in Sources */,
