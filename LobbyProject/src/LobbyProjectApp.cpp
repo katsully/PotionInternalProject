@@ -80,7 +80,7 @@ void LobbyProjectApp::draw()
 {
 	// clear out the window with black
 	gl::clear( Color( 0, 0, 0 ) );
-    
+    gl::enableDepthRead();
     mFrameSubtraction.draw();
     if (drawMesh) {
         myMesh->draw();
