@@ -11,10 +11,10 @@
 
 
 
-Mesh::Mesh(int vertices_x, int vertices_y, gl::TextureRef &texture, int meshType){
+Mesh::Mesh(int vertices_x, int vertices_y, int meshType){
     this->VERTICES_X = vertices_x;
     this->VERTICES_Y = vertices_y;
-    this->mTexture   = texture;
+    
     
     
     int totalVertices = VERTICES_X * VERTICES_Y;
@@ -33,37 +33,7 @@ Mesh::Mesh(int vertices_x, int vertices_y, gl::TextureRef &texture, int meshType
     }else{
         mVboMesh = gl::VboMesh::create(totalVertices, totalQuads*4, layout, GL_QUADS);
     }
-    
-    
 
-    
-    
-    
-    vector<uint32_t> indices;
-    vector<Vec2f> texCoords;
-    
-    //-----> buffer texCoords and indices
-    for (int x = 0; x < VERTICES_X; x++) {
-        for (int y = 0; y < VERTICES_Y; y++) {
-            
-            timeDiff.push_back(0);
-            isTarget.push_back(false);
-            
-            //-----> creating quads
-            if (( x + 1 < VERTICES_X ) && ( y + 1 < VERTICES_Y )) {
-                indices.push_back( (x+0) * VERTICES_Y + (y+0) );
-                indices.push_back( (x+1) * VERTICES_Y + (y+0) );
-                indices.push_back( (x+1) * VERTICES_Y + (y+1) );
-                indices.push_back( (x+0) * VERTICES_Y + (y+1) );
-            }
-            //-----> mapping texture
-            texCoords.push_back(Vec2f( x / (float)VERTICES_X, y / (float)VERTICES_Y ));
-            
-        }
-    }
-    
-    mVboMesh->bufferIndices(indices);
-    mVboMesh->bufferTexCoords2d(0, texCoords);
     
     
 }
@@ -84,12 +54,44 @@ void Mesh::getParticle(std::list<Particle> &_mParticles){
 }
 
 
-void Mesh::update(Vec2f &_mousePos){
+void Mesh::update(Vec2f &_mousePos, gl::Texture &texture){
+    
+    
+    vector<uint32_t> indices;
+    vector<Vec2f> texCoords;
+    
+    //-----> buffer texCoords and indices
+    for (int x = 0; x < VERTICES_X; x++) {
+        for (int y = 0; y < VERTICES_Y; y++) {
+            
+            timeDiff.push_back(0);
+            isTarget.push_back(false);
+            
+            //-----> creating quads
+            if (( x + 1 < VERTICES_X ) && ( y + 1 < VERTICES_Y )) {
+                indices.push_back( (x+0) * VERTICES_Y + (y+0) );
+                indices.push_back( (x+1) * VERTICES_Y + (y+0) );
+                indices.push_back( (x+1) * VERTICES_Y + (y+1) );
+                indices.push_back( (x+0) * VERTICES_Y + (y+1) );
+            }
+            //-----> mapping texture (0 to texture size)
+            if (mTexture) {
+                texCoords.push_back(Vec2f( mTexture.getWidth() * x / (float)VERTICES_X, mTexture.getHeight() * y / (float)VERTICES_Y ));
+                std::cout<<mTexture.getWidth()<<std::endl;
+            }else{
+                texCoords.push_back(Vec2f( x / (float)VERTICES_X, y / (float)VERTICES_Y ));
+            }
+            
+        }
+    }
+    
+    mVboMesh->bufferIndices(indices);
+    mVboMesh->bufferTexCoords2d(0, texCoords);
     
 
     float time = getElapsedSeconds();
     this->mousePos = _mousePos;
-    
+    this->mTexture = texture;
     
 
     //---generate movements
@@ -152,7 +154,8 @@ void Mesh::update(Vec2f &_mousePos){
 }
 
 void Mesh::draw(){
-    
-    mTexture->enableAndBind();
+    if(mTexture){
+    mTexture.enableAndBind();
+    }
     gl::draw(mVboMesh);
 }

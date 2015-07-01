@@ -26,16 +26,16 @@ using std::vector;
 
 class Mesh{
 public:
-    Mesh(int vertices_x, int vertices_y, gl::TextureRef &texture,  int meshType);
+    Mesh(int vertices_x, int vertices_y, int meshType);
     
     void getParticle(std::list<Particle> &_mParticles);
-    void update(Vec2f &_mousePos);
+    void update(Vec2f &_mousePos, gl::Texture &texture);
     void draw();
     
     int VERTICES_X, VERTICES_Y;
     
     gl::VboMeshRef  mVboMesh;
-    gl::TextureRef  mTexture;
+    gl::Texture  mTexture;
     
     vector<float>   timeDiff;
     vector<bool>    isTarget;

@@ -1,9 +1,12 @@
 #include "cinder/app/AppNative.h"
 #include "cinder/gl/gl.h"
+#include "cinder/gl/Texture.h"
+#include "cinder/qtime/QuickTime.h"
 #include "FrameSubtraction.h"
 #include "Mesh.h"
 #include "cinder/Camera.h"
 #include "cinder/params/Params.h"
+
 
 using namespace ci;
 using namespace ci::app;
@@ -17,12 +20,15 @@ class LobbyProjectApp : public AppNative {
 	void update();
 	void draw();
     
-    gl::TextureRef      mTexture;
+    qtime::MovieGlRef   mMovie;
+    gl::Texture         mMovieTexture;
+    gl::Texture         mTexture;
     CameraPersp         mCamera;
     Vec3f               mEye, mCenter, mUp;
     Vec2f               mousePos;
     Quatf               mSceneRot;
     params::InterfaceGl mParams;
+    
     
     float volumeMin;
     bool drawMesh;
@@ -32,6 +38,26 @@ class LobbyProjectApp : public AppNative {
 };
 
 void LobbyProjectApp::setup(){
+    
+    
+    //absolute path now...
+    addAssetDirectory("/Users/luobin/PotionInternalProject/LobbyProject/assets");
+    try{
+        // fs::path path = getOpenFilePath();
+        mMovie = qtime::MovieGl::create(loadAsset("po.mp4"));
+        
+    } catch( ... ){
+        console() << "file is not a valid movie" << std::endl;
+    }
+    
+    
+    //load movie and play
+    if (mMovie) {
+        mMovie->setLoop();
+        mMovie->play();
+        mMovie->setVolume(0.1f);
+    }
+
     
     //init
     mEye = Vec3f(0, 0, 1.f);
@@ -46,9 +72,9 @@ void LobbyProjectApp::setup(){
     mParams.addParam("camera viewing volume min", &volumeMin);
     mParams.addParam("draw mesh", &drawMesh);
     
-    mTexture = gl::Texture::create(loadImage(loadResource("demo.jpg")));
+    mTexture = gl::Texture(loadImage(loadResource("demo.jpg")));
     mFrameSubtraction.setup();
-    myMesh = new Mesh(40, 40, mTexture, 0);
+    myMesh = new Mesh(40, 40, 0);
     
 }
 
@@ -62,17 +88,21 @@ void LobbyProjectApp::mouseMove(MouseEvent event){
 
 void LobbyProjectApp::update()
 {
+    
     mCamera.setPerspective( 60.0f, 1.f, volumeMin, 3000.0f );
     mCamera.lookAt(mEye, mCenter, mUp);
     gl::setMatrices( mCamera );
     gl::rotate( mSceneRot);
+    
+    //-----> load texture from movie --- could expand and determine which texture to read
+    //-----> also because there's issue with texture2d and GL_TEXTURE_RECTANGLE_ARB tex coordinates
+    //-----> changing texture needs the coordinates in mesh.cpp to be updated
+    if( mMovie ){
+        mMovieTexture = gl::Texture(mMovie->getTexture());
+    }
+    
     myMesh->getParticle(mFrameSubtraction.mParticleController.mParticles);
-    myMesh->update(mousePos);
-    
-    
-
-    
-      
+    myMesh->update(mousePos, mMovieTexture);
     
 }
 
