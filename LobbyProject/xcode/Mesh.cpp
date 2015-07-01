@@ -77,7 +77,7 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture){
             //-----> mapping texture (0 to texture size)
             if (mTexture) {
                 texCoords.push_back(Vec2f( mTexture.getWidth() * x / (float)VERTICES_X, mTexture.getHeight() * y / (float)VERTICES_Y ));
-                std::cout<<mTexture.getWidth()<<std::endl;
+                //std::cout<<mTexture.getWidth()<<std::endl;
             }else{
                 texCoords.push_back(Vec2f( x / (float)VERTICES_X, y / (float)VERTICES_Y ));
             }
@@ -101,12 +101,13 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture){
             Vec3f position = Vec3f(Vec3f( x / (float)VERTICES_X, y / (float)VERTICES_Y, 0.f));
             Vec2f pPos;
             
-            // mesh influence
+            // mesh influence from particles
             for (int i = 0 ; i < particlePos.size() - 1; i ++) {
-                Vec2f diff = Vec2f((particlePos[i].x * 1.8 - position.x), (particlePos[i].y * 1.8 - position.y));
+                Vec2f diff = Vec2f((particlePos[i].x * 1.8 - position.x), (particlePos[i].y * 2.f - position.y));
                 //std::cout<<diff.length()<<std::endl;
                 if (diff.length() < 0.2) {
-                    position.z -= particleRad[i] * 1.4;
+                    position.z -= particleRad[i] * 5.f * diff.length();
+                   
                 }
             }
   
@@ -141,8 +142,13 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture){
             float noise = mPerlin.fBm(v);
             float noise2 = mPerlin.fBm(v2);
             
+            
+                        
             // ----> position adjustment
-            position -= Vec3f(0.5 + noise * 0.05, 0.5 + noise2 * 0.05, 0 );
+            
+            //std::cout << noise3<< std::endl;
+            float a = sin(getElapsedSeconds());
+            position -= Vec3f(0.5 + noise * 0.05, 0.5 + noise2 * 0.05,  a * 0.05f );
         
             iter.setPosition(position);
             ++iter;

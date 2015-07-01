@@ -39,9 +39,10 @@ class LobbyProjectApp : public AppNative {
 
 void LobbyProjectApp::setup(){
     
-    
+    std::cout<<getAppPath()<<std::endl;
     //absolute path now...
-    addAssetDirectory("/Users/luobin/PotionInternalProject/LobbyProject/assets");
+   // addAssetDirectory("/Users/luobin/PotionInternalProject/LobbyProject/assets");
+    addAssetDirectory("../../../../../assets");
     try{
         // fs::path path = getOpenFilePath();
         mMovie = qtime::MovieGl::create(loadAsset("po.mp4"));
@@ -63,7 +64,7 @@ void LobbyProjectApp::setup(){
     mEye = Vec3f(0, 0, 1.f);
     mCenter = Vec3f::zero();
     mUp = Vec3f::yAxis();
-    volumeMin = 0.98f;
+    volumeMin = 0.9f;
     mSceneRot = ci::Quatf(M_PI, 0, 0);
     drawMesh = true;
     

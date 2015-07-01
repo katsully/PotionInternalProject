@@ -47,6 +47,7 @@ public:
     
     Vec2f           mousePos;
     Perlin          mPerlin;
+    Perlin          mOsci;
     
     
 };
