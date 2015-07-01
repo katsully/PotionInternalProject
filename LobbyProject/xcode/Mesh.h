@@ -34,13 +34,16 @@ public:
     
     int VERTICES_X, VERTICES_Y;
     
+    
     gl::VboMeshRef  mVboMesh;
     gl::Texture  mTexture;
     
     vector<float>   timeDiff;
     vector<bool>    isTarget;
-    vector<float>   timeDiffCam;
-    vector<bool>    isTargetCam;
+    vector<float>   timeDiffP;
+
+    
+    
     vector<Vec2f>   particlePos;
     vector<float>   particleRad;
     std::list<Particle> mParticles;

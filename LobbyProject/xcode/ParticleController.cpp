@@ -24,7 +24,7 @@ void ParticleController::addParticles( ci::Surface8u surface ){
         while( iter.pixel() ){
             //if( iter.r() == 0 ){
                 // Vec2f randVec = Rand::randVec2f();
-                if(count % 500 == 0 ){
+                if(count % 55 == 0 ){
                     Vec2f pos = Vec2f( iter.x() / 300.f - 0.55f, iter.y() / 250.f - 0.5f );
                     //   Vec2f vel = randVec * Rand::randFloat( 5.0f );
                     mParticles.push_back( Particle( pos , 0.00003 * iter.g()));

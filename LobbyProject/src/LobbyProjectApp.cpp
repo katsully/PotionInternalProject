@@ -40,7 +40,7 @@ class LobbyProjectApp : public AppNative {
 void LobbyProjectApp::setup(){
     
     std::cout<<getAppPath()<<std::endl;
-    //absolute path now...
+    
    // addAssetDirectory("/Users/luobin/PotionInternalProject/LobbyProject/assets");
     addAssetDirectory("../../../../../assets");
     try{
@@ -75,7 +75,7 @@ void LobbyProjectApp::setup(){
     
     mTexture = gl::Texture(loadImage(loadResource("demo.jpg")));
     mFrameSubtraction.setup();
-    myMesh = new Mesh(40, 40, 0);
+    myMesh = new Mesh(20, 20, 0);
     
 }
 

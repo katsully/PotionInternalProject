@@ -59,6 +59,10 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture){
     
     vector<uint32_t> indices;
     vector<Vec2f> texCoords;
+    for (int i = 0 ; i < particlePos.size() - 1; i ++) {
+        timeDiffP.push_back(0);
+        //isTargetP.push_back(false);
+    }
     
     //-----> buffer texCoords and indices
     for (int x = 0; x < VERTICES_X; x++) {
@@ -66,6 +70,7 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture){
             
             timeDiff.push_back(0);
             isTarget.push_back(false);
+            
             
             //-----> creating quads
             if (( x + 1 < VERTICES_X ) && ( y + 1 < VERTICES_Y )) {
@@ -105,10 +110,25 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture){
             for (int i = 0 ; i < particlePos.size() - 1; i ++) {
                 Vec2f diff = Vec2f((particlePos[i].x * 1.8 - position.x), (particlePos[i].y * 2.f - position.y));
                 //std::cout<<diff.length()<<std::endl;
-                if (diff.length() < 0.2) {
-                    position.z -= particleRad[i] * 5.f * diff.length();
-                   
+                float particleInfluence = particleRad[i] * 1.f * diff.length();
+                
+                if (diff.length() < 0.5f &&particleRad[i] != 0) {
+                    timeDiffP[i] = time;
+                    
                 }
+                
+                if (time - timeDiffP[i] < 3.f && diff.length() < 0.5f) {
+                    position.z +=  timeDiffP[i] / time * 0.001f;
+                }
+                
+
+                
+                
+                if (diff.length() < 0.5f && particleInfluence != 0.f) {
+                    //position.z += particleInfluence ;
+                }
+
+                
             }
   
             //---->calculate relative location to mouse
@@ -148,15 +168,15 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture){
             
             //std::cout << noise3<< std::endl;
             float a = sin(getElapsedSeconds());
-            position -= Vec3f(0.5 + noise * 0.05, 0.5 + noise2 * 0.05,  a * 0.05f );
+            position -= Vec3f(0.5 + noise * 0.05, 0.5 + noise2 * 0.05,  0.f );
         
             iter.setPosition(position);
             ++iter;
        }
     }
     
-  //  std::cout<< mousePos<<std::endl;
-    
+   
+
 }
 
 void Mesh::draw(){
@@ -164,4 +184,5 @@ void Mesh::draw(){
     mTexture.enableAndBind();
     }
     gl::draw(mVboMesh);
+    mTexture.disable();
 }
