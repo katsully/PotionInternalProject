@@ -56,15 +56,15 @@ void LobbyProjectApp::setup(){
     if (mMovie) {
         mMovie->setLoop();
         mMovie->play();
-        mMovie->setVolume(0.1f);
+        mMovie->setVolume(0.01f);
     }
 
     
     //init
-    mEye = Vec3f(0, 0, 1.f);
+    mEye = Vec3f(0, 0, 0.88f);
     mCenter = Vec3f::zero();
     mUp = Vec3f::yAxis();
-    volumeMin = 0.9f;
+    volumeMin = 0.8f;
     mSceneRot = ci::Quatf(M_PI, 0, 0);
     drawMesh = true;
     
@@ -89,7 +89,9 @@ void LobbyProjectApp::mouseMove(MouseEvent event){
 
 void LobbyProjectApp::update()
 {
-    
+    if (mMovie) {
+        mMovie->setRate(3.f);
+    }
     mCamera.setPerspective( 60.0f, 1.f, volumeMin, 3000.0f );
     mCamera.lookAt(mEye, mCenter, mUp);
     gl::setMatrices( mCamera );
@@ -110,7 +112,7 @@ void LobbyProjectApp::update()
 void LobbyProjectApp::draw()
 {
 	// clear out the window with black
-	gl::clear( Color( 0, 0, 0 ) );
+	gl::clear( Color( 1, 1, 1 ) );
     gl::enableDepthRead();
     mFrameSubtraction.draw();
     if (drawMesh) {

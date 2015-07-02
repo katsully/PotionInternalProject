@@ -33,6 +33,7 @@ Mesh::Mesh(int vertices_x, int vertices_y, int meshType){
     }else{
         mVboMesh = gl::VboMesh::create(totalVertices, totalQuads*4, layout, GL_QUADS);
     }
+    
 
     
     
@@ -59,9 +60,17 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture){
     
     vector<uint32_t> indices;
     vector<Vec2f> texCoords;
+    
+   
+    
     for (int i = 0 ; i < particlePos.size() - 1; i ++) {
-        timeDiffP.push_back(0);
-        //isTargetP.push_back(false);
+        if (timeDiffP.size() != particlePos.size()) {
+            timeDiffP.push_back(0);
+        }
+        if (isTargetP.size() != particlePos.size()) {
+            isTargetP.push_back(false);
+        }
+        
     }
     
     //-----> buffer texCoords and indices
@@ -110,22 +119,19 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture){
             for (int i = 0 ; i < particlePos.size() - 1; i ++) {
                 Vec2f diff = Vec2f((particlePos[i].x * 1.8 - position.x), (particlePos[i].y * 2.f - position.y));
                 //std::cout<<diff.length()<<std::endl;
-                float particleInfluence = particleRad[i] * 1.f * diff.length();
+                float particleInfluence = particleRad[i] * diff.lengthSquared();
                 
-                if (diff.length() < 0.5f &&particleRad[i] != 0) {
+                if (diff.lengthSquared() < 0.1f &&particleRad[i] != 0) {
                     timeDiffP[i] = time;
                     
                 }
                 
-                if (time - timeDiffP[i] < 3.f && diff.length() < 0.5f) {
+                if (time - timeDiffP[i] < 10.f && diff.length() < 0.5f) {
                     position.z +=  timeDiffP[i] / time * 0.001f;
                 }
                 
-
-                
-                
-                if (diff.length() < 0.5f && particleInfluence != 0.f) {
-                    //position.z += particleInfluence ;
+                if (diff.length() < 0.1f && particleInfluence != 0.f) {
+                    position.z += particleInfluence;
                 }
 
                 
@@ -168,7 +174,7 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture){
             
             //std::cout << noise3<< std::endl;
             float a = sin(getElapsedSeconds());
-            position -= Vec3f(0.5 + noise * 0.05, 0.5 + noise2 * 0.05,  0.f );
+            position -= Vec3f(0.48 + noise * 0.05, 0.48 + noise2 * 0.05,  0.f );
         
             iter.setPosition(position);
             ++iter;
@@ -184,5 +190,8 @@ void Mesh::draw(){
     mTexture.enableAndBind();
     }
     gl::draw(mVboMesh);
-    mTexture.disable();
+    if(mTexture){
+        mTexture.unbind();
+    }
+    ;
 }

@@ -41,6 +41,7 @@ public:
     vector<float>   timeDiff;
     vector<bool>    isTarget;
     vector<float>   timeDiffP;
+    vector<bool>    isTargetP;
 
     
     
