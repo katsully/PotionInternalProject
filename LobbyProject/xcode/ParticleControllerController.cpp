@@ -17,19 +17,19 @@ void ParticleControllerController::update( std::vector< Shape > trackedShapes ){
     for( int i = 0; i < trackedShapes.size(); i++ ){
         // if there is a new shape, give it a particle system
         if( trackedShapes[i].particleSystem == false ){
-            std::cout << "new shape " << trackedShapes[i].ID << std::endl;
+            //std::cout << "new shape " << trackedShapes[i].ID << std::endl;
             ParticleController particleController;
             particleController.centroid = trackedShapes[i].centroid;
             particleController.particleSystemUID = trackedShapes[i].ID;
             particleController.generateSystem( trackedShapes[i] );
             mParticleControllers.push_back( particleController );
-            trackedShapes[i].particleSystem = true;
+            //trackedShapes[i].particleSystem = true;
        // if the particle system already exists, update its location
         } else {
-            std::cout << "exisiting shape beginning " << trackedShapes[i].ID << std::endl;
+           // std::cout << "exisiting shape beginning " << trackedShapes[i].ID << std::endl;
             for( std::list <ParticleController>::iterator pc = mParticleControllers.begin(); pc != mParticleControllers.end(); ++pc ){
                 if( pc->particleSystemUID == trackedShapes[i].ID ){
-                    std::cout << "exisiting shape " << trackedShapes[i].ID << std::endl;
+             //       std::cout << "exisiting shape " << trackedShapes[i].ID << std::endl;
                     cv::Point distPoint = pc->centroid - trackedShapes[i].centroid;
                     pc->update( distPoint );
                 }
@@ -38,7 +38,7 @@ void ParticleControllerController::update( std::vector< Shape > trackedShapes ){
     }
     
     // remove any particle systems whose shapes no longer exist
-    for( std::list <ParticleController>::iterator pc = mParticleControllers.begin(); pc != mParticleControllers.end(); ++pc ){
+    for( std::list <ParticleController>::iterator pc = mParticleControllers.begin(); pc != mParticleControllers.end(); ){
         Boolean keep = false;
         for( int i=0; i<trackedShapes.size(); i++ ){
             if( pc->particleSystemUID == trackedShapes[i].ID ){
@@ -47,8 +47,12 @@ void ParticleControllerController::update( std::vector< Shape > trackedShapes ){
         }
         if( !keep ){
             pc = mParticleControllers.erase( pc );
+        } else {
+            ++pc;
         }
     }
+    
+    
 }
 
 void ParticleControllerController::draw(){

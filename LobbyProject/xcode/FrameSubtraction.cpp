@@ -73,8 +73,15 @@ void FrameSubtraction::onDepth(openni::VideoFrameRef frame, const OpenNI::Device
             mTrackedShapes[i].lastFrameSeen = ci::app::getElapsedFrames();
             mTrackedShapes[i].hull.clear();
             mTrackedShapes[i].hull = nearestShape->hull;
-            if( mTrackedShapes[i].particleSystem == true ){
-                std::cout << "its true" << mShapes[i].ID << std::endl;
+//            if( mTrackedShapes[i].particleSystem == true ){
+//                std::cout << "its TRUE " << mTrackedShapes[i].ID << std::endl;
+//            }
+//            else if( mTrackedShapes[i].particleSystem == false ){
+//                std::cout << "its false " << mTrackedShapes[i].ID << std::endl;
+//            } else {
+//                std::cout << "CRAP " << mTrackedShapes[i].ID << std::endl;
+//
+//            }
             //std::cout << "Found match to shape ID: " << mTrackedShapes[i].ID << std::endl;
         }
     }
@@ -104,6 +111,9 @@ void FrameSubtraction::onDepth(openni::VideoFrameRef frame, const OpenNI::Device
 
    // std::cout << "total shapes: " << mShapes.size() << std::endl;
     mParticleControllerController.update( mTrackedShapes );
+    for( vector<Shape>::iterator it=mTrackedShapes.begin(); it!=mTrackedShapes.end(); ++it ){
+        it->particleSystem = true;
+    }
     
     mInput.copyTo( mPreviousFrame );
 }
