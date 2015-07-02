@@ -100,7 +100,7 @@ void FrameSubtraction::onDepth(openni::VideoFrameRef frame, const OpenNI::Device
     }
 
    // std::cout << "total shapes: " << mShapes.size() << std::endl;
-    mParticleControllerController.update( mShapes );
+    mParticleControllerController.update( mTrackedShapes );
 }
 
 void FrameSubtraction::onColor(openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions){

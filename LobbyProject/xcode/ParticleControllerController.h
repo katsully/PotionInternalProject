@@ -13,7 +13,7 @@
 class ParticleControllerController {
 public:
     ParticleControllerController();
-    void update( std::vector< Shape > shapes );
+    void update( std::vector< Shape > trackedShapes );
     void draw();
     
     std::list< ParticleController > mParticleControllers;
