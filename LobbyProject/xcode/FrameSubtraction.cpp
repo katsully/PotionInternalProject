@@ -73,7 +73,8 @@ void FrameSubtraction::onDepth(openni::VideoFrameRef frame, const OpenNI::Device
             mTrackedShapes[i].lastFrameSeen = ci::app::getElapsedFrames();
             mTrackedShapes[i].hull.clear();
             mTrackedShapes[i].hull = nearestShape->hull;
-            std::cout << std::boolalpha << mTrackedShapes[i].particleSystem << '\n';
+            if( mTrackedShapes[i].particleSystem == true ){
+                std::cout << "its true" << mShapes[i].ID << std::endl;
             //std::cout << "Found match to shape ID: " << mTrackedShapes[i].ID << std::endl;
         }
     }
