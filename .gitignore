@@ -39,6 +39,7 @@
 *.xcuserdata
 xcuserdata/
 build/
+DerivedData/
 
 
 

@@ -51,7 +51,7 @@ void LobbyProjectApp::setup(){
         console() << "file is not a valid movie" << std::endl;
     }
     
-    
+    setWindowSize(960, 540);
     //load movie and play
     if (mMovie) {
         mMovie->setLoop();
@@ -61,10 +61,10 @@ void LobbyProjectApp::setup(){
 
     
     //init
-    mEye = Vec3f(0, 0, 0.88f);
+    mEye = Vec3f(0, 0, 0.75f);
     mCenter = Vec3f::zero();
     mUp = Vec3f::yAxis();
-    volumeMin = 0.8f;
+    volumeMin = 0.50f;
     mSceneRot = ci::Quatf(M_PI, 0, 0);
     drawMesh = true;
     
@@ -75,7 +75,7 @@ void LobbyProjectApp::setup(){
     
     mTexture = gl::Texture(loadImage(loadResource("demo.jpg")));
     mFrameSubtraction.setup();
-    myMesh = new Mesh(20, 20, 0);
+    myMesh = new Mesh(32, 18, 0);
     
 }
 
@@ -89,9 +89,7 @@ void LobbyProjectApp::mouseMove(MouseEvent event){
 
 void LobbyProjectApp::update()
 {
-    if (mMovie) {
-        mMovie->setRate(3.f);
-    }
+    
     mCamera.setPerspective( 60.0f, 1.f, volumeMin, 3000.0f );
     mCamera.lookAt(mEye, mCenter, mUp);
     gl::setMatrices( mCamera );
@@ -99,13 +97,13 @@ void LobbyProjectApp::update()
     
     //-----> load texture from movie --- could expand and determine which texture to read
     //-----> also because there's issue with texture2d and GL_TEXTURE_RECTANGLE_ARB tex coordinates
-    //-----> changing texture needs the coordinates in mesh.cpp to be updated
+    //-----> changing texture needs the coordinates in mesh.cpp to be updated (fix pending)
     if( mMovie ){
         mMovieTexture = gl::Texture(mMovie->getTexture());
     }
-    
+    bool fly = true;
     myMesh->getParticle(mFrameSubtraction.mParticleController.mParticles);
-    myMesh->update(mousePos, mMovieTexture);
+    myMesh->update(mousePos, mMovieTexture, fly);
     
 }
 

@@ -15,7 +15,9 @@ Mesh::Mesh(int vertices_x, int vertices_y, int meshType){
     this->VERTICES_X = vertices_x;
     this->VERTICES_Y = vertices_y;
     
-    
+    zPct = 0.f;
+    currIter = 0.f;
+    totalIter = 100.f;
     
     int totalVertices = VERTICES_X * VERTICES_Y;
     int totalQuads = ( VERTICES_X - 1 ) * ( VERTICES_Y - 1 );
@@ -34,9 +36,15 @@ Mesh::Mesh(int vertices_x, int vertices_y, int meshType){
         mVboMesh = gl::VboMesh::create(totalVertices, totalQuads*4, layout, GL_QUADS);
     }
     
+}
 
-    
-    
+
+
+
+
+
+float Mesh::easeIn(float t,float b , float c, float d){
+    return c*((t=t/d-1)*t*t + 1) + b;
 }
 
 void Mesh::getParticle(std::list<Particle> &_mParticles){
@@ -55,12 +63,12 @@ void Mesh::getParticle(std::list<Particle> &_mParticles){
 }
 
 
-void Mesh::update(Vec2f &_mousePos, gl::Texture &texture){
+void Mesh::update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway){
     
     
     vector<uint32_t> indices;
     vector<Vec2f> texCoords;
-    
+    zPct = easeIn(currIter, 0.0, 1.0, totalIter);
    
     
     for (int i = 0 ; i < particlePos.size() - 1; i ++) {
@@ -72,6 +80,11 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture){
         }
         
     }
+    
+    
+    
+   
+//    isTargetP[0] = true;
     
     //-----> buffer texCoords and indices
     for (int x = 0; x < VERTICES_X; x++) {
@@ -107,7 +120,7 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture){
     this->mousePos = _mousePos;
     this->mTexture = texture;
     
-
+    
     //---generate movements
     gl::VboMesh::VertexIter iter = mVboMesh->mapVertexBuffer();
     for( int x = 0; x < VERTICES_X; ++x ) {
@@ -121,17 +134,16 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture){
                 //std::cout<<diff.length()<<std::endl;
                 float particleInfluence = particleRad[i] * diff.lengthSquared();
                 
-                if (diff.lengthSquared() < 0.1f &&particleRad[i] != 0) {
+                if (diff.lengthSquared() < 0.5f &&particleRad[i] != 0) {
                     timeDiffP[i] = time;
-                    
                 }
                 
-                if (time - timeDiffP[i] < 10.f && diff.length() < 0.5f) {
+                if (time - timeDiffP[i] < 3.f && diff.length() < 0.5f) {
                     position.z +=  timeDiffP[i] / time * 0.001f;
                 }
-                
+               
                 if (diff.length() < 0.1f && particleInfluence != 0.f) {
-                    position.z += particleInfluence;
+                    position.z += particleInfluence * 10.f;
                 }
 
                 
@@ -152,15 +164,16 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture){
             }
             
             //--->timer affecting mesh
-            if ( (time - timeDiff[x * VERTICES_Y + y] ) < 10.f && isTarget[x * VERTICES_Y + y] == true) {
-                position.z -= 0.0001f + 1/  (time - timeDiff[x * VERTICES_Y + y ] ) * 0.1;
+            if ( (time - timeDiff[x * VERTICES_Y + y] ) < 2.f && isTarget[x * VERTICES_Y + y] == true) {
+                position.z -= 0.0001f +  timeDiff[x * VERTICES_Y + y ] /time * 0.1f;
+                //position.z -= 0.0001f + 1/  (time - timeDiff[x * VERTICES_Y + y ] ) * 0.1;
             }else if ((time - timeDiff[x * VERTICES_Y + y]) >= 10.f){
                 isTarget[x * VERTICES_Y + y] = false;
             }
             
             // ----generating Perlin Noise
-            float nX = relPos.x * 0.001f;
-            float nY = relPos.y * 0.001f;
+            float nX = relPos.x * 0.0001f;
+            float nY = relPos.y * 0.0001f;
             float nZ = app::getElapsedSeconds() * 0.1f;
             float nZ2 = app::getElapsedSeconds() * 0.1f + 500.f;
             Vec3f v( nX, nY, nZ );
@@ -174,14 +187,18 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture){
             
             //std::cout << noise3<< std::endl;
             float a = sin(getElapsedSeconds());
-            position -= Vec3f(0.48 + noise * 0.05, 0.48 + noise2 * 0.05,  0.f );
-        
+            position -= Vec3f(0.48 + noise * 0.05, 0.48 + noise2 * 0.05,  -1.f * zPct);
+            
             iter.setPosition(position);
             ++iter;
        }
     }
-    
-   
+    if (flyAway) {
+        if (currIter< totalIter) {
+            currIter ++;
+        }
+    }
+   // std::cout<<zPct<<std::endl;
 
 }
 
