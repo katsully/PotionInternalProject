@@ -16,7 +16,6 @@ ParticleControllerController::ParticleControllerController(){
 void ParticleControllerController::update( std::vector< Shape > trackedShapes ){
     for( int i = 0; i < trackedShapes.size(); i++ ){
         // if there is a new shape, give it a particle system
-        //std::cout << "has particle system " << std::boolalpha << shapes[i].particleSystem << std::endl;
         if( trackedShapes[i].particleSystem == false ){
             std::cout << "new shape " << trackedShapes[i].ID << std::endl;
             ParticleController particleController;
@@ -27,6 +26,7 @@ void ParticleControllerController::update( std::vector< Shape > trackedShapes ){
             trackedShapes[i].particleSystem = true;
        // if the particle system already exists, update its location
         } else {
+            std::cout << "exisiting shape beginning " << trackedShapes[i].ID << std::endl;
             for( std::list <ParticleController>::iterator pc = mParticleControllers.begin(); pc != mParticleControllers.end(); ++pc ){
                 if( pc->particleSystemUID == trackedShapes[i].ID ){
                     std::cout << "exisiting shape " << trackedShapes[i].ID << std::endl;

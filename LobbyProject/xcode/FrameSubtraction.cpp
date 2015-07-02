@@ -68,10 +68,12 @@ void FrameSubtraction::onDepth(openni::VideoFrameRef frame, const OpenNI::Device
         if( nearestShape != NULL ){
             // update our tracked contours
             // set last frame seen
-            mTrackedShapes[i].centroid = nearestShape->centroid;
-            mTrackedShapes.push_back( *nearestShape );
-            nearestShape->lastFrameSeen = ci::app::getElapsedFrames();
             nearestShape->matchFound = true;
+            mTrackedShapes[i].centroid = nearestShape->centroid;
+            mTrackedShapes[i].lastFrameSeen = ci::app::getElapsedFrames();
+            mTrackedShapes[i].hull.clear();
+            mTrackedShapes[i].hull = nearestShape->hull;
+            std::cout << std::boolalpha << mTrackedShapes[i].particleSystem << '\n';
             //std::cout << "Found match to shape ID: " << mTrackedShapes[i].ID << std::endl;
         }
     }
@@ -101,6 +103,8 @@ void FrameSubtraction::onDepth(openni::VideoFrameRef frame, const OpenNI::Device
 
    // std::cout << "total shapes: " << mShapes.size() << std::endl;
     mParticleControllerController.update( mTrackedShapes );
+    
+    mInput.copyTo( mPreviousFrame );
 }
 
 void FrameSubtraction::onColor(openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions){

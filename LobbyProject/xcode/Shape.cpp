@@ -8,6 +8,11 @@
 
 #include "Shape.h"
 
-Shape::Shape(){
-    
+Shape::Shape() :
+centroid( cv::Point() ),
+ID(-1),
+lastFrameSeen(-1),
+matchFound(false),
+particleSystem(false)
+{
 }
