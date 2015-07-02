@@ -13,13 +13,11 @@ FrameSubtraction::FrameSubtraction(){
 }
 
 void FrameSubtraction::setup(){
-    
-    // Setup the parameters
-    //    mParams = params::INterfaceGl("Parameters", Vec2i(200, 150) );
-    //    mParams.addParam( "Picked Color", &mPickedColor, "readonly=1" );
-    mColor = Color(1, 0, 0);
-    
     mDeviceManager = OpenNI::DeviceManager::create();
+    
+    shapeUID = 0;
+    mBlurAmount = 10;
+    mTrackedShapes.clear();
     
     if( mDeviceManager->isInitialized() ){
         try{
@@ -40,63 +38,134 @@ void FrameSubtraction::setup(){
 }
 
 void FrameSubtraction::onDepth(openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions){
-    
     cv::Mat mInput = toOcv( OpenNI::toChannel16u( frame ) );
-    cv::Mat mInput8bit;
+
     cv::Mat mSubtracted;
-    cv::Mat mThreshold;
-    cv::Mat mOutput;
+    cv::Mat blur;
+    cv::Mat thresh;
+    cv::Mat lines;
     
     
+    cv::blur( mInput, blur, cv::Size( mBlurAmount, mBlurAmount ) );
     // subtrackted depth
     cv::absdiff( mBackground, mInput, mSubtracted );
     
-    mSubtracted.convertTo( mThreshold, CV_8UC1 );
+    mSubtracted.convertTo( lines, CV_8UC1, 0.1/1.0 );
     
-    cv::adaptiveThreshold(mThreshold, mThreshold, 255, cv::ADAPTIVE_THRESH_MEAN_C, cv::THRESH_BINARY_INV, 105, 1);
-    //cv::threshold( mThreshold, mThreshold, 128, 255, cv::THRESH_BINARY );
-    cv::dilate( mThreshold, mThreshold, cv::Mat(), cv::Point( -1, -1), 2, 1, 1 );
-    //cv::Mat kernel( 30, 30, CV_8UC1 );
-    // cv::erode( mThreshold, mThreshold, cv::Mat() );
+    mContours.clear();
+    cv::threshold( lines, thresh, 75, 255, CV_8U );
+    cv::findContours( thresh, mContours, mHierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE );
     
-    cv::Mat contourOuput = mThreshold.clone();
-    vector<vector<cv::Point> > contours;
+    // get data that we can later compare
+    mShapes.clear();
+    mShapes = getEvaluationSet( mContours, 75, 10000 );
     
-    cv::findContours( contourOuput, contours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE );
+    // find the nearest match for each shape
+    for( int i=0; i<mTrackedShapes.size(); i++ ){
+        Shape* nearestShape = findNearestMatch( mTrackedShapes[i], mShapes, 5000 );
+        
+        // a tracked shape was found, update that tracked shape with the new shape
+        if( nearestShape != NULL ){
+            // update our tracked contours
+            // set last frame seen
+            mTrackedShapes[i].centroid = nearestShape->centroid;
+            mTrackedShapes.push_back( *nearestShape );
+            nearestShape->lastFrameSeen = ci::app::getElapsedFrames();
+            nearestShape->matchFound = true;
+            //std::cout << "Found match to shape ID: " << mTrackedShapes[i].ID << std::endl;
+        }
+    }
     
+    // if shape->matchFound is false, add it as a new shape
+    for( int i = 0; i<mShapes.size(); i++ ){
+        if( mShapes[i].matchFound == false ){
+            mShapes[i].ID = shapeUID;
+            mShapes[i].lastFrameSeen = ci::app::getElapsedFrames();
+            mShapes[i].particleSystem = false;
+            mTrackedShapes.push_back( mShapes[i] );
+            shapeUID++;
+            //std::cout << "adding a new tracked shape with ID: " << mShapes[i].ID << std::endl;
+        }
+    }
     
-    //    cout << "contours size: " << contours.size() << endl;
-    //
-    //    if ( ci::app::getElapsedFrames() % 200 )
-    //    {
-    //        cout << "my type " << mInput.type() << endl;
-    //        cout << "my channels " << mInput.channels() << endl;
-    //        cout << "my size " << mInput.size() << endl;
-    //    }
-    
-    // convert to RGB
-    cv::cvtColor( mThreshold,mThreshold, CV_GRAY2RGB );
-    
-    mThreshold.copyTo( mOutput );
-    
-    // draw all the contours
-    cv::drawContours( mOutput, contours, -1, cv::Scalar(0,255,0) );
-    
-    //    cv::Mat imWithKeypoints;
-    //    //blob detection
-    //    cv::drawKeypoints(mThreshold, mKeyPoints, imWithKeypoints, cv::Scalar(0, 255, 0) );
-    
-    // save the current frame
-    mInput.copyTo( mPreviousFrame );
-    
-    // display the threshold image
-    mSurfaceDepth = Surface8u( fromOcv( mOutput ) );
-    mParticleController.addParticles( mSurfaceDepth );
+    // if we didn't find a match for x frames, delete the tracked shape
+    for( vector<Shape>::iterator it=mTrackedShapes.begin(); it!=mTrackedShapes.end();  ){
+        //std::cout << "tracked shapes size: " << mTrackedShapes.size() << std::endl;
+        if( ci::app::getElapsedFrames() - it->lastFrameSeen > 20 ){
+            //std::cout << "deleting shape with ID: " << it->ID << std::endl;
+            it = mTrackedShapes.erase(it);
+        } else {
+            ++it;
+        }
+    }
+
+   // std::cout << "total shapes: " << mShapes.size() << std::endl;
+    mParticleControllerController.update( mShapes );
 }
 
 void FrameSubtraction::onColor(openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions){
     mSurface = OpenNI::toSurface8u( frame );
     cv::Mat mInput( toOcv( OpenNI::toSurface8u( frame), 0 ) );
+}
+
+vector< Shape > FrameSubtraction::getEvaluationSet( vector< vector<cv::Point> > rawContours, int minimalArea, int maxArea ){
+    vector< Shape > vec;
+    for( vector< cv::Point > &c : rawContours ){
+        // create a matrix for the contour
+        cv::Mat matrix = cv::Mat( c );
+        
+        // extract data from contour
+        cv::Scalar center = mean( matrix );
+        double area = cv::contourArea( matrix );
+        cv::Rect boundingBox = cv::boundingRect( matrix );
+        
+        // reject it if too small
+        if( area < minimalArea ){
+            continue;
+        }
+        
+        // reject it if too big
+        if( area > maxArea ){
+            continue;
+        }
+        
+        // store data
+        Shape shape;
+        shape.area = area;
+        shape.boundingBox = boundingBox;
+        shape.centroid = cv::Point( center.val[0], center.val[1] );
+        
+        // convex hull is the polygon enclosing the contour
+        shape.hull = c;
+        shape.matchFound = false;
+        vec.push_back( shape );
+    }
+    return vec;
+}
+
+Shape* FrameSubtraction::findNearestMatch( Shape trackedShape, vector< Shape > &shapes, float maximumDistance ){
+    Shape* closestShape = NULL;
+    float nearestDist = 1e5;
+    if( shapes.empty() ){
+        return NULL;
+    }
+    
+    for( Shape &candidate : shapes ){
+        // find dist between the center of the contour and the shape
+        cv::Point distPoint = trackedShape.centroid - candidate.centroid;
+        float dist = cv::sqrt( distPoint.x*distPoint.x + distPoint.y*distPoint.y);
+        if( dist > maximumDistance ){
+            continue;
+        }
+        if( candidate.matchFound ){
+            continue;
+        }
+        if( dist < nearestDist ){
+            nearestDist = dist;
+            closestShape = &candidate;
+        }
+    }
+    return closestShape;
 }
 
 void FrameSubtraction::update(){
@@ -134,5 +203,5 @@ void FrameSubtraction::draw()
     //        }
     //        gl::draw( mTextureDepth, mTextureDepth->getBounds(), getWindowBounds() );
     //    }
-    mParticleController.draw();
+    mParticleControllerController.draw();
 }

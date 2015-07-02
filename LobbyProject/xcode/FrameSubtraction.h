@@ -12,7 +12,8 @@
 #include "Cinder-OpenNI.h"
 #include "CinderOpenCV.h"
 #include "cinder/Rand.h"
-#include "ParticleController.h"
+#include "ParticleControllerController.h"
+#include "Shape.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -29,12 +30,7 @@ public:
     cv::Mat mPreviousFrame;
     cv::Mat mBackground;
     
-    Color mColor;
-    
-    cv::SimpleBlobDetector mDetector;
-    vector<cv::KeyPoint> mKeyPoints;
-    
-    ParticleController mParticleController;
+    ParticleControllerController mParticleControllerController;
     
     
 private:
@@ -46,7 +42,19 @@ private:
     ci::Surface8u mSurface;
     ci::Surface8u mSurfaceDepth;
     
+    typedef vector< vector<cv::Point > > ContourVector;
+    ContourVector mContours;
+    int shapeUID;
+    int mBlurAmount;
+    
+    cv::Mat mInput;
+    cv::vector<cv::Vec4i> mHierarchy;
+    vector<Shape> mShapes;
+    vector<Shape> mTrackedShapes;
+    
     void onDepth(openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions);
     void onColor(openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions);
+    vector< Shape > getEvaluationSet( vector< vector<cv::Point> > rawContours, int minimalArea, int maxArea );
+    Shape* findNearestMatch( Shape trackedShape, vector< Shape > &shapes, float maximumDistance );
     void screenShot();
 };

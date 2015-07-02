@@ -17,38 +17,38 @@ class LobbyProjectApp : public AppNative {
 	void update();
 	void draw();
     
-    gl::TextureRef      mTexture;
-    CameraPersp         mCamera;
-    Vec3f               mEye, mCenter, mUp;
-    Vec2f               mousePos;
-    Quatf               mSceneRot;
-    params::InterfaceGl mParams;
+//    gl::TextureRef      mTexture;
+//    CameraPersp         mCamera;
+//    Vec3f               mEye, mCenter, mUp;
+//    Vec2f               mousePos;
+//    Quatf               mSceneRot;
+//    params::InterfaceGl mParams;
     
     float volumeMin;
     bool drawMesh;
     
     FrameSubtraction    mFrameSubtraction;
-    Mesh                *myMesh;
+   // Mesh                *myMesh;
 };
 
 void LobbyProjectApp::setup(){
     
     //init
-    mEye = Vec3f(0, 0, 1.f);
-    mCenter = Vec3f::zero();
-    mUp = Vec3f::yAxis();
-    volumeMin = 0.98f;
-    mSceneRot = ci::Quatf(M_PI, 0, 0);
-    drawMesh = true;
+//    mEye = Vec3f(0, 0, 1.f);
+//    mCenter = Vec3f::zero();
+//    mUp = Vec3f::yAxis();
+//    volumeMin = 0.98f;
+//    mSceneRot = ci::Quatf(M_PI, 0, 0);
+//    drawMesh = true;
+//    
+//    mParams = params::InterfaceGl("mesh", Vec2i(225, 100));
+//    mParams.addParam("camera rotation", &mSceneRot);
+//    mParams.addParam("camera viewing volume min", &volumeMin);
+//    mParams.addParam("draw mesh", &drawMesh);
     
-    mParams = params::InterfaceGl("mesh", Vec2i(225, 100));
-    mParams.addParam("camera rotation", &mSceneRot);
-    mParams.addParam("camera viewing volume min", &volumeMin);
-    mParams.addParam("draw mesh", &drawMesh);
-    
-    mTexture = gl::Texture::create(loadImage(loadResource("demo.jpg")));
+  //  mTexture = gl::Texture::create(loadImage(loadResource("demo.jpg")));
     mFrameSubtraction.setup();
-    myMesh = new Mesh(40, 40, mTexture, 0);
+   // myMesh = new Mesh(40, 40, mTexture, 0);
     
 }
 
@@ -57,18 +57,18 @@ void LobbyProjectApp::keyDown( KeyEvent event ){
 }
 
 void LobbyProjectApp::mouseMove(MouseEvent event){
-    mousePos = event.getPos();
+ //   mousePos = event.getPos();
 }
 
 void LobbyProjectApp::update()
 {
-    mCamera.setPerspective( 60.0f, 1.f, volumeMin, 3000.0f );
-    mCamera.lookAt(mEye, mCenter, mUp);
-    gl::setMatrices( mCamera );
-    gl::rotate( mSceneRot);
-    myMesh->getParticle(mFrameSubtraction.mParticleController.mParticles);
-    myMesh->update(mousePos);
-    
+//    mCamera.setPerspective( 60.0f, 1.f, volumeMin, 3000.0f );
+//    mCamera.lookAt(mEye, mCenter, mUp);
+//    gl::setMatrices( mCamera );
+//    gl::rotate( mSceneRot);
+//   // myMesh->getParticle(mFrameSubtraction.mParticleController.mParticles);
+//    myMesh->update(mousePos);
+//    
     
 
     
@@ -82,11 +82,11 @@ void LobbyProjectApp::draw()
 	gl::clear( Color( 0, 0, 0 ) );
     gl::enableDepthRead();
     mFrameSubtraction.draw();
-    if (drawMesh) {
-        myMesh->draw();
-    }
+//    if (drawMesh) {
+//        myMesh->draw();
+//    }
     
-    mParams.draw();
+ //   mParams.draw();
 }
 
 CINDER_APP_NATIVE( LobbyProjectApp, RendererGl )
