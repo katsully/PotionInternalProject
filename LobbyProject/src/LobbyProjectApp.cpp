@@ -35,6 +35,8 @@ class LobbyProjectApp : public AppNative {
     bool drawMesh;
     bool nextMeshState, mouseClick;
     bool meshReset, meshStart, nextMeshReset, nextMeshStart;
+    bool firstMesh;
+    bool secondMesh;
     
     FrameSubtraction    mFrameSubtraction;
     Mesh                *myMesh;
@@ -81,8 +83,8 @@ void LobbyProjectApp::setup(){
     
     mTexture = gl::Texture(loadImage(loadResource("demo.jpg")));
     mFrameSubtraction.setup();
-    myMesh = new Mesh(16, 9, 0);
-    myNextMesh = new Mesh(16 , 9 ,0);
+    myMesh = new Mesh(16, 9, 0, firstMesh);
+    myNextMesh = new Mesh(16 , 9 , 0, secondMesh);
     
 }
 

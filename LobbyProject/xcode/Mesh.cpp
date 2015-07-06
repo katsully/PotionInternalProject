@@ -11,7 +11,7 @@
 
 
 
-Mesh::Mesh(int vertices_x, int vertices_y, int meshType){
+Mesh::Mesh(int vertices_x, int vertices_y, int meshType, bool &_isFirstMesh){
     this->VERTICES_X = vertices_x;
     this->VERTICES_Y = vertices_y;
     
