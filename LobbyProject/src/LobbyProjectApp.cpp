@@ -17,6 +17,7 @@ class LobbyProjectApp : public AppNative {
 	void setup();
 	void keyDown( KeyEvent event );
     void mouseMove( MouseEvent event );
+    void mouseDown( MouseEvent event );
 	void update();
 	void draw();
     
@@ -32,6 +33,7 @@ class LobbyProjectApp : public AppNative {
     
     float volumeMin;
     bool drawMesh;
+    bool swapTexture;
     
     FrameSubtraction    mFrameSubtraction;
     Mesh                *myMesh;
@@ -67,6 +69,7 @@ void LobbyProjectApp::setup(){
     volumeMin = 0.50f;
     mSceneRot = ci::Quatf(M_PI, 0, 0);
     drawMesh = true;
+    swapTexture = true;
     
     mParams = params::InterfaceGl("mesh", Vec2i(225, 100));
     mParams.addParam("camera rotation", &mSceneRot);
@@ -87,6 +90,12 @@ void LobbyProjectApp::mouseMove(MouseEvent event){
     mousePos = event.getPos();
 }
 
+void LobbyProjectApp::mouseDown(MouseEvent event){
+    swapTexture = !swapTexture;
+    std::cout<<"swapTexture"<<swapTexture<<std::endl;
+    
+}
+
 void LobbyProjectApp::update()
 {
     
@@ -104,8 +113,12 @@ void LobbyProjectApp::update()
     bool fly = true;
     myMesh->getParticle(mFrameSubtraction.mParticleController.mParticles);
     
-    
-    myMesh->update(mousePos, mMovieTexture, fly);
+    if (swapTexture) {
+        myMesh->update(mousePos, mTexture, fly);
+    }else{
+        myMesh->update(mousePos, mMovieTexture, fly);
+    }
+   
     
 }
 

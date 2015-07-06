@@ -66,7 +66,9 @@ void Mesh::getParticle(std::list<Particle> &_mParticles){
 
 void Mesh::update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway){
     
-    
+    float time = getElapsedSeconds();
+    this->mousePos = _mousePos;
+    this->mTexture = texture;
     vector<uint32_t> indices;
     vector<Vec2f> texCoords;
     zPct = easeIn(currIter, 0.0, 1.0, totalIter);
@@ -104,24 +106,30 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway){
                 indices.push_back( (x+0) * VERTICES_Y + (y+1) );
             }
             //-----> mapping texture (0 to texture size)
+            
             if (mTexture) {
+                
                 texCoords.push_back(Vec2f( mTexture.getWidth() * x / (float)VERTICES_X, mTexture.getHeight() * y / (float)VERTICES_Y ));
                 //std::cout<<mTexture.getWidth()<<std::endl;
             }else{
+                
                 texCoords.push_back(Vec2f( x / (float)VERTICES_X, y / (float)VERTICES_Y ));
             }
             
         }
     }
+   
     
     mVboMesh->bufferIndices(indices);
     mVboMesh->bufferTexCoords2d(0, texCoords);
     
 
-    float time = getElapsedSeconds();
-    this->mousePos = _mousePos;
-    this->mTexture = texture;
+   
     
+    
+    if (mTexture){
+        std::cout<<mTexture.getTarget()<<std::endl;
+    }
     
     //---generate movements
     gl::VboMesh::VertexIter iter = mVboMesh->mapVertexBuffer();
@@ -204,7 +212,7 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway){
             currIter ++;
         }
     }
-    std::cout<<zPctReverse<<std::endl;
+   // std::cout<<zPctReverse<<std::endl;
 
 }
 
@@ -217,7 +225,8 @@ void Mesh::draw(){
     }
     gl::draw(mVboMesh);
     if(mTexture){
-        mTexture.unbind();
+    mTexture.unbind();
+    mTexture.disable();
     }
     ;
 }
