@@ -33,7 +33,7 @@ class LobbyProjectApp : public AppNative {
     
     float volumeMin;
     bool drawMesh;
-    bool nextMeshState;
+    bool nextMeshState, mouseClick;
     bool meshReset, meshStart, nextMeshReset, nextMeshStart;
     
     FrameSubtraction    mFrameSubtraction;
@@ -72,6 +72,7 @@ void LobbyProjectApp::setup(){
     mSceneRot = ci::Quatf(M_PI, 0, 0);
     drawMesh = true;
     nextMeshState = false;
+    mouseClick = false;
     
     mParams = params::InterfaceGl("mesh", Vec2i(225, 100));
     mParams.addParam("camera rotation", &mSceneRot);
@@ -95,8 +96,9 @@ void LobbyProjectApp::mouseMove(MouseEvent event){
 
 void LobbyProjectApp::mouseDown(MouseEvent event){
     nextMeshState = !nextMeshState;
+    mouseClick = true;
    
-    std::cout<<"nextMeshState"<<nextMeshState<<std::endl;
+    //std::cout<<"nextMeshState"<<nextMeshState<<std::endl;
     
 }
 
@@ -106,6 +108,7 @@ void LobbyProjectApp::update()
     mCamera.lookAt(mEye, mCenter, mUp);
     gl::setMatrices( mCamera );
     gl::rotate( mSceneRot);
+    
     
     
     //-----> load texture from movie --- could expand and determine which texture to read
@@ -120,12 +123,16 @@ void LobbyProjectApp::update()
     myNextMesh->getParticle(mFrameSubtraction.mParticleController.mParticles);
     
     
-    myMesh->update(mousePos, mTexture, nextMeshState, meshReset, meshStart);
+    
+    myMesh->update(mousePos, mTexture, nextMeshState, meshReset, meshStart, mouseClick);
+    mouseClick = false;
     
     if (myMesh->zPct == 1.f) {
         nextMeshState = false;
         meshReset = true;
     }
+    
+    
 
     
     

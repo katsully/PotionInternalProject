@@ -16,8 +16,12 @@ Mesh::Mesh(int vertices_x, int vertices_y, int meshType){
     this->VERTICES_Y = vertices_y;
     
     zPct = 0.f;
+    zPctStart = 0.f;
     currIter = 0.f;
     totalIter = 100.f;
+    currIterStart = 0.f;
+    totalIterStart = 100.f;
+    stateStable = true;
     
     int totalVertices = VERTICES_X * VERTICES_Y;
     int totalQuads = ( VERTICES_X - 1 ) * ( VERTICES_Y - 1 );
@@ -64,16 +68,35 @@ void Mesh::getParticle(std::list<Particle> &_mParticles){
 }
 
 
-void Mesh::update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway, bool &_reset, bool &_start){
+void Mesh::update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway, bool &_reset, bool &_start, bool &_mouseClick){
     
     float time = getElapsedSeconds();
     bool reset = _reset;
     bool start = _start;
+    bool mouseClick = _mouseClick;
     this->mousePos = _mousePos;
     this->mTexture = texture;
     vector<uint32_t> indices;
     vector<Vec2f> texCoords;
     zPct = easeIn(currIter, 0.0, 1.0, totalIter);
+    //zPctStart = easeIn(currIterStart, 0.f, 1.f, totalIterStart);
+    zPctStart = lmap<float>(easeIn(currIterStart, 0.0, 1.0f, totalIterStart), 0.f, 1.f, 1.f, 0);
+    
+    
+    
+    if (mouseClick && stateStable) {
+        stateFly = true;
+        stateStable = false;
+        std::cout<<"fly and reset"<<std::endl;
+    } else if (mouseClick && stateFly){
+        stateStart = true;
+        stateFly = false;
+        std::cout<<"start"<<std::endl;
+    } else if (mouseClick && stateStart){
+        stateStable = true;
+        stateStart  = false;
+        std::cout<<"stable"<<std::endl;
+    }
     
     float zPctReverse = lmap<float>(zPct, 0.0, 1.0, 1.0, 0);
     float zPctStarting = lmap<float>(zPct, 0.0, 1.0, -1.0, 0);
@@ -91,7 +114,7 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway, bool &_
     
     if (mTexture){
         //if video target is 34037, if pic tartget is 3553;
-        std::cout<<mTexture.getTarget()<<std::endl;
+        //std::cout<<mTexture.getTarget()<<std::endl;
         
     }
     
@@ -204,34 +227,65 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway, bool &_
             float a = sin(getElapsedSeconds());
             //position -= Vec3f(0.48 + noise * 0.05, 0.48 + noise2 * 0.05, 0.f);
             
-            
-            if (flyAway) {
-                position -= Vec3f(0.48 + noise * 0.05, 0.48 + noise2 * 0.05,  -1.f * zPct);
+            if (stateStable) {
+                currIterStart = 0.f;
+                position -= Vec3f(0.45f + noise * 0.05f, 0.45f + noise2 * 0.05f,  0.f);
+                iter.setColorRGBA(ColorA(1.f, 1.f, 1.f, 1.f));
+            }else if (stateFly) {
+                
+                if(zPct == 1.f){
+                    position -= Vec3f(0.45f + noise * 0.05f, 0.45f + noise2 * 0.05f,  1.f);
+                }else{
+                    position -= Vec3f(0.45f + noise * 0.05f, 0.45f + noise2 * 0.05f,  -1.f * zPct);
+                    iter.setColorRGBA(ColorA(1.f, 1.f, 1.f, zPctReverse));
+                }
+            }else if (stateStart) {
+                currIter = 0.f;
+                position -= Vec3f(0.45f + noise * 0.05f, 0.45f + noise2 * 0.05f,  zPctStart);
+                iter.setColorRGBA(ColorA(lmap<float>(zPctStart, 1.0f, 0, 0, 1.0f), lmap<float>(zPctStart, 1.0f, 0, 0, 1.0f), lmap<float>(zPctStart, 1.0f, 0, 0, 1.0f), 1.f));
             }else{
-                position -= Vec3f(0.48 + noise * 0.05, 0.48 + noise2 * 0.05,  0.f);
+                
+                position -= Vec3f(0.45f + noise * 0.05f, 0.45f + noise2 * 0.05f,  0.f);
             }
-           
-            if (reset){
-                position -= Vec3f(0, 0,  0.2f);
-            }
+            
+            
+//            if (flyAway) {
+//                position -= Vec3f(0.48 + noise * 0.05, 0.48 + noise2 * 0.05,  -1.f * zPct);
+//            }else{
+//                position -= Vec3f(0.48 + noise * 0.05, 0.48 + noise2 * 0.05,  0.f);
+//            }
+//           
+//            if (reset){
+//                position -= Vec3f(0, 0,  0.2f);
+//            }
             
             
             iter.setPosition(position);
-            iter.setColorRGBA(ColorA(1.f, 1.f, 1.f, 1.f));
+            //iter.setColorRGBA(ColorA(1.f, 1.f, 1.f, 1.f));
            // iter.setColorRGBA(ColorA(1.f, 1.f, 1.f, zPctReverse));
            
             ++iter;
        }
     }
     
-    std::cout<<"this is reset value"<<reset<<std::endl;
+  
     
-    if (flyAway) {
-        if (currIter< totalIter) {
-            currIter ++;
+//    if (flyAway) {
+//        if (currIter< totalIter) {
+//            currIter ++;
+//        }
+//    }
+        if (stateFly) {
+            if (currIter< totalIter) {
+                currIter ++;
+            }
+        }
+    
+    if (stateStart) {
+        if (currIterStart< totalIterStart) {
+            currIterStart ++;
         }
     }
-    
     
     
     
