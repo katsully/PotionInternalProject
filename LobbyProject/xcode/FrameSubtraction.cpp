@@ -58,8 +58,8 @@ void FrameSubtraction::onDepth(openni::VideoFrameRef frame, const OpenNI::Device
     cv::threshold( eightBit, thresh, 75.0, 255.0, CV_8U );
     cv::findContours( thresh, mContours, mHierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE );
     
-    // get data that we can later compare
     mShapes.clear();
+    // get data that we can later compare
     mShapes = getEvaluationSet( mContours, 75, 100000 );
     
     // find the nearest match for each shape
@@ -68,8 +68,6 @@ void FrameSubtraction::onDepth(openni::VideoFrameRef frame, const OpenNI::Device
         
         // a tracked shape was found, update that tracked shape with the new shape
         if( nearestShape != NULL ){
-            // update our tracked contours
-            // set last frame seen
             nearestShape->matchFound = true;
             mTrackedShapes[i].centroid = nearestShape->centroid;
             mTrackedShapes[i].lastFrameSeen = ci::app::getElapsedFrames();
@@ -85,6 +83,7 @@ void FrameSubtraction::onDepth(openni::VideoFrameRef frame, const OpenNI::Device
             mShapes[i].ID = shapeUID;
             mShapes[i].lastFrameSeen = ci::app::getElapsedFrames();
             mShapes[i].particleSystem = false;
+            // add this new shape to tracked shapes
             mTrackedShapes.push_back( mShapes[i] );
             shapeUID++;
             //std::cout << "adding a new tracked shape with ID: " << mShapes[i].ID << std::endl;
@@ -94,6 +93,7 @@ void FrameSubtraction::onDepth(openni::VideoFrameRef frame, const OpenNI::Device
     // if we didn't find a match for x frames, delete the tracked shape
     for( vector<Shape>::iterator it=mTrackedShapes.begin(); it!=mTrackedShapes.end(); ){
         if( ci::app::getElapsedFrames() - it->lastFrameSeen > 20 ){
+            // remove the tracked shape
             it = mTrackedShapes.erase(it);
         } else {
             ++it;

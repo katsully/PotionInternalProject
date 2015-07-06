@@ -10,6 +10,8 @@
 #include "ParticleController.h"
 #include "cinder/Rand.h"
 
+// CURRENTLY NOT USING THIS CLASS
+
 using namespace ci;
 using std::list;
 

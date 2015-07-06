@@ -8,6 +8,8 @@
 
 #include "Particle.h"
 
+// CURRENTLY NOT USING THIS CLASS
+
 
 Particle::Particle( Vec2f pos , float _mRadius){
     mPos = pos;
