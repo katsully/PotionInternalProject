@@ -189,10 +189,12 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway){
             
             //std::cout << noise3<< std::endl;
             float a = sin(getElapsedSeconds());
-            position -= Vec3f(0.48 + noise * 0.05, 0.48 + noise2 * 0.05,  -1.f * zPct);
+            position -= Vec3f(0.48 + noise * 0.05, 0.48 + noise2 * 0.05, 0.f);
+            //position -= Vec3f(0.48 + noise * 0.05, 0.48 + noise2 * 0.05,  -1.f * zPct);
             
             iter.setPosition(position);
-            iter.setColorRGBA(ColorA(1.f, 1.f, 1.f, zPctReverse));
+            iter.setColorRGBA(ColorA(1.f, 1.f, 1.f, 1.f));
+            //iter.setColorRGBA(ColorA(1.f, 1.f, 1.f, zPctReverse));
            
             ++iter;
        }
