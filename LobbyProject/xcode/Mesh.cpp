@@ -85,11 +85,14 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway){
         
     }
     
-    
+    if (mTexture){
+        //if video target is 34037, if pic tartget is 3553;
+        std::cout<<mTexture.getTarget()<<std::endl;
+        
+    }
     
    
-//    isTargetP[0] = true;
-    
+   
     //-----> buffer texCoords and indices
     for (int x = 0; x < VERTICES_X; x++) {
         for (int y = 0; y < VERTICES_Y; y++) {
@@ -107,7 +110,7 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway){
             }
             //-----> mapping texture (0 to texture size)
             
-            if (mTexture) {
+            if (mTexture && mTexture.getTarget() == 34037) {
                 
                 texCoords.push_back(Vec2f( mTexture.getWidth() * x / (float)VERTICES_X, mTexture.getHeight() * y / (float)VERTICES_Y ));
                 //std::cout<<mTexture.getWidth()<<std::endl;
@@ -127,9 +130,7 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway){
    
     
     
-    if (mTexture){
-        std::cout<<mTexture.getTarget()<<std::endl;
-    }
+    
     
     //---generate movements
     gl::VboMesh::VertexIter iter = mVboMesh->mapVertexBuffer();
