@@ -4,6 +4,7 @@
 //
 //  Created by Kathleen Sullivan on 6/18/15.
 //
+//  This class represents a particle system
 //
 
 #include "ParticleController.h"
@@ -16,30 +17,35 @@ ParticleController::ParticleController(){
     
 }
 
-void ParticleController::addParticles( ci::Surface8u surface ){
-    int count = 0;
+void ParticleController::generateSystem( Shape shape ){
     mParticles.clear();
-    Surface::Iter iter = surface.getIter();
-    while (iter.line() ){
-        while( iter.pixel() ){
-            //if( iter.r() == 0 ){
-                // Vec2f randVec = Rand::randVec2f();
-                if(count % 500 == 0 ){
-                    Vec2f pos = Vec2f( iter.x() / 300.f - 0.55f, iter.y() / 250.f - 0.5f );
-                    //   Vec2f vel = randVec * Rand::randFloat( 5.0f );
-                    mParticles.push_back( Particle( pos , 0.00003 * iter.g()));
-                    count = 0;
-                    //std::cout<<iter.r()<<std::endl;
-                }
-                count++;
-           // }
+    for( int i=0; i<shape.hull.size(); i++ ){
+        Vec2f newPos = Vec2f( shape.hull[i].x, shape.hull[i].y );
+        mParticles.push_back( Particle( newPos, 5 ) );
+    }
+    Vec2f newPos = Vec2f( shape.centroid.x, shape.centroid.y );
+    mParticles.push_back( Particle( newPos, 5 ) );
+}
+
+void ParticleController::update( cv::Point distPoint, cv::vector<cv::Point> hullPoints ){
+    for( int i=0; i<mParticles.size(); i++ ){
+        Vec2f newPos = Vec2f( distPoint.x+mParticles[i].mPos.x, distPoint.y + mParticles[i].mPos.y );
+//        std::cout << "old pos: " << p->mPos << std::endl;
+//        std::cout << "point " << distPoint << std::endl;
+//        std::cout << "new pos " << newPos << std::endl;
+        mParticles[i].mPos = newPos;
+    }
+    if( mParticles.size() < hullPoints.size() ){
+        for( int j = hullPoints.size() - mParticles.size(); j < hullPoints.size(); j++ ){
+            Vec2f newPos = Vec2f( hullPoints[j].x, hullPoints[j].y );
+            mParticles.push_back( Particle( newPos, 5 ) );
         }
     }
 }
 
 void ParticleController::draw(){
     gl::setViewport(ci::app::getWindowBounds() );
-    for( list <Particle>::iterator p = mParticles.begin(); p != mParticles.end(); ++p){
-        p->draw();
+    for( int i=0; i<mParticles.size(); i++ ){
+        mParticles[i].draw();
     }
 }

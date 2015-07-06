@@ -1,6 +1,6 @@
 //
 //  Particle.cpp
-//  FrameSubtraction
+//  LobbyProject
 //
 //  Created by Kathleen Sullivan on 6/18/15.
 //
@@ -19,6 +19,5 @@ Particle::Particle( Vec2f pos , float _mRadius){
 void Particle::draw(){
     // gl::setViewport( ci::app::getWindowBounds() );
     gl::color(1, 1, 1);
-    //std::cout<<mRadius<<std::endl;
     gl::drawSolidCircle( mPos, mRadius, 16);
 }

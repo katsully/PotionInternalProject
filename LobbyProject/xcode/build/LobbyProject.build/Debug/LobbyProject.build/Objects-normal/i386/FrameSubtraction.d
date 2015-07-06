@@ -201,5 +201,7 @@ dependencies: \
   ../blocks/OpenCV/include/opencv2/contrib/retina.hpp \
   ../blocks/OpenCV/include/opencv2/contrib/openfabmap.hpp \
   ../../../Cinder/include/cinder/Rand.h \
+  /Users/kathleen/PotionProject/LobbyProject/xcode/ParticleControllerController.h \
   /Users/kathleen/PotionProject/LobbyProject/xcode/ParticleController.h \
-  /Users/kathleen/PotionProject/LobbyProject/xcode/Particle.h
+  /Users/kathleen/PotionProject/LobbyProject/xcode/Particle.h \
+  /Users/kathleen/PotionProject/LobbyProject/xcode/Shape.h

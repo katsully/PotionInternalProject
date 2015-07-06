@@ -8,13 +8,17 @@
 
 #pragma once
 #include "Particle.h"
+#include "Shape.h"
 
 class ParticleController {
 public:
     ParticleController();
-    void addParticles (ci::Surface8u surface );
+    void generateSystem ( Shape shape );
+    void update( cv::Point distPoint, cv::vector<cv::Point> hullPoints );
     void draw();
     
     float radius;
-    std::list<Particle> mParticles;
+    cv::Point centroid;
+    int particleSystemUID;
+    std::vector< Particle > mParticles;
 };

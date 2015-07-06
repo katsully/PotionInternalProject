@@ -12,6 +12,7 @@ using namespace std;
 class LobbyProjectApp : public AppNative {
   public:
 	void setup();
+    void prepareSettings( Settings* settings );
 	void keyDown( KeyEvent event );
     void mouseMove( MouseEvent event );
 	void update();
@@ -52,6 +53,11 @@ void LobbyProjectApp::setup(){
     
 }
 
+void LobbyProjectApp::prepareSettings( Settings* settings ){
+    settings->setFrameRate( 60.0f );
+    settings->setWindowSize( 800, 600 );
+}
+
 void LobbyProjectApp::keyDown( KeyEvent event ){
     mFrameSubtraction.keyDown( event );
 }
@@ -66,13 +72,9 @@ void LobbyProjectApp::update()
     mCamera.lookAt(mEye, mCenter, mUp);
     gl::setMatrices( mCamera );
     gl::rotate( mSceneRot);
-    myMesh->getParticle(mFrameSubtraction.mParticleController.mParticles);
+    // will need to call mFrameSubtraction.mTrackedShapes, then iterate through the points of each tracked shape
+   // myMesh->getParticle(mFrameSubtraction.mParticleController.mParticles);
     myMesh->update(mousePos);
-    
-    
-
-    
-      
     
 }
 
@@ -81,7 +83,8 @@ void LobbyProjectApp::draw()
 	// clear out the window with black
 	gl::clear( Color( 0, 0, 0 ) );
     gl::enableDepthRead();
-    mFrameSubtraction.draw();
+    // no longer need to draw frame subtraction
+    // mFrameSubtraction.draw();
     if (drawMesh) {
         myMesh->draw();
     }
