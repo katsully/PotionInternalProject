@@ -11,13 +11,17 @@
 
 
 
-Mesh::Mesh(int vertices_x, int vertices_y, int meshType){
+Mesh::Mesh(int vertices_x, int vertices_y, int meshType, bool &_isFirstMesh){
     this->VERTICES_X = vertices_x;
     this->VERTICES_Y = vertices_y;
     
     zPct = 0.f;
+    zPctStart = 0.f;
     currIter = 0.f;
     totalIter = 100.f;
+    currIterStart = 0.f;
+    totalIterStart = 100.f;
+    stateStable = true;
     
     int totalVertices = VERTICES_X * VERTICES_Y;
     int totalQuads = ( VERTICES_X - 1 ) * ( VERTICES_Y - 1 );
@@ -48,46 +52,74 @@ float Mesh::easeIn(float t,float b , float c, float d){
     return c*((t=t/d-1)*t*t + 1) + b;
 }
 
-void Mesh::getParticle(std::list<Particle> &_mParticles){
-    this->mParticles = _mParticles;
-    particlePos.clear();
-    particleRad.clear();
-    //-----> copy particle list from main cpp
-    for (list <Particle>::iterator p = mParticles.begin() ; p!= mParticles.end(); p++) {
-        particlePos.push_back(p->mPos);
-        particleRad.push_back(p->mRadius);
-        
-    }
+//void Mesh::getParticle(std::list<Particle> &_mParticles){
+//    this->mParticles = _mParticles;
+//    particlePos.clear();
+//    particleRad.clear();
+//    //-----> copy particle list from main cpp
+//    for (list <Particle>::iterator p = mParticles.begin() ; p!= mParticles.end(); p++) {
+//        particlePos.push_back(p->mPos);
+//        particleRad.push_back(p->mRadius);
+//        
+//    }
+//
+//    
+//    
+//}
 
-    
-    
-}
 
-
-void Mesh::update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway){
+void Mesh::update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway, bool &_reset, bool &_start, bool &_mouseClick){
     
-    
+    float time = getElapsedSeconds();
+    bool reset = _reset;
+    bool start = _start;
+    bool mouseClick = _mouseClick;
+    this->mousePos = _mousePos;
+    this->mTexture = texture;
     vector<uint32_t> indices;
     vector<Vec2f> texCoords;
     zPct = easeIn(currIter, 0.0, 1.0, totalIter);
-    zPctReverse = lmap<float>(zPct, 0.0, 1.0, 1.0, 0);
+    //zPctStart = easeIn(currIterStart, 0.f, 1.f, totalIterStart);
+    zPctStart = lmap<float>(easeIn(currIterStart, 0.0, 1.0f, totalIterStart), 0.f, 1.f, 1.f, 0);
+    
+    
+    
+    if (mouseClick && stateStable) {
+        stateFly = true;
+        stateStable = false;
+        std::cout<<"fly and reset"<<std::endl;
+    } else if (mouseClick && stateFly){
+        stateStart = true;
+        stateFly = false;
+        std::cout<<"start"<<std::endl;
+    } else if (mouseClick && stateStart){
+        stateStable = true;
+        stateStart  = false;
+        std::cout<<"stable"<<std::endl;
+    }
+    
+    float zPctReverse = lmap<float>(zPct, 0.0, 1.0, 1.0, 0);
+    float zPctStarting = lmap<float>(zPct, 0.0, 1.0, -1.0, 0);
    
     
-    for (int i = 0 ; i < particlePos.size() - 1; i ++) {
-        if (timeDiffP.size() != particlePos.size()) {
-            timeDiffP.push_back(0);
-        }
-        if (isTargetP.size() != particlePos.size()) {
-            isTargetP.push_back(false);
-        }
+//    for (int i = 0 ; i < particlePos.size() - 1; i ++) {
+//        if (timeDiffP.size() != particlePos.size()) {
+//            timeDiffP.push_back(0);
+//        }
+//        if (isTargetP.size() != particlePos.size()) {
+//            isTargetP.push_back(false);
+//        }
+//        
+//    }
+    
+    if (mTexture){
+        //if video target is 34037, if pic tartget is 3553;
+        //std::cout<<mTexture.getTarget()<<std::endl;
         
     }
     
-    
-    
    
-//    isTargetP[0] = true;
-    
+   
     //-----> buffer texCoords and indices
     for (int x = 0; x < VERTICES_X; x++) {
         for (int y = 0; y < VERTICES_Y; y++) {
@@ -104,23 +136,27 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway){
                 indices.push_back( (x+0) * VERTICES_Y + (y+1) );
             }
             //-----> mapping texture (0 to texture size)
-            if (mTexture) {
+            
+            if (mTexture && mTexture.getTarget() == 34037) {
+                
                 texCoords.push_back(Vec2f( mTexture.getWidth() * x / (float)VERTICES_X, mTexture.getHeight() * y / (float)VERTICES_Y ));
                 //std::cout<<mTexture.getWidth()<<std::endl;
             }else{
+                
                 texCoords.push_back(Vec2f( x / (float)VERTICES_X, y / (float)VERTICES_Y ));
             }
             
         }
     }
+   
     
     mVboMesh->bufferIndices(indices);
     mVboMesh->bufferTexCoords2d(0, texCoords);
     
 
-    float time = getElapsedSeconds();
-    this->mousePos = _mousePos;
-    this->mTexture = texture;
+   
+    
+    
     
     
     //---generate movements
@@ -130,27 +166,27 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway){
             Vec3f position = Vec3f(Vec3f( x / (float)VERTICES_X, y / (float)VERTICES_Y, 0.f));
             Vec2f pPos;
             
-            // mesh influence from particles
-            for (int i = 0 ; i < particlePos.size() - 1; i ++) {
-                Vec2f diff = Vec2f((particlePos[i].x * 1.8 - position.x), (particlePos[i].y * 2.f - position.y));
-                //std::cout<<diff.length()<<std::endl;
-                float particleInfluence = particleRad[i] * diff.lengthSquared();
-                
-                if (diff.lengthSquared() < 0.5f &&particleRad[i] != 0) {
-                    timeDiffP[i] = time;
-                }
-                
-                if (time - timeDiffP[i] < 3.f && diff.length() < 0.5f) {
-                    position.z +=  timeDiffP[i] / time * 0.001f;
-                }
-               
-                if (diff.length() < 0.1f && particleInfluence != 0.f) {
-                    position.z += particleInfluence * 10.f;
-                }
-
-                
-            }
-  
+//            // mesh influence from particles
+//            for (int i = 0 ; i < particlePos.size() - 1; i ++) {
+//                Vec2f diff = Vec2f((particlePos[i].x * 1.8 - position.x), (particlePos[i].y * 2.f - position.y));
+//                //std::cout<<diff.length()<<std::endl;
+//                float particleInfluence = particleRad[i] * diff.lengthSquared();
+//                
+//                if (diff.lengthSquared() < 0.5f &&particleRad[i] != 0) {
+//                    timeDiffP[i] = time;
+//                }
+//                
+//                if (time - timeDiffP[i] < 3.f && diff.length() < 0.5f) {
+//                    position.z +=  timeDiffP[i] / time * 0.001f;
+//                }
+//               
+//                if (diff.length() < 0.1f && particleInfluence != 0.f) {
+//                    position.z += particleInfluence * 10.f;
+//                }
+//
+//                
+//            }
+//  
             //---->calculate relative location to mouse
             Vec2f relPos = Vec2f(lmap<float>(position.x, 0, 1, 0, getWindowWidth()), lmap<float>(position.y, 0, 1, 0, getWindowHeight()));
             Vec2f dist = Vec2f(std::abs(relPos.x - mousePos.x)/1000, std::abs(relPos.y - mousePos.y)/1000);
@@ -189,22 +225,71 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway){
             
             //std::cout << noise3<< std::endl;
             float a = sin(getElapsedSeconds());
-            position -= Vec3f(0.48 + noise * 0.05, 0.48 + noise2 * 0.05, 0.f);
-            //position -= Vec3f(0.48 + noise * 0.05, 0.48 + noise2 * 0.05,  -1.f * zPct);
+            //position -= Vec3f(0.48 + noise * 0.05, 0.48 + noise2 * 0.05, 0.f);
+            
+            if (stateStable) {
+                currIterStart = 0.f;
+                position -= Vec3f(0.45f + noise * 0.05f, 0.45f + noise2 * 0.05f,  0.f);
+                iter.setColorRGBA(ColorA(1.f, 1.f, 1.f, 1.f));
+            }else if (stateFly) {
+                
+                if(zPct == 1.f){
+                    position -= Vec3f(0.45f + noise * 0.05f, 0.45f + noise2 * 0.05f,  1.f);
+                }else{
+                    position -= Vec3f(0.45f + noise * 0.05f, 0.45f + noise2 * 0.05f,  -1.f * zPct);
+                    iter.setColorRGBA(ColorA(1.f, 1.f, 1.f, zPctReverse));
+                }
+            }else if (stateStart) {
+                currIter = 0.f;
+                position -= Vec3f(0.45f + noise * 0.05f, 0.45f + noise2 * 0.05f,  zPctStart);
+                iter.setColorRGBA(ColorA(lmap<float>(zPctStart, 1.0f, 0, 0, 1.0f), lmap<float>(zPctStart, 1.0f, 0, 0, 1.0f), lmap<float>(zPctStart, 1.0f, 0, 0, 1.0f), 1.f));
+            }else{
+                
+                position -= Vec3f(0.45f + noise * 0.05f, 0.45f + noise2 * 0.05f,  0.f);
+            }
+            
+            
+//            if (flyAway) {
+//                position -= Vec3f(0.48 + noise * 0.05, 0.48 + noise2 * 0.05,  -1.f * zPct);
+//            }else{
+//                position -= Vec3f(0.48 + noise * 0.05, 0.48 + noise2 * 0.05,  0.f);
+//            }
+//           
+//            if (reset){
+//                position -= Vec3f(0, 0,  0.2f);
+//            }
+            
             
             iter.setPosition(position);
-            iter.setColorRGBA(ColorA(1.f, 1.f, 1.f, 1.f));
-            //iter.setColorRGBA(ColorA(1.f, 1.f, 1.f, zPctReverse));
+            //iter.setColorRGBA(ColorA(1.f, 1.f, 1.f, 1.f));
+           // iter.setColorRGBA(ColorA(1.f, 1.f, 1.f, zPctReverse));
            
             ++iter;
        }
     }
-    if (flyAway) {
-        if (currIter< totalIter) {
-            currIter ++;
+    
+  
+    
+//    if (flyAway) {
+//        if (currIter< totalIter) {
+//            currIter ++;
+//        }
+//    }
+        if (stateFly) {
+            if (currIter< totalIter) {
+                currIter ++;
+            }
+        }
+    
+    if (stateStart) {
+        if (currIterStart< totalIterStart) {
+            currIterStart ++;
         }
     }
-    std::cout<<zPctReverse<<std::endl;
+    
+    
+    
+   // std::cout<<zPctReverse<<std::endl;
 
 }
 
@@ -217,7 +302,8 @@ void Mesh::draw(){
     }
     gl::draw(mVboMesh);
     if(mTexture){
-        mTexture.unbind();
+    mTexture.unbind();
+    mTexture.disable();
     }
     ;
 }
