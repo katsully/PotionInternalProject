@@ -18,6 +18,7 @@ class LobbyProjectApp : public AppNative {
     void prepareSettings( Settings* settings );
 	void keyDown( KeyEvent event );
     void mouseMove( MouseEvent event );
+    void mouseDown( MouseEvent event );
 	void update();
 	void draw();
     
@@ -33,9 +34,14 @@ class LobbyProjectApp : public AppNative {
     
     float volumeMin;
     bool drawMesh;
+    bool nextMeshState, mouseClick;
+    bool meshReset, meshStart, nextMeshReset, nextMeshStart;
+    bool firstMesh;
+    bool secondMesh;
     
     FrameSubtraction    mFrameSubtraction;
     Mesh                *myMesh;
+    Mesh                *myNextMesh;
 };
 
 void LobbyProjectApp::setup(){
@@ -68,6 +74,8 @@ void LobbyProjectApp::setup(){
     volumeMin = 0.50f;
     mSceneRot = ci::Quatf(M_PI, 0, 0);
     drawMesh = true;
+    nextMeshState = false;
+    mouseClick = false;
     
     mParams = params::InterfaceGl("mesh", Vec2i(225, 100));
     mParams.addParam("camera rotation", &mSceneRot);
@@ -76,7 +84,8 @@ void LobbyProjectApp::setup(){
     
     mTexture = gl::Texture(loadImage(loadResource("demo.jpg")));
     mFrameSubtraction.setup();
-    myMesh = new Mesh(16, 9, 0);
+    myMesh = new Mesh(16, 9, 0, firstMesh);
+    myNextMesh = new Mesh(16 , 9 , 0, secondMesh);
     
 }
 
@@ -93,9 +102,16 @@ void LobbyProjectApp::mouseMove(MouseEvent event){
     mousePos = event.getPos();
 }
 
+void LobbyProjectApp::mouseDown(MouseEvent event){
+    nextMeshState = !nextMeshState;
+    mouseClick = true;
+   
+    //std::cout<<"nextMeshState"<<nextMeshState<<std::endl;
+    
+}
+
 void LobbyProjectApp::update()
 {
-    
     mCamera.setPerspective( 60.0f, 1.f, volumeMin, 3000.0f );
     mCamera.lookAt(mEye, mCenter, mUp);
     gl::setMatrices( mCamera );
@@ -103,16 +119,38 @@ void LobbyProjectApp::update()
     // will need to call mFrameSubtraction.mTrackedShapes, then iterate through the points of each tracked shape
    // myMesh->getParticle(mFrameSubtraction.mParticleController.mParticles);
     
+    
+    
     //-----> load texture from movie --- could expand and determine which texture to read
     //-----> also because there's an issue with texture2d and GL_TEXTURE_RECTANGLE_ARB tex coordinates
     //-----> changing texture needs the coordinates in mesh.cpp to be updated (fix pending)
     if( mMovie ){
         mMovieTexture = gl::Texture(mMovie->getTexture());
     }
-    bool fly = true;
     
     
-    myMesh->update(mousePos, mMovieTexture, fly);
+//    myMesh->getParticle(mFrameSubtraction.mParticleController.mParticles);
+//    myNextMesh->getParticle(mFrameSubtraction.mParticleController.mParticles);
+    
+    
+    
+    myMesh->update(mousePos, mTexture, nextMeshState, meshReset, meshStart, mouseClick);
+    mouseClick = false;
+    
+    if (myMesh->zPct == 1.f) {
+        nextMeshState = false;
+        meshReset = true;
+    }
+    
+    
+
+    
+    
+    // myNextMesh->update(mousePos, mTexture, noFly);
+    
+    
+
+    
 }
 
 void LobbyProjectApp::draw()

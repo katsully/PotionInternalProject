@@ -26,10 +26,10 @@ using std::vector;
 
 class Mesh{
 public:
-    Mesh(int vertices_x, int vertices_y, int meshType);
+    Mesh(int vertices_x, int vertices_y, int meshType, bool &isFirstMesh);
     
     void getParticle(std::list<Particle> &_mParticles);
-    void update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway);
+    void update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway, bool &_reset, bool &_start, bool &_mouseClick);
     void draw();
     
     int VERTICES_X, VERTICES_Y;
@@ -43,8 +43,9 @@ public:
     vector<float>   timeDiffP;
     vector<bool>    isTargetP;
     float           zOffset;
-    float           zPct,zPctReverse, currIter, totalIter;
+    float           zPct, zPctStart, currIter, totalIter, currIterStart, totalIterStart;
     float           easeIn(float t,float b , float c, float d);
+    bool            stateStable, stateFly, stateStart;
     
     
     vector<Vec2f>   particlePos;
