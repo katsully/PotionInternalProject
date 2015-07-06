@@ -13,6 +13,7 @@ FrameSubtraction::FrameSubtraction(){
 }
 
 void FrameSubtraction::setup(){
+    // setup camera
     mDeviceManager = OpenNI::DeviceManager::create();
     
     shapeUID = 0;
@@ -43,22 +44,23 @@ void FrameSubtraction::onDepth(openni::VideoFrameRef frame, const OpenNI::Device
     cv::Mat mSubtracted;
     cv::Mat blur;
     cv::Mat thresh;
-    cv::Mat lines;
+    cv::Mat eightBit;
     
-    
+    // blur the image to reduce noise
     cv::blur( mInput, blur, cv::Size( mBlurAmount, mBlurAmount ) );
-    // subtrackted depth
-    cv::absdiff( mBackground, mInput, mSubtracted );
+    // background subtraction
+    cv::absdiff( mBackground, blur, mSubtracted );
     
-    mSubtracted.convertTo( lines, CV_8UC1, 0.1/1.0 );
+    mSubtracted.convertTo( eightBit, CV_8UC1, 0.1/1.0 );
     
     mContours.clear();
-    cv::threshold( lines, thresh, 75, 255, CV_8U );
+    // using a threshold to reduce noise
+    cv::threshold( eightBit, thresh, 75.0, 255.0, CV_8U );
     cv::findContours( thresh, mContours, mHierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE );
     
     // get data that we can later compare
     mShapes.clear();
-    mShapes = getEvaluationSet( mContours, 75, 10000 );
+    mShapes = getEvaluationSet( mContours, 75, 100000 );
     
     // find the nearest match for each shape
     for( int i=0; i<mTrackedShapes.size(); i++ ){
@@ -73,22 +75,13 @@ void FrameSubtraction::onDepth(openni::VideoFrameRef frame, const OpenNI::Device
             mTrackedShapes[i].lastFrameSeen = ci::app::getElapsedFrames();
             mTrackedShapes[i].hull.clear();
             mTrackedShapes[i].hull = nearestShape->hull;
-//            if( mTrackedShapes[i].particleSystem == true ){
-//                std::cout << "its TRUE " << mTrackedShapes[i].ID << std::endl;
-//            }
-//            else if( mTrackedShapes[i].particleSystem == false ){
-//                std::cout << "its false " << mTrackedShapes[i].ID << std::endl;
-//            } else {
-//                std::cout << "CRAP " << mTrackedShapes[i].ID << std::endl;
-//
-//            }
-            //std::cout << "Found match to shape ID: " << mTrackedShapes[i].ID << std::endl;
         }
     }
     
     // if shape->matchFound is false, add it as a new shape
     for( int i = 0; i<mShapes.size(); i++ ){
         if( mShapes[i].matchFound == false ){
+            // assign an unique ID
             mShapes[i].ID = shapeUID;
             mShapes[i].lastFrameSeen = ci::app::getElapsedFrames();
             mShapes[i].particleSystem = false;
@@ -99,20 +92,12 @@ void FrameSubtraction::onDepth(openni::VideoFrameRef frame, const OpenNI::Device
     }
     
     // if we didn't find a match for x frames, delete the tracked shape
-    for( vector<Shape>::iterator it=mTrackedShapes.begin(); it!=mTrackedShapes.end();  ){
-        //std::cout << "tracked shapes size: " << mTrackedShapes.size() << std::endl;
+    for( vector<Shape>::iterator it=mTrackedShapes.begin(); it!=mTrackedShapes.end(); ){
         if( ci::app::getElapsedFrames() - it->lastFrameSeen > 20 ){
-            //std::cout << "deleting shape with ID: " << it->ID << std::endl;
             it = mTrackedShapes.erase(it);
         } else {
             ++it;
         }
-    }
-
-   // std::cout << "total shapes: " << mShapes.size() << std::endl;
-    mParticleControllerController.update( mTrackedShapes );
-    for( vector<Shape>::iterator it=mTrackedShapes.begin(); it!=mTrackedShapes.end(); ++it ){
-        it->particleSystem = true;
     }
     
     mInput.copyTo( mPreviousFrame );
@@ -132,7 +117,6 @@ vector< Shape > FrameSubtraction::getEvaluationSet( vector< vector<cv::Point> > 
         // extract data from contour
         cv::Scalar center = mean( matrix );
         double area = cv::contourArea( matrix );
-        cv::Rect boundingBox = cv::boundingRect( matrix );
         
         // reject it if too small
         if( area < minimalArea ){
@@ -147,7 +131,6 @@ vector< Shape > FrameSubtraction::getEvaluationSet( vector< vector<cv::Point> > 
         // store data
         Shape shape;
         shape.area = area;
-        shape.boundingBox = boundingBox;
         shape.centroid = cv::Point( center.val[0], center.val[1] );
         
         // convex hull is the polygon enclosing the contour
@@ -193,30 +176,5 @@ void FrameSubtraction::keyDown( KeyEvent event ){
 
 void FrameSubtraction::draw()
 {
-    gl::setViewport( ci::app::getWindowBounds() );
-    // clear out the window with black
-    // gl::clear( Color( 0, 0, 0 ) );
-    if( mTexture ){
-        //    gl::color( mColor );
-        gl::draw( mTexture, ci::app::getWindowBounds() );
-    }
-    //
-    //    if( mSurface ){
-    //        if( mTexture ){
-    //            mTexture->update( mSurface );
-    //        } else {
-    //            mTexture = gl::Texture::create( mSurface );
-    //        }
-    //        gl::draw( mTexture, mTexture->getBounds(), getWindowBounds() );
-    //    }
-    //
-    //    if( mSurfaceDepth ){
-    //        if( mTextureDepth ) {
-    //            mTextureDepth->update( mSurfaceDepth );
-    //        } else {
-    //            mTextureDepth = gl::Texture::create( mSurfaceDepth );
-    //        }
-    //        gl::draw( mTextureDepth, mTextureDepth->getBounds(), getWindowBounds() );
-    //    }
-    mParticleControllerController.draw();
+    
 }

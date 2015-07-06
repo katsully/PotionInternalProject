@@ -23,15 +23,21 @@ void ParticleControllerController::update( std::vector< Shape > trackedShapes ){
             particleController.particleSystemUID = trackedShapes[i].ID;
             particleController.generateSystem( trackedShapes[i] );
             mParticleControllers.push_back( particleController );
-            //trackedShapes[i].particleSystem = true;
        // if the particle system already exists, update its location
         } else {
            // std::cout << "exisiting shape beginning " << trackedShapes[i].ID << std::endl;
             for( std::list <ParticleController>::iterator pc = mParticleControllers.begin(); pc != mParticleControllers.end(); ++pc ){
                 if( pc->particleSystemUID == trackedShapes[i].ID ){
-             //       std::cout << "exisiting shape " << trackedShapes[i].ID << std::endl;
                     cv::Point distPoint = pc->centroid - trackedShapes[i].centroid;
-                    pc->update( distPoint );
+                    // update the centroid
+                    pc->centroid = trackedShapes[i].centroid;
+                    // update the exterior points, and add or delete particles as the hull gets updated
+                    std::cout << "hull points " << trackedShapes[i].hull.size()   << std::endl;
+                    std::cout << "particle count " << pc->mParticles.size()   << std::endl;
+                    // invert the distance point aka [-1, 5] become [1, -5]
+                    distPoint *= -1;
+                    pc->update( distPoint, trackedShapes[i].hull );
+                    break;
                 }
             }
         }

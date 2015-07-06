@@ -14,11 +14,11 @@ class ParticleController {
 public:
     ParticleController();
     void generateSystem ( Shape shape );
-    void update( cv::Point point );
+    void update( cv::Point distPoint, cv::vector<cv::Point> hullPoints );
     void draw();
     
     float radius;
     cv::Point centroid;
     int particleSystemUID;
-    std::list< Particle > mParticles;
+    std::vector< Particle > mParticles;
 };

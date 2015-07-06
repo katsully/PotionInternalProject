@@ -15,7 +15,6 @@ public:
     
     int ID;
     double area;
-    cv::Rect boundingBox;
     cv::Point centroid;
     Boolean matchFound;
     Boolean particleSystem;
