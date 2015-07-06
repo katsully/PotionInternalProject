@@ -64,15 +64,19 @@ void Mesh::getParticle(std::list<Particle> &_mParticles){
 }
 
 
-void Mesh::update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway){
+void Mesh::update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway, bool &_reset, bool &_start){
     
     float time = getElapsedSeconds();
+    bool reset = _reset;
+    bool start = _start;
     this->mousePos = _mousePos;
     this->mTexture = texture;
     vector<uint32_t> indices;
     vector<Vec2f> texCoords;
     zPct = easeIn(currIter, 0.0, 1.0, totalIter);
-    zPctReverse = lmap<float>(zPct, 0.0, 1.0, 1.0, 0);
+    
+    float zPctReverse = lmap<float>(zPct, 0.0, 1.0, 1.0, 0);
+    float zPctStarting = lmap<float>(zPct, 0.0, 1.0, -1.0, 0);
    
     
     for (int i = 0 ; i < particlePos.size() - 1; i ++) {
@@ -198,21 +202,39 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway){
             
             //std::cout << noise3<< std::endl;
             float a = sin(getElapsedSeconds());
-            position -= Vec3f(0.48 + noise * 0.05, 0.48 + noise2 * 0.05, 0.f);
-            //position -= Vec3f(0.48 + noise * 0.05, 0.48 + noise2 * 0.05,  -1.f * zPct);
+            //position -= Vec3f(0.48 + noise * 0.05, 0.48 + noise2 * 0.05, 0.f);
+            
+            
+            if (flyAway) {
+                position -= Vec3f(0.48 + noise * 0.05, 0.48 + noise2 * 0.05,  -1.f * zPct);
+            }else{
+                position -= Vec3f(0.48 + noise * 0.05, 0.48 + noise2 * 0.05,  0.f);
+            }
+           
+            if (reset){
+                position -= Vec3f(0, 0,  0.2f);
+            }
+            
             
             iter.setPosition(position);
             iter.setColorRGBA(ColorA(1.f, 1.f, 1.f, 1.f));
-            //iter.setColorRGBA(ColorA(1.f, 1.f, 1.f, zPctReverse));
+           // iter.setColorRGBA(ColorA(1.f, 1.f, 1.f, zPctReverse));
            
             ++iter;
        }
     }
+    
+    std::cout<<"this is reset value"<<reset<<std::endl;
+    
     if (flyAway) {
         if (currIter< totalIter) {
             currIter ++;
         }
     }
+    
+    
+    
+    
    // std::cout<<zPctReverse<<std::endl;
 
 }

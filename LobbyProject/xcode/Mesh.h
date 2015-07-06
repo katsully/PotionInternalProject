@@ -29,7 +29,7 @@ public:
     Mesh(int vertices_x, int vertices_y, int meshType);
     
     void getParticle(std::list<Particle> &_mParticles);
-    void update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway);
+    void update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway, bool &_reset, bool &_start);
     void draw();
     
     int VERTICES_X, VERTICES_Y;
@@ -43,8 +43,9 @@ public:
     vector<float>   timeDiffP;
     vector<bool>    isTargetP;
     float           zOffset;
-    float           zPct,zPctReverse, currIter, totalIter;
+    float           zPct, currIter, totalIter, currIterStart, totalIterStart;
     float           easeIn(float t,float b , float c, float d);
+    bool            stateStable, stateFly, stateReset, stateStart;
     
     
     vector<Vec2f>   particlePos;

@@ -33,10 +33,12 @@ class LobbyProjectApp : public AppNative {
     
     float volumeMin;
     bool drawMesh;
-    bool swapTexture;
+    bool nextMeshState;
+    bool meshReset, meshStart, nextMeshReset, nextMeshStart;
     
     FrameSubtraction    mFrameSubtraction;
     Mesh                *myMesh;
+    Mesh                *myNextMesh;
 };
 
 void LobbyProjectApp::setup(){
@@ -47,7 +49,7 @@ void LobbyProjectApp::setup(){
     addAssetDirectory("../../../../../assets");
     try{
         // fs::path path = getOpenFilePath();
-        mMovie = qtime::MovieGl::create(loadAsset("po.mp4"));
+        mMovie = qtime::MovieGl::create(loadAsset("po2.mp4"));
         
     } catch( ... ){
         console() << "file is not a valid movie" << std::endl;
@@ -69,7 +71,7 @@ void LobbyProjectApp::setup(){
     volumeMin = 0.50f;
     mSceneRot = ci::Quatf(M_PI, 0, 0);
     drawMesh = true;
-    swapTexture = true;
+    nextMeshState = false;
     
     mParams = params::InterfaceGl("mesh", Vec2i(225, 100));
     mParams.addParam("camera rotation", &mSceneRot);
@@ -79,6 +81,7 @@ void LobbyProjectApp::setup(){
     mTexture = gl::Texture(loadImage(loadResource("demo.jpg")));
     mFrameSubtraction.setup();
     myMesh = new Mesh(16, 9, 0);
+    myNextMesh = new Mesh(16 , 9 ,0);
     
 }
 
@@ -91,18 +94,19 @@ void LobbyProjectApp::mouseMove(MouseEvent event){
 }
 
 void LobbyProjectApp::mouseDown(MouseEvent event){
-    swapTexture = !swapTexture;
-    std::cout<<"swapTexture"<<swapTexture<<std::endl;
+    nextMeshState = !nextMeshState;
+   
+    std::cout<<"nextMeshState"<<nextMeshState<<std::endl;
     
 }
 
 void LobbyProjectApp::update()
 {
-    
     mCamera.setPerspective( 60.0f, 1.f, volumeMin, 3000.0f );
     mCamera.lookAt(mEye, mCenter, mUp);
     gl::setMatrices( mCamera );
     gl::rotate( mSceneRot);
+    
     
     //-----> load texture from movie --- could expand and determine which texture to read
     //-----> also because there's an issue with texture2d and GL_TEXTURE_RECTANGLE_ARB tex coordinates
@@ -110,15 +114,25 @@ void LobbyProjectApp::update()
     if( mMovie ){
         mMovieTexture = gl::Texture(mMovie->getTexture());
     }
-    bool fly = true;
-    myMesh->getParticle(mFrameSubtraction.mParticleController.mParticles);
     
-    if (swapTexture) {
-        myMesh->update(mousePos, mTexture, fly);
-    }else{
-        myMesh->update(mousePos, mMovieTexture, fly);
+    
+    myMesh->getParticle(mFrameSubtraction.mParticleController.mParticles);
+    myNextMesh->getParticle(mFrameSubtraction.mParticleController.mParticles);
+    
+    
+    myMesh->update(mousePos, mTexture, nextMeshState, meshReset, meshStart);
+    
+    if (myMesh->zPct == 1.f) {
+        nextMeshState = false;
+        meshReset = true;
     }
-   
+
+    
+    
+    // myNextMesh->update(mousePos, mTexture, noFly);
+    
+    
+
     
 }
 
