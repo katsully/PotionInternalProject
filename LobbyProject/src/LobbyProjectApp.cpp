@@ -6,7 +6,7 @@
 #include "Mesh.h"
 #include "cinder/Camera.h"
 #include "cinder/params/Params.h"
-
+#include "dirent.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -36,14 +36,26 @@ class LobbyProjectApp : public AppNative {
     
     FrameSubtraction    mFrameSubtraction;
     Mesh                *myMesh;
+    
+    DIR *dir;
+    struct dirent *ent;
 };
 
 void LobbyProjectApp::setup(){
     
     std::cout<<getAppPath()<<std::endl;
     
-   // addAssetDirectory("/Users/luobin/PotionInternalProject/LobbyProject/assets");
     addAssetDirectory("../../../../../assets");
+    if(( dir = opendir( "../../../../../assets" )) != NULL ){
+        console() << "here";
+        while ( ( ent = readdir ( dir ) ) != NULL ){
+            printf ("%s\n", ent->d_name );
+        }
+        closedir( dir );
+    } else {
+        perror("");
+        return;
+    }
     try{
         // fs::path path = getOpenFilePath();
         mMovie = qtime::MovieGl::create(loadAsset("po.mp4"));
