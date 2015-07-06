@@ -19,6 +19,7 @@ ParticleController::ParticleController(){
 
 void ParticleController::generateSystem( Shape shape ){
     mParticles.clear();
+
     for( int i=0; i<shape.hull.size(); i++ ){
         Vec2f newPos = Vec2f( shape.hull[i].x, shape.hull[i].y );
         mParticles.push_back( Particle( newPos, 5 ) );
@@ -39,6 +40,7 @@ void ParticleController::update( cv::Point distPoint, cv::vector<cv::Point> hull
         for( int j = hullPoints.size() - mParticles.size(); j < hullPoints.size(); j++ ){
             Vec2f newPos = Vec2f( hullPoints[j].x, hullPoints[j].y );
             mParticles.push_back( Particle( newPos, 5 ) );
+
         }
     }
 }
