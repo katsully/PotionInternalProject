@@ -75,7 +75,7 @@ void LobbyProjectApp::setup(){
     
     mTexture = gl::Texture(loadImage(loadResource("demo.jpg")));
     mFrameSubtraction.setup();
-    myMesh = new Mesh(32, 18, 0);
+    myMesh = new Mesh(16, 9, 0);
     
 }
 
@@ -96,13 +96,15 @@ void LobbyProjectApp::update()
     gl::rotate( mSceneRot);
     
     //-----> load texture from movie --- could expand and determine which texture to read
-    //-----> also because there's issue with texture2d and GL_TEXTURE_RECTANGLE_ARB tex coordinates
+    //-----> also because there's an issue with texture2d and GL_TEXTURE_RECTANGLE_ARB tex coordinates
     //-----> changing texture needs the coordinates in mesh.cpp to be updated (fix pending)
     if( mMovie ){
         mMovieTexture = gl::Texture(mMovie->getTexture());
     }
     bool fly = true;
     myMesh->getParticle(mFrameSubtraction.mParticleController.mParticles);
+    
+    
     myMesh->update(mousePos, mMovieTexture, fly);
     
 }

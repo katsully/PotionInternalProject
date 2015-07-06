@@ -25,6 +25,7 @@ Mesh::Mesh(int vertices_x, int vertices_y, int meshType){
     layout.setStaticIndices();
     layout.setDynamicPositions();
     layout.setStaticTexCoords2d();
+    layout.setDynamicColorsRGBA();
     
     
     //-----> determine mesh type
@@ -69,6 +70,7 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway){
     vector<uint32_t> indices;
     vector<Vec2f> texCoords;
     zPct = easeIn(currIter, 0.0, 1.0, totalIter);
+    zPctReverse = lmap<float>(zPct, 0.0, 1.0, 1.0, 0);
    
     
     for (int i = 0 ; i < particlePos.size() - 1; i ++) {
@@ -190,6 +192,8 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway){
             position -= Vec3f(0.48 + noise * 0.05, 0.48 + noise2 * 0.05,  -1.f * zPct);
             
             iter.setPosition(position);
+            iter.setColorRGBA(ColorA(1.f, 1.f, 1.f, zPctReverse));
+           
             ++iter;
        }
     }
@@ -198,11 +202,14 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway){
             currIter ++;
         }
     }
-   // std::cout<<zPct<<std::endl;
+    std::cout<<zPctReverse<<std::endl;
 
 }
 
 void Mesh::draw(){
+    glEnable(GL_BLEND);
+    
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     if(mTexture){
     mTexture.enableAndBind();
     }

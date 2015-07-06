@@ -43,7 +43,7 @@ public:
     vector<float>   timeDiffP;
     vector<bool>    isTargetP;
     float           zOffset;
-    float           zPct, currIter, totalIter;
+    float           zPct,zPctReverse, currIter, totalIter;
     float           easeIn(float t,float b , float c, float d);
     
     
