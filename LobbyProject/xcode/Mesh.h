@@ -45,17 +45,18 @@ public:
     vector<float>   timeDiffP;
     vector<bool>    isTargetP;
     vector<float>   currIterBounce, totalIterBounce, zPctBounce;
-    float           zOffset;
+    float           zOffset, xOffset, yOffset;
     float           zPct, zPctStart, currIter, totalIter, currIterStart, totalIterStart;
     float           easeIn(float t,float b , float c, float d);
     bool            stateStable, stateFly, stateStart;
+    bool            isFirstMesh;
     
     
-    vector<Vec2f>   particlePos;
-    vector<float>   particleRad;
-    vector<Vec2f>   shapePos;
+    vector<Vec2f>       particlePos;
+    vector<float>       particleRad;
+    vector<Vec2f>       shapePos;
     std::list<Particle> mParticles;
-    vector<Shape> mTrackedShapes;
+    vector<Shape>       mTrackedShapes;
     
     Vec2f           mousePos;
     Perlin          mPerlin;

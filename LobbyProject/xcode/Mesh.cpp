@@ -14,6 +14,7 @@
 Mesh::Mesh(int vertices_x, int vertices_y, int meshType, bool &_isFirstMesh){
     this->VERTICES_X = vertices_x;
     this->VERTICES_Y = vertices_y;
+    this->isFirstMesh = _isFirstMesh;
     
     zPct = 0.f;
     zPctStart = 0.f;
@@ -21,8 +22,20 @@ Mesh::Mesh(int vertices_x, int vertices_y, int meshType, bool &_isFirstMesh){
     totalIter = 100.f;
     currIterStart = 0.f;
     totalIterStart = 100.f;
+    xOffset = 0.48f;
+    yOffset = 0.43f;
    
-    stateStable = true;
+    
+    if (isFirstMesh == true) {
+        stateStable = true;
+        stateStart = false;
+        stateFly = false;
+    }else{
+        stateFly  = true;
+        stateStable = false;
+        stateStart = false;
+    }
+    
     
     int totalVertices = VERTICES_X * VERTICES_Y;
     int totalQuads = ( VERTICES_X - 1 ) * ( VERTICES_Y - 1 );
@@ -85,15 +98,16 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture,  bool &_mouseClick){
         stateFly = true;
         stateStable = false;
         std::cout<<"fly and reset"<<std::endl;
-    } else if (mouseClick && stateFly){
+    } else if (mouseClick && stateFly && zPct == 1.f){
         stateStart = true;
         stateFly = false;
         std::cout<<"start"<<std::endl;
-    } else if (mouseClick && stateStart){
+    } else if (zPctStart == 0.f && stateStart){
         stateStable = true;
         stateStart  = false;
         std::cout<<"stable"<<std::endl;
     }
+    
     
     float zPctReverse = lmap<float>(zPct, 0.0, 1.0, 1.0, 0);
     float zPctStarting = lmap<float>(zPct, 0.0, 1.0, -1.0, 0);
@@ -198,8 +212,10 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture,  bool &_mouseClick){
             float nZ2 = app::getElapsedSeconds() * 0.1f + 500.f;
             Vec3f v( nX, nY, nZ );
             Vec3f v2( nX, nY, nZ2 );
-            float noise = mPerlin.fBm(v);
-            float noise2 = mPerlin.fBm(v2);
+            float noiseMulti = 0.05f;
+            float noise = mPerlin.fBm(v) * noiseMulti;
+            float noise2 = mPerlin.fBm(v2) * noiseMulti;
+            
             
             
                         
@@ -211,23 +227,23 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture,  bool &_mouseClick){
             
             if (stateStable) {
                 currIterStart = 0.f;
-                position -= Vec3f(0.45f + noise * 0.05f, 0.45f + noise2 * 0.05f,  0.f);
+                position -= Vec3f(xOffset + noise, yOffset + noise2,  0.f);
                 iter.setColorRGBA(ColorA(1.f, 1.f, 1.f, 1.f));
             }else if (stateFly) {
                 
                 if(zPct == 1.f){
-                    position -= Vec3f(0.45f + noise * 0.05f, 0.45f + noise2 * 0.05f,  1.f);
+                    position -= Vec3f(xOffset + noise, yOffset + noise2,  1.f);
                 }else{
-                    position -= Vec3f(0.45f + noise * 0.05f, 0.45f + noise2 * 0.05f,  -1.f * zPct);
+                    position -= Vec3f(xOffset + noise, yOffset + noise2,  -1.f * zPct);
                     iter.setColorRGBA(ColorA(1.f, 1.f, 1.f, zPctReverse));
                 }
             }else if (stateStart) {
                 currIter = 0.f;
-                position -= Vec3f(0.45f + noise * 0.05f, 0.45f + noise2 * 0.05f,  zPctStart);
+                position -= Vec3f(xOffset + noise, yOffset + noise2,  zPctStart);
                 iter.setColorRGBA(ColorA(lmap<float>(zPctStart, 1.0f, 0, 0, 1.0f), lmap<float>(zPctStart, 1.0f, 0, 0, 1.0f), lmap<float>(zPctStart, 1.0f, 0, 0, 1.0f), 1.f));
             }else{
                 
-                position -= Vec3f(0.45f + noise * 0.05f, 0.45f + noise2 * 0.05f,  0.f);
+                position -= Vec3f(xOffset + noise, yOffset + noise2,  0.f);
             }
             
             
