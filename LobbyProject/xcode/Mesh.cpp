@@ -27,8 +27,8 @@ Mesh::Mesh(int vertices_x, int vertices_y, int meshType, bool &_isFirstMesh){
    
     
     if (isFirstMesh == true) {
-        stateStable = true;
-        stateStart = false;
+        stateStable = false;
+        stateStart = true;
         stateFly = false;
     }else{
         stateFly  = true;
@@ -67,7 +67,13 @@ void Mesh::getTrackedShapes(vector<Shape> &_mTrackedShapes){
     shapePos.clear();
     if (mTrackedShapes.size() > 0) {
         for (int i = 0; i < mTrackedShapes.size() - 1; i ++) {
-            shapePos.push_back(Vec2f(lmap<float>(mTrackedShapes[i].centroid.x, 0, 320, 0, getWindowWidth()), lmap<float>(mTrackedShapes[i].centroid.y, 0, 240, 0, getWindowHeight())));
+            for (cv::vector<cv::Point>::iterator j = mTrackedShapes[i].hull.begin(); j != mTrackedShapes[i].hull.end() ; ++j ) {
+                shapePos.push_back(Vec2f(lmap<float>(j->x, 0, 320, 0, getWindowWidth()), lmap<float>(j->y, 0, 240, 0, getWindowHeight())));
+            }
+            
+            
+            
+//            shapePos.push_back(Vec2f(lmap<float>(mTrackedShapes[i].centroid.x, 0, 320, 0, getWindowWidth()), lmap<float>(mTrackedShapes[i].centroid.y, 0, 240, 0, getWindowHeight())));
         }
     }
     
@@ -181,7 +187,7 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture,  bool &_mouseClick){
                     Vec2f diff = Vec2f((shapePos[i].x - relPos.x) * 0.001f, (shapePos[i].y - relPos.y)  * 0.001f);
                     float shapeInfluence = diff.lengthSquared();
                     if (shapeInfluence < 0.005f) {
-                        position.z -= shapeInfluence * 2.f;
+                        position.z -= shapeInfluence * 0.3;
                         isTarget[x * VERTICES_Y + y] = true;
                         timeDiff[x * VERTICES_Y + y] = time;
                     }
@@ -190,9 +196,9 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture,  bool &_mouseClick){
             
             // -----> influnce timer
             zPctBounce[x * VERTICES_Y + y] = lmap<float>(easeIn(currIterBounce[x * VERTICES_Y + y], 0.0, 1.0f, totalIterBounce[x * VERTICES_Y + y]), 0.f, 1.f, 1.f, 0);
-            if ((time - timeDiff[x * VERTICES_Y + y] ) < 5.f && isTarget[x * VERTICES_Y + y] == true ) {
+            if ((time - timeDiff[x * VERTICES_Y + y] ) < 2.f && isTarget[x * VERTICES_Y + y] == true ) {
                 position.z -= 0.1f * zPctBounce[x * VERTICES_Y + y];
-            }else if((time - timeDiff[x * VERTICES_Y + y]) >= 10.f){
+            }else if((time - timeDiff[x * VERTICES_Y + y]) >= 2.f){
                 isTarget[x * VERTICES_Y + y] = false;
             }
             if (isTarget[x * VERTICES_Y + y]) {
@@ -205,7 +211,7 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture,  bool &_mouseClick){
             
 
             
-            // ----generating Perlin Noise
+            // ----> generating Perlin Noise
             float nX = relPos.x * 0.0001f;
             float nY = relPos.y * 0.0001f;
             float nZ = app::getElapsedSeconds() * 0.1f;
@@ -225,6 +231,8 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture,  bool &_mouseClick){
             float a = sin(getElapsedSeconds());
             //position -= Vec3f(0.48 + noise * 0.05, 0.48 + noise2 * 0.05, 0.f);
             
+            
+            // ----> transition animation
             if (stateStable) {
                 currIterStart = 0.f;
                 position -= Vec3f(xOffset + noise, yOffset + noise2,  0.f);
