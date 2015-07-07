@@ -52,6 +52,7 @@ public:
     
     vector<Vec2f>   particlePos;
     vector<float>   particleRad;
+    vector<Vec2f>   shapePos;
     std::list<Particle> mParticles;
     vector<Shape> mTrackedShapes;
     

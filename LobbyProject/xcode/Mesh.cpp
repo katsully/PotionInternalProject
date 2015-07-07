@@ -48,12 +48,19 @@ Mesh::Mesh(int vertices_x, int vertices_y, int meshType, bool &_isFirstMesh){
 
 
 
-float Mesh::easeIn(float t,float b , float c, float d){
+float Mesh::easeIn(float t, float b , float c, float d){
     return c*((t=t/d-1)*t*t + 1) + b;
 }
 
 void Mesh::getTrackedShapes(vector<Shape> &_mTrackedShapes){
-
+    this->mTrackedShapes = _mTrackedShapes;
+    shapePos.clear();
+    if (mTrackedShapes.size() > 0) {
+        for (int i = 0; i < mTrackedShapes.size() - 1; i ++) {
+            shapePos.push_back(Vec2f(lmap<float>(mTrackedShapes[i].centroid.x, 0, 320, 0, getWindowWidth()), lmap<float>(mTrackedShapes[i].centroid.y, 0, 240, 0, getWindowHeight())));
+        }
+    }
+    
 
 
 }
@@ -78,16 +85,19 @@ void Mesh::getTrackedShapes(vector<Shape> &_mTrackedShapes){
 void Mesh::update(Vec2f &_mousePos, gl::Texture &texture,  bool &_mouseClick){
     
     float time = getElapsedSeconds();
-
+    if (shapePos.size() > 0){
+        this->mousePos = shapePos[0];
+    }
     bool mouseClick = _mouseClick;
-    this->mousePos = _mousePos;
+    
+    
     this->mTexture = texture;
     vector<uint32_t> indices;
     vector<Vec2f> texCoords;
     zPct = easeIn(currIter, 0.0, 1.0, totalIter);
     zPctStart = lmap<float>(easeIn(currIterStart, 0.0, 1.0f, totalIterStart), 0.f, 1.f, 1.f, 0);
     
-    
+ 
     
     if (mouseClick && stateStable) {
         stateFly = true;
@@ -106,16 +116,17 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture,  bool &_mouseClick){
     float zPctReverse = lmap<float>(zPct, 0.0, 1.0, 1.0, 0);
     float zPctStarting = lmap<float>(zPct, 0.0, 1.0, -1.0, 0);
    
+    if (shapePos.size() > 0) {
+        for (int i = 0 ; i < shapePos.size(); i ++) {
+            if (timeDiffP.size() != shapePos.size()) {
+                timeDiffP.push_back(0);
+            }
+            if (isTargetP.size() != shapePos.size()) {
+                isTargetP.push_back(false);
+            }
+        }
+    }
     
-//    for (int i = 0 ; i < particlePos.size() - 1; i ++) {
-//        if (timeDiffP.size() != particlePos.size()) {
-//            timeDiffP.push_back(0);
-//        }
-//        if (isTargetP.size() != particlePos.size()) {
-//            isTargetP.push_back(false);
-//        }
-//        
-//    }
     
     if (mTexture){
      
@@ -169,7 +180,7 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture,  bool &_mouseClick){
     for( int x = 0; x < VERTICES_X; ++x ) {
         for( int y = 0; y < VERTICES_Y; ++y ) {
             Vec3f position = Vec3f(Vec3f( x / (float)VERTICES_X, y / (float)VERTICES_Y, 0.f));
-            Vec2f pPos;
+           
             
 //            // mesh influence from particles
 //            for (int i = 0 ; i < particlePos.size() - 1; i ++) {
@@ -191,25 +202,53 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture,  bool &_mouseClick){
 //
 //                
 //            }
-//  
-            //---->calculate relative location to mouse
             Vec2f relPos = Vec2f(lmap<float>(position.x, 0, 1, 0, getWindowWidth()), lmap<float>(position.y, 0, 1, 0, getWindowHeight()));
-            Vec2f dist = Vec2f(std::abs(relPos.x - mousePos.x)/1000, std::abs(relPos.y - mousePos.y)/1000);
+
+            if (shapePos.size() > 0) {
+                
+                for (int i = 0; i < shapePos.size(); i ++) {
+                    Vec2f diff = Vec2f((shapePos[i].x - relPos.x) * 0.001f, (shapePos[i].y - relPos.y)  * 0.001f);
+                    float shapeInfluence = diff.lengthSquared();
+                    //std::cout<<shapeInfluence<<std::endl;
+                    if (shapeInfluence < 0.005f) {
+                        position.z -= shapeInfluence * 10.f;
+                        timeDiff[i] = time;
+                    }
+                
+                    if (time - timeDiffP[i] < 5.f  ) {
+                        position.z -= timeDiffP[i] / time * 0.1f;
+                    }
+                
+                }
+            }
+            
+ 
+            //---->calculate relative location to mouse
+            
+            
+            
+            
+            
+                        Vec2f dist = Vec2f(std::abs(relPos.x - mousePos.x)/1000, std::abs(relPos.y - mousePos.y )/1000);
+            
+          
+            
+            
             if (dist.lengthSquared() < 0.001f) {
-                position.z -= lmap<float>(dist.lengthSquared(), 0, 1, 0, 0);
+               // position.z -= lmap<float>(dist.lengthSquared(), 0, 1, 0, 0);
             }
             
             
             if (dist.lengthSquared() < 0.001f) {
-                position.z -= 0.0001f;
+                //position.z -= 0.0001f;
                 isTarget[x * VERTICES_Y + y] = true;
                 timeDiff[x * VERTICES_Y + y] = time;
             }
             
             //--->timer affecting mesh
             if ( (time - timeDiff[x * VERTICES_Y + y] ) < 2.f && isTarget[x * VERTICES_Y + y] == true) {
-                position.z -= 0.0001f +  timeDiff[x * VERTICES_Y + y ] /time * 0.1f;
-                //position.z -= 0.0001f + 1/  (time - timeDiff[x * VERTICES_Y + y ] ) * 0.1;
+                //position.z -= 0.0001f +  timeDiff[x * VERTICES_Y + y ] /time * 0.1f;
+                ////position.z -= 0.0001f + 1/  (time - timeDiff[x * VERTICES_Y + y ] ) * 0.1;
             }else if ((time - timeDiff[x * VERTICES_Y + y]) >= 10.f){
                 isTarget[x * VERTICES_Y + y] = false;
             }
