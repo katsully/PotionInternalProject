@@ -68,18 +68,16 @@ float Mesh::easeIn(float t,float b , float c, float d){
 //}
 
 
-void Mesh::update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway, bool &_reset, bool &_start, bool &_mouseClick){
+void Mesh::update(Vec2f &_mousePos, gl::Texture &texture,  bool &_mouseClick){
     
     float time = getElapsedSeconds();
-    bool reset = _reset;
-    bool start = _start;
+
     bool mouseClick = _mouseClick;
     this->mousePos = _mousePos;
     this->mTexture = texture;
     vector<uint32_t> indices;
     vector<Vec2f> texCoords;
     zPct = easeIn(currIter, 0.0, 1.0, totalIter);
-    //zPctStart = easeIn(currIterStart, 0.f, 1.f, totalIterStart);
     zPctStart = lmap<float>(easeIn(currIterStart, 0.0, 1.0f, totalIterStart), 0.f, 1.f, 1.f, 0);
     
     
@@ -113,7 +111,7 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway, bool &_
 //    }
     
     if (mTexture){
-        //if video target is 34037, if pic tartget is 3553;
+     
         //std::cout<<mTexture.getTarget()<<std::endl;
         
     }
@@ -135,7 +133,7 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway, bool &_
                 indices.push_back( (x+1) * VERTICES_Y + (y+1) );
                 indices.push_back( (x+0) * VERTICES_Y + (y+1) );
             }
-            //-----> mapping texture (0 to texture size)
+            //-----> mapping texture (0 to texture size) video target is 34037, pic tartget is 3553;
             
             if (mTexture && mTexture.getTarget() == 34037) {
                 
@@ -249,37 +247,20 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway, bool &_
             }
             
             
-//            if (flyAway) {
-//                position -= Vec3f(0.48 + noise * 0.05, 0.48 + noise2 * 0.05,  -1.f * zPct);
-//            }else{
-//                position -= Vec3f(0.48 + noise * 0.05, 0.48 + noise2 * 0.05,  0.f);
-//            }
-//           
-//            if (reset){
-//                position -= Vec3f(0, 0,  0.2f);
-//            }
-            
-            
             iter.setPosition(position);
             //iter.setColorRGBA(ColorA(1.f, 1.f, 1.f, 1.f));
-           // iter.setColorRGBA(ColorA(1.f, 1.f, 1.f, zPctReverse));
+
            
             ++iter;
        }
     }
     
   
-    
-//    if (flyAway) {
-//        if (currIter< totalIter) {
-//            currIter ++;
-//        }
-//    }
-        if (stateFly) {
-            if (currIter< totalIter) {
-                currIter ++;
-            }
+    if (stateFly) {
+        if (currIter< totalIter) {
+            currIter ++;
         }
+    }
     
     if (stateStart) {
         if (currIterStart< totalIterStart) {
@@ -289,7 +270,7 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture, bool &flyAway, bool &_
     
     
     
-   // std::cout<<zPctReverse<<std::endl;
+
 
 }
 

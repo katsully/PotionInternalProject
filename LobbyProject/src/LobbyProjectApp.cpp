@@ -50,7 +50,7 @@ class LobbyProjectApp : public AppNative {
 void LobbyProjectApp::setup(){
     
     std::cout<<getAppPath()<<std::endl;
-    
+
     addAssetDirectory("../../../../../assets");
     
     // get absolute path to assets' directory
@@ -117,9 +117,6 @@ void LobbyProjectApp::mouseMove(MouseEvent event){
 void LobbyProjectApp::mouseDown(MouseEvent event){
     nextMeshState = !nextMeshState;
     mouseClick = true;
-   
-    //std::cout<<"nextMeshState"<<nextMeshState<<std::endl;
-    
 }
 
 void LobbyProjectApp::update()
@@ -131,35 +128,12 @@ void LobbyProjectApp::update()
     // will need to call mFrameSubtraction.mTrackedShapes, then iterate through the points of each tracked shape
    // myMesh->getParticle(mFrameSubtraction.mParticleController.mParticles);
     
-    
-    
-    //-----> load texture from movie --- could expand and determine which texture to read
-    //-----> also because there's an issue with texture2d and GL_TEXTURE_RECTANGLE_ARB tex coordinates
-    //-----> changing texture needs the coordinates in mesh.cpp to be updated (fix pending)
     if( mMovie ){
         mMovieTexture = gl::Texture(mMovie->getTexture());
     }
     
-    
-//    myMesh->getParticle(mFrameSubtraction.mParticleController.mParticles);
-//    myNextMesh->getParticle(mFrameSubtraction.mParticleController.mParticles);
-    
-    
-    
-    myMesh->update(mousePos, mTexture, nextMeshState, meshReset, meshStart, mouseClick);
+    myMesh->update(mousePos, mTexture, mouseClick);
     mouseClick = false;
-    
-    if (myMesh->zPct == 1.f) {
-        nextMeshState = false;
-        meshReset = true;
-    }
-    
-    
-
-    
-    
-    // myNextMesh->update(mousePos, mTexture, noFly);
-    
     
 
     
