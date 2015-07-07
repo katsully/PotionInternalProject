@@ -8,11 +8,12 @@
 
 #include "FrameSubtraction.h"
 
-FrameSubtraction::FrameSubtraction(){
-    
+FrameSubtraction::FrameSubtraction()
+{
 }
 
-void FrameSubtraction::setup(){
+void FrameSubtraction::setup()
+{
     // setup camera
     mDeviceManager = OpenNI::DeviceManager::create();
     
@@ -20,7 +21,7 @@ void FrameSubtraction::setup(){
     mBlurAmount = 10;
     mTrackedShapes.clear();
     
-    if( mDeviceManager->isInitialized() ){
+    if ( mDeviceManager->isInitialized() ) {
         try{
             mDevice = mDeviceManager->createDevice( OpenNI::DeviceOptions().enableColor() );
         } catch ( OpenNI::ExcDeviceNotAvailable ex ){
@@ -28,7 +29,7 @@ void FrameSubtraction::setup(){
             return;
         }
         
-        if( mDevice ){
+        if ( mDevice ){
             mDevice->connectDepthEventHandler( &FrameSubtraction::onDepth, this);
             mDevice->connectColorEventHandler( &FrameSubtraction::onColor, this );
             mPreviousFrame = cv::Mat( 240,320, CV_16UC1 );
@@ -38,7 +39,8 @@ void FrameSubtraction::setup(){
     }
 }
 
-void FrameSubtraction::onDepth(openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions){
+void FrameSubtraction::onDepth(openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions)
+{
     cv::Mat mInput = toOcv( OpenNI::toChannel16u( frame ) );
 
     cv::Mat mSubtracted;
@@ -51,6 +53,7 @@ void FrameSubtraction::onDepth(openni::VideoFrameRef frame, const OpenNI::Device
     // background subtraction
     cv::absdiff( mBackground, blur, mSubtracted );
     
+    // convert to RGB color space, with some compensation
     mSubtracted.convertTo( eightBit, CV_8UC1, 0.1/1.0 );
     
     mContours.clear();
@@ -63,11 +66,11 @@ void FrameSubtraction::onDepth(openni::VideoFrameRef frame, const OpenNI::Device
     mShapes = getEvaluationSet( mContours, 75, 100000 );
     
     // find the nearest match for each shape
-    for( int i=0; i<mTrackedShapes.size(); i++ ){
+    for ( int i=0; i<mTrackedShapes.size(); i++ ) {
         Shape* nearestShape = findNearestMatch( mTrackedShapes[i], mShapes, 5000 );
         
         // a tracked shape was found, update that tracked shape with the new shape
-        if( nearestShape != NULL ){
+        if ( nearestShape != NULL ) {
             nearestShape->matchFound = true;
             mTrackedShapes[i].centroid = nearestShape->centroid;
             mTrackedShapes[i].lastFrameSeen = ci::app::getElapsedFrames();
@@ -77,12 +80,11 @@ void FrameSubtraction::onDepth(openni::VideoFrameRef frame, const OpenNI::Device
     }
     
     // if shape->matchFound is false, add it as a new shape
-    for( int i = 0; i<mShapes.size(); i++ ){
+    for ( int i = 0; i<mShapes.size(); i++ ) {
         if( mShapes[i].matchFound == false ){
             // assign an unique ID
             mShapes[i].ID = shapeUID;
             mShapes[i].lastFrameSeen = ci::app::getElapsedFrames();
-            mShapes[i].particleSystem = false;
             // add this new shape to tracked shapes
             mTrackedShapes.push_back( mShapes[i] );
             shapeUID++;
@@ -91,8 +93,8 @@ void FrameSubtraction::onDepth(openni::VideoFrameRef frame, const OpenNI::Device
     }
     
     // if we didn't find a match for x frames, delete the tracked shape
-    for( vector<Shape>::iterator it=mTrackedShapes.begin(); it!=mTrackedShapes.end(); ){
-        if( ci::app::getElapsedFrames() - it->lastFrameSeen > 20 ){
+    for ( vector<Shape>::iterator it=mTrackedShapes.begin(); it!=mTrackedShapes.end(); ) {
+        if ( ci::app::getElapsedFrames() - it->lastFrameSeen > 20 ) {
             // remove the tracked shape
             it = mTrackedShapes.erase(it);
         } else {
@@ -103,14 +105,16 @@ void FrameSubtraction::onDepth(openni::VideoFrameRef frame, const OpenNI::Device
     mInput.copyTo( mPreviousFrame );
 }
 
-void FrameSubtraction::onColor(openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions){
+void FrameSubtraction::onColor(openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions)
+{
     mSurface = OpenNI::toSurface8u( frame );
     cv::Mat mInput( toOcv( OpenNI::toSurface8u( frame), 0 ) );
 }
 
-vector< Shape > FrameSubtraction::getEvaluationSet( vector< vector<cv::Point> > rawContours, int minimalArea, int maxArea ){
+vector< Shape > FrameSubtraction::getEvaluationSet( ContourVector rawContours, int minimalArea, int maxArea )
+{
     vector< Shape > vec;
-    for( vector< cv::Point > &c : rawContours ){
+    for ( vector< cv::Point > &c : rawContours ) {
         // create a matrix for the contour
         cv::Mat matrix = cv::Mat( c );
         
@@ -119,12 +123,12 @@ vector< Shape > FrameSubtraction::getEvaluationSet( vector< vector<cv::Point> > 
         double area = cv::contourArea( matrix );
         
         // reject it if too small
-        if( area < minimalArea ){
+        if ( area < minimalArea ) {
             continue;
         }
         
         // reject it if too big
-        if( area > maxArea ){
+        if ( area > maxArea ) {
             continue;
         }
         
@@ -141,24 +145,25 @@ vector< Shape > FrameSubtraction::getEvaluationSet( vector< vector<cv::Point> > 
     return vec;
 }
 
-Shape* FrameSubtraction::findNearestMatch( Shape trackedShape, vector< Shape > &shapes, float maximumDistance ){
+Shape* FrameSubtraction::findNearestMatch( Shape trackedShape, vector< Shape > &shapes, float maximumDistance )
+{
     Shape* closestShape = NULL;
     float nearestDist = 1e5;
-    if( shapes.empty() ){
+    if ( shapes.empty() ) {
         return NULL;
     }
     
     for( Shape &candidate : shapes ){
         // find dist between the center of the contour and the shape
         cv::Point distPoint = trackedShape.centroid - candidate.centroid;
-        float dist = cv::sqrt( distPoint.x*distPoint.x + distPoint.y*distPoint.y);
-        if( dist > maximumDistance ){
+        float dist = cv::sqrt( distPoint.x*distPoint.x + distPoint.y*distPoint.y );
+        if ( dist > maximumDistance ) {
             continue;
         }
-        if( candidate.matchFound ){
+        if ( candidate.matchFound ) {
             continue;
         }
-        if( dist < nearestDist ){
+        if ( dist < nearestDist ) {
             nearestDist = dist;
             closestShape = &candidate;
         }
@@ -166,11 +171,13 @@ Shape* FrameSubtraction::findNearestMatch( Shape trackedShape, vector< Shape > &
     return closestShape;
 }
 
-void FrameSubtraction::update(){
+void FrameSubtraction::update()
+{
     
 }
 
-void FrameSubtraction::keyDown( KeyEvent event ){
+void FrameSubtraction::keyDown( KeyEvent event )
+{
     mPreviousFrame.copyTo( mBackground );
 }
 

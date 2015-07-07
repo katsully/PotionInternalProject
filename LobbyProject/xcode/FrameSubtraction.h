@@ -27,12 +27,10 @@ public:
     void update();
     void draw();
     
-    cv::Mat mPreviousFrame;
-    cv::Mat mBackground;
+    cv::Mat mPreviousFrame; // track the previous frame which is then used to set the background frame
+    cv::Mat mBackground;    // stores the background image which is used for background subtraction to capture motion
     
-    ParticleControllerController mParticleControllerController;
-    
-    vector<Shape> mTrackedShapes;
+        vector<Shape> mTrackedShapes;   // store tracked shapes
     
     
 private:
@@ -40,7 +38,7 @@ private:
     OpenNI::DeviceManagerRef mDeviceManager;
     gl::TextureRef mTexture;
     gl::TextureRef mTextureDepth;
-    
+
     ci::Surface8u mSurface;
     ci::Surface8u mSurfaceDepth;
     
@@ -48,14 +46,14 @@ private:
     ContourVector mContours;
     int shapeUID;
     int mBlurAmount;
-    
+
     cv::Mat mInput;
     cv::vector<cv::Vec4i> mHierarchy;
     vector<Shape> mShapes;
     
     void onDepth(openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions);
     void onColor(openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions);
-    vector< Shape > getEvaluationSet( vector< vector<cv::Point> > rawContours, int minimalArea, int maxArea );
+    vector< Shape > getEvaluationSet( ContourVector rawContours, int minimalArea, int maxArea );
     Shape* findNearestMatch( Shape trackedShape, vector< Shape > &shapes, float maximumDistance );
     void screenShot();
 };

@@ -12,8 +12,8 @@ using namespace ci::app;
 using namespace std;
 
 class LobbyProjectApp : public AppNative {
-  public:
-	void setup();
+public:
+    void setup();
     void prepareSettings( Settings* settings );
 	void keyDown( KeyEvent event );
     void mouseMove( MouseEvent event );
@@ -47,7 +47,8 @@ class LobbyProjectApp : public AppNative {
 
 };
 
-void LobbyProjectApp::setup(){
+void LobbyProjectApp::setup()
+{
     
     std::cout<<getAppPath()<<std::endl;
 
@@ -56,9 +57,10 @@ void LobbyProjectApp::setup(){
     // get absolute path to assets' directory
     fs::path p( getAssetPath( "" ) );
     // iterate through the asset directory and add all filenames to the vector assetNames
-    for( fs::directory_iterator it( p ); it != fs::directory_iterator(); ++it ) {
-        if( ! is_directory( *it ) )
+    for ( fs::directory_iterator it( p ); it != fs::directory_iterator(); ++it ) {
+        if ( ! is_directory( *it ) ) {
             assetNames.push_back( it->path().filename() );
+        }
     }
 
     try{
@@ -101,12 +103,14 @@ void LobbyProjectApp::setup(){
     
 }
 
-void LobbyProjectApp::prepareSettings( Settings* settings ){
+void LobbyProjectApp::prepareSettings( Settings* settings )
+{
     settings->setFrameRate( 60.0f );
     settings->setWindowSize( 800, 600 );
 }
 
-void LobbyProjectApp::keyDown( KeyEvent event ){
+void LobbyProjectApp::keyDown( KeyEvent event )
+{
     mFrameSubtraction.keyDown( event );
 }
 
@@ -114,7 +118,8 @@ void LobbyProjectApp::mouseMove(MouseEvent event){
     mousePos = event.getPos();
 }
 
-void LobbyProjectApp::mouseDown(MouseEvent event){
+void LobbyProjectApp::mouseDown(MouseEvent event)
+{
     nextMeshState = !nextMeshState;
     mouseClick = true;
 }
@@ -129,7 +134,7 @@ void LobbyProjectApp::update()
    // myMesh->getParticle(mFrameSubtraction.mParticleController.mParticles);
     myMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
     
-    if( mMovie ){
+    if ( mMovie ){
         mMovieTexture = gl::Texture(mMovie->getTexture());
     }
     
@@ -145,8 +150,6 @@ void LobbyProjectApp::draw()
 	// clear out the window with black
 	gl::clear( Color( 1, 1, 1 ) );
     gl::enableDepthRead();
-    // no longer need to draw frame subtraction
-    // mFrameSubtraction.draw();
     if (drawMesh) {
         myMesh->draw();
     }
