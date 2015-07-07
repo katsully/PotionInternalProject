@@ -22,26 +22,26 @@ void FrameSubtraction::setup()
     mTrackedShapes.clear();
     
     if ( mDeviceManager->isInitialized() ) {
-        try{
+        try {
             mDevice = mDeviceManager->createDevice( OpenNI::DeviceOptions().enableColor() );
         } catch ( OpenNI::ExcDeviceNotAvailable ex ){
             ci::app::console() << ex.what() << endl;
             return;
         }
         
-        if ( mDevice ){
+        if (mDevice) {
             mDevice->connectDepthEventHandler( &FrameSubtraction::onDepth, this);
             mDevice->connectColorEventHandler( &FrameSubtraction::onColor, this );
-            mPreviousFrame = cv::Mat( 240,320, CV_16UC1 );
-            mBackground = cv::Mat( 240,320, CV_16UC1 );
+            mPreviousFrame = cv::Mat( 240, 320, CV_16UC1 );
+            mBackground = cv::Mat( 240, 320, CV_16UC1 );
             mDevice->start();
         }
     }
 }
 
-void FrameSubtraction::onDepth(openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions)
+void FrameSubtraction::onDepth( openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions )
 {
-    cv::Mat mInput = toOcv( OpenNI::toChannel16u( frame ) );
+    cv::Mat mInput = toOcv( OpenNI::toChannel16u(frame) );
 
     cv::Mat mSubtracted;
     cv::Mat blur;
@@ -80,7 +80,7 @@ void FrameSubtraction::onDepth(openni::VideoFrameRef frame, const OpenNI::Device
     }
     
     // if shape->matchFound is false, add it as a new shape
-    for ( int i = 0; i<mShapes.size(); i++ ) {
+    for ( int i = 0; i < mShapes.size(); i++ ) {
         if( mShapes[i].matchFound == false ){
             // assign an unique ID
             mShapes[i].ID = shapeUID;
@@ -102,13 +102,13 @@ void FrameSubtraction::onDepth(openni::VideoFrameRef frame, const OpenNI::Device
         }
     }
     
-    mInput.copyTo( mPreviousFrame );
+    mInput.copyTo(mPreviousFrame);
 }
 
-void FrameSubtraction::onColor(openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions)
+void FrameSubtraction::onColor( openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions )
 {
-    mSurface = OpenNI::toSurface8u( frame );
-    cv::Mat mInput( toOcv( OpenNI::toSurface8u( frame), 0 ) );
+    mSurface = OpenNI::toSurface8u(frame);
+    cv::Mat mInput( toOcv( OpenNI::toSurface8u(frame), 0 ) );
 }
 
 vector< Shape > FrameSubtraction::getEvaluationSet( ContourVector rawContours, int minimalArea, int maxArea )
@@ -116,11 +116,11 @@ vector< Shape > FrameSubtraction::getEvaluationSet( ContourVector rawContours, i
     vector< Shape > vec;
     for ( vector< cv::Point > &c : rawContours ) {
         // create a matrix for the contour
-        cv::Mat matrix = cv::Mat( c );
+        cv::Mat matrix = cv::Mat(c);
         
         // extract data from contour
-        cv::Scalar center = mean( matrix );
-        double area = cv::contourArea( matrix );
+        cv::Scalar center = mean(matrix);
+        double area = cv::contourArea(matrix);
         
         // reject it if too small
         if ( area < minimalArea ) {
@@ -140,7 +140,7 @@ vector< Shape > FrameSubtraction::getEvaluationSet( ContourVector rawContours, i
         // convex hull is the polygon enclosing the contour
         shape.hull = c;
         shape.matchFound = false;
-        vec.push_back( shape );
+        vec.push_back(shape);
     }
     return vec;
 }
@@ -153,7 +153,7 @@ Shape* FrameSubtraction::findNearestMatch( Shape trackedShape, vector< Shape > &
         return NULL;
     }
     
-    for( Shape &candidate : shapes ){
+    for ( Shape &candidate : shapes ) {
         // find dist between the center of the contour and the shape
         cv::Point distPoint = trackedShape.centroid - candidate.centroid;
         float dist = cv::sqrt( distPoint.x*distPoint.x + distPoint.y*distPoint.y );
