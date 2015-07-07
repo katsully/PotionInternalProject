@@ -2,7 +2,7 @@
 //  FrameSubtraction.cpp
 //  LobbyProject
 //
-//  Created by Kathleen Sullivan on 6/22/15.
+//  Created by Kat Sullivan on 6/22/15.
 //
 //
 
