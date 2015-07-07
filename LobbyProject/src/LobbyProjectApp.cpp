@@ -60,12 +60,10 @@ void LobbyProjectApp::setup(){
         if( ! is_directory( *it ) )
             assetNames.push_back( it->path().filename() );
     }
-    console() << assetNames.size();
+
     try{
         // pick a movie at random from the asset directory
         int randInt = Rand::randInt( 0, assetNames.size() );
-        console() << "randInt " << randInt << std::endl;
-        
         mMovie = qtime::MovieGl::create(loadAsset(assetNames[randInt]));
         
     } catch( ... ){
