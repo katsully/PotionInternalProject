@@ -44,6 +44,7 @@ public:
     vector<bool>    isTarget;
     vector<float>   timeDiffP;
     vector<bool>    isTargetP;
+    vector<float>   currIterBounce, totalIterBounce, zPctBounce;
     float           zOffset;
     float           zPct, zPctStart, currIter, totalIter, currIterStart, totalIterStart;
     float           easeIn(float t,float b , float c, float d);

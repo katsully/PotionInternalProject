@@ -94,7 +94,7 @@ void LobbyProjectApp::setup()
     
     mTexture = gl::Texture(loadImage(loadResource("demo.jpg")));
     mFrameSubtraction.setup();
-    myMesh = new Mesh(16, 9, 0, firstMesh);
+    myMesh = new Mesh(32, 18, 0, firstMesh);
     myNextMesh = new Mesh(16 , 9 , 0, secondMesh);
     
 }

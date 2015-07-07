@@ -21,6 +21,7 @@ Mesh::Mesh(int vertices_x, int vertices_y, int meshType, bool &_isFirstMesh){
     totalIter = 100.f;
     currIterStart = 0.f;
     totalIterStart = 100.f;
+   
     stateStable = true;
     
     int totalVertices = VERTICES_X * VERTICES_Y;
@@ -44,10 +45,6 @@ Mesh::Mesh(int vertices_x, int vertices_y, int meshType, bool &_isFirstMesh){
 }
 
 
-
-
-
-
 float Mesh::easeIn(float t, float b , float c, float d){
     return c*((t=t/d-1)*t*t + 1) + b;
 }
@@ -66,22 +63,6 @@ void Mesh::getTrackedShapes(vector<Shape> &_mTrackedShapes){
 }
 
 
-//void Mesh::getParticle(std::list<Particle> &_mParticles){
-//    this->mParticles = _mParticles;
-//    particlePos.clear();
-//    particleRad.clear();
-//    //-----> copy particle list from main cpp
-//    for (list <Particle>::iterator p = mParticles.begin() ; p!= mParticles.end(); p++) {
-//        particlePos.push_back(p->mPos);
-//        particleRad.push_back(p->mRadius);
-//        
-//    }
-//
-//    
-//    
-//}
-
-
 void Mesh::update(Vec2f &_mousePos, gl::Texture &texture,  bool &_mouseClick){
     
     float time = getElapsedSeconds();
@@ -96,6 +77,7 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture,  bool &_mouseClick){
     vector<Vec2f> texCoords;
     zPct = easeIn(currIter, 0.0, 1.0, totalIter);
     zPctStart = lmap<float>(easeIn(currIterStart, 0.0, 1.0f, totalIterStart), 0.f, 1.f, 1.f, 0);
+    
     
  
     
@@ -126,15 +108,7 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture,  bool &_mouseClick){
             }
         }
     }
-    
-    
-    if (mTexture){
-     
-        //std::cout<<mTexture.getTarget()<<std::endl;
-        
-    }
-    
-   
+
    
     //-----> buffer texCoords and indices
     for (int x = 0; x < VERTICES_X; x++) {
@@ -142,6 +116,9 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture,  bool &_mouseClick){
             
             timeDiff.push_back(0);
             isTarget.push_back(false);
+            currIterBounce.push_back(0);
+            totalIterBounce.push_back(100.f);
+            zPctBounce.push_back(0);
             
             
             //-----> creating quads
@@ -170,8 +147,7 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture,  bool &_mouseClick){
     mVboMesh->bufferTexCoords2d(0, texCoords);
     
 
-   
-    
+
     
     
     
@@ -182,76 +158,38 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture,  bool &_mouseClick){
             Vec3f position = Vec3f(Vec3f( x / (float)VERTICES_X, y / (float)VERTICES_Y, 0.f));
            
             
-//            // mesh influence from particles
-//            for (int i = 0 ; i < particlePos.size() - 1; i ++) {
-//                Vec2f diff = Vec2f((particlePos[i].x * 1.8 - position.x), (particlePos[i].y * 2.f - position.y));
-//                //std::cout<<diff.length()<<std::endl;
-//                float particleInfluence = particleRad[i] * diff.lengthSquared();
-//                
-//                if (diff.lengthSquared() < 0.5f &&particleRad[i] != 0) {
-//                    timeDiffP[i] = time;
-//                }
-//                
-//                if (time - timeDiffP[i] < 3.f && diff.length() < 0.5f) {
-//                    position.z +=  timeDiffP[i] / time * 0.001f;
-//                }
-//               
-//                if (diff.length() < 0.1f && particleInfluence != 0.f) {
-//                    position.z += particleInfluence * 10.f;
-//                }
-//
-//                
-//            }
+            // ----->  mapping mesh pos to relative pos to the window
             Vec2f relPos = Vec2f(lmap<float>(position.x, 0, 1, 0, getWindowWidth()), lmap<float>(position.y, 0, 1, 0, getWindowHeight()));
 
+            //
             if (shapePos.size() > 0) {
-                
                 for (int i = 0; i < shapePos.size(); i ++) {
                     Vec2f diff = Vec2f((shapePos[i].x - relPos.x) * 0.001f, (shapePos[i].y - relPos.y)  * 0.001f);
                     float shapeInfluence = diff.lengthSquared();
-                    //std::cout<<shapeInfluence<<std::endl;
                     if (shapeInfluence < 0.005f) {
-                        position.z -= shapeInfluence * 10.f;
-                        timeDiff[i] = time;
+                        position.z -= shapeInfluence * 2.f;
+                        isTarget[x * VERTICES_Y + y] = true;
+                        timeDiff[x * VERTICES_Y + y] = time;
                     }
-                
-                    if (time - timeDiffP[i] < 5.f  ) {
-                        position.z -= timeDiffP[i] / time * 0.1f;
-                    }
-                
                 }
             }
             
- 
-            //---->calculate relative location to mouse
-            
-            
-            
-            
-            
-                        Vec2f dist = Vec2f(std::abs(relPos.x - mousePos.x)/1000, std::abs(relPos.y - mousePos.y )/1000);
-            
-          
-            
-            
-            if (dist.lengthSquared() < 0.001f) {
-               // position.z -= lmap<float>(dist.lengthSquared(), 0, 1, 0, 0);
-            }
-            
-            
-            if (dist.lengthSquared() < 0.001f) {
-                //position.z -= 0.0001f;
-                isTarget[x * VERTICES_Y + y] = true;
-                timeDiff[x * VERTICES_Y + y] = time;
-            }
-            
-            //--->timer affecting mesh
-            if ( (time - timeDiff[x * VERTICES_Y + y] ) < 2.f && isTarget[x * VERTICES_Y + y] == true) {
-                //position.z -= 0.0001f +  timeDiff[x * VERTICES_Y + y ] /time * 0.1f;
-                ////position.z -= 0.0001f + 1/  (time - timeDiff[x * VERTICES_Y + y ] ) * 0.1;
-            }else if ((time - timeDiff[x * VERTICES_Y + y]) >= 10.f){
+            // -----> influnce timer
+            zPctBounce[x * VERTICES_Y + y] = lmap<float>(easeIn(currIterBounce[x * VERTICES_Y + y], 0.0, 1.0f, totalIterBounce[x * VERTICES_Y + y]), 0.f, 1.f, 1.f, 0);
+            if ((time - timeDiff[x * VERTICES_Y + y] ) < 5.f && isTarget[x * VERTICES_Y + y] == true ) {
+                position.z -= 0.1f * zPctBounce[x * VERTICES_Y + y];
+            }else if((time - timeDiff[x * VERTICES_Y + y]) >= 10.f){
                 isTarget[x * VERTICES_Y + y] = false;
             }
+            if (isTarget[x * VERTICES_Y + y]) {
+                if (currIterBounce[x * VERTICES_Y + y]< totalIterBounce[x * VERTICES_Y + y]) {
+                    currIterBounce[x * VERTICES_Y + y] ++;
+                }
+            }else{
+                currIterBounce[x * VERTICES_Y + y] = 0.f;
+            }
+            
+
             
             // ----generating Perlin Noise
             float nX = relPos.x * 0.0001f;
@@ -302,6 +240,7 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture,  bool &_mouseClick){
     }
     
   
+    //transi
     if (stateFly) {
         if (currIter< totalIter) {
             currIter ++;
