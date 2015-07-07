@@ -1,8 +1,9 @@
 dependencies: \
   /Users/kathleen/PotionProject/LobbyProject/src/LobbyProjectApp.cpp \
   ../../../Cinder/include/cinder/app/AppNative.h \
-  /Users/kathleen/PotionProject/LobbyProject/xcode/FrameSubtraction.h \
   ../../../Cinder/include/cinder/gl/Texture.h \
+  ../../../Cinder/include/cinder/qtime/QuickTime.h \
+  /Users/kathleen/PotionProject/LobbyProject/xcode/FrameSubtraction.h \
   /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/Cinder-OpenNI.h \
   ../../../Cinder/boost/boost/ptr_container/ptr_vector.hpp \
   ../../../Cinder/boost/boost/ptr_container/ptr_sequence_adapter.hpp \
