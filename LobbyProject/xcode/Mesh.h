@@ -15,6 +15,7 @@
 #include "cinder/gl/Texture.h"
 #include "cinder/Perlin.h"
 #include "Particle.h"
+#include "Shape.h"
 
 
 
@@ -29,6 +30,7 @@ public:
     Mesh(int vertices_x, int vertices_y, int meshType, bool &isFirstMesh);
     
     void getParticle(std::list<Particle> &_mParticles);
+    void getTrackedShapes(vector<Shape> &_mTrackedShapes);
     void update(Vec2f &_mousePos, gl::Texture &texture, bool &_mouseClick);
     void draw();
     
@@ -42,15 +44,19 @@ public:
     vector<bool>    isTarget;
     vector<float>   timeDiffP;
     vector<bool>    isTargetP;
-    float           zOffset;
+    vector<float>   currIterBounce, totalIterBounce, zPctBounce;
+    float           zOffset, xOffset, yOffset;
     float           zPct, zPctStart, currIter, totalIter, currIterStart, totalIterStart;
     float           easeIn(float t,float b , float c, float d);
     bool            stateStable, stateFly, stateStart;
+    bool            isFirstMesh;
     
     
-    vector<Vec2f>   particlePos;
-    vector<float>   particleRad;
+    vector<Vec2f>       particlePos;
+    vector<float>       particleRad;
+    vector<Vec2f>       shapePos;
     std::list<Particle> mParticles;
+    vector<Shape>       mTrackedShapes;
     
     Vec2f           mousePos;
     Perlin          mPerlin;

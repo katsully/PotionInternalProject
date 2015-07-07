@@ -69,7 +69,7 @@ void LobbyProjectApp::setup()
         console() << "file is not a valid movie" << std::endl;
     }
     
-    setWindowSize(960, 540);
+    
     //load movie and play
     if (mMovie) {
         mMovie->setLoop();
@@ -78,14 +78,16 @@ void LobbyProjectApp::setup()
     }
     
     //init
-    mEye = Vec3f(0, 0, 0.75f);
-    mCenter = Vec3f::zero();
-    mUp = Vec3f::yAxis();
-    volumeMin = 0.50f;
-    mSceneRot = ci::Quatf(M_PI, 0, 0);
-    drawMesh = true;
-    nextMeshState = false;
-    mouseClick = false;
+    mEye            = Vec3f(0, 0, 0.75f);
+    mCenter         = Vec3f::zero();
+    mUp             = Vec3f::yAxis();
+    volumeMin       = 0.50f;
+    mSceneRot       = ci::Quatf(M_PI, 0, 0);
+    drawMesh        = true;
+    nextMeshState   = false;
+    mouseClick      = false;
+    firstMesh       = true;
+    secondMesh      = false;
     
     mParams = params::InterfaceGl("mesh", Vec2i(225, 100));
     mParams.addParam("camera rotation", &mSceneRot);
@@ -94,7 +96,7 @@ void LobbyProjectApp::setup()
     
     mTexture = gl::Texture(loadImage(loadResource("demo.jpg")));
     mFrameSubtraction.setup();
-    myMesh = new Mesh(16, 9, 0, firstMesh);
+    myMesh = new Mesh(32, 18, 0, firstMesh);
     myNextMesh = new Mesh(16 , 9 , 0, secondMesh);
     
 }
@@ -102,7 +104,7 @@ void LobbyProjectApp::setup()
 void LobbyProjectApp::prepareSettings( Settings* settings )
 {
     settings->setFrameRate( 60.0f );
-    settings->setWindowSize( 800, 600 );
+    settings->setWindowSize( 960, 540 );
 }
 
 void LobbyProjectApp::keyDown( KeyEvent event )
@@ -128,12 +130,15 @@ void LobbyProjectApp::update()
     gl::rotate( mSceneRot);
     // will need to call mFrameSubtraction.mTrackedShapes, then iterate through the points of each tracked shape
    // myMesh->getParticle(mFrameSubtraction.mParticleController.mParticles);
+    myMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
+    //myNextMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
     
     if ( mMovie ){
         mMovieTexture = gl::Texture(mMovie->getTexture());
     }
     
     myMesh->update(mousePos, mTexture, mouseClick);
+    //myNextMesh->update(mousePos, mMovieTexture, mouseClick);
     mouseClick = false;
 }
 
@@ -144,6 +149,7 @@ void LobbyProjectApp::draw()
     gl::enableDepthRead();
     if (drawMesh) {
         myMesh->draw();
+        //myNextMesh->draw();
     }
     
     mParams.draw();
