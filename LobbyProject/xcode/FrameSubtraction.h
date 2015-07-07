@@ -32,6 +32,8 @@ public:
     
     ParticleControllerController mParticleControllerController;
     
+    vector<Shape> mTrackedShapes;
+    
     
 private:
     OpenNI::DeviceRef mDevice;
@@ -50,7 +52,6 @@ private:
     cv::Mat mInput;
     cv::vector<cv::Vec4i> mHierarchy;
     vector<Shape> mShapes;
-    vector<Shape> mTrackedShapes;
     
     void onDepth(openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions);
     void onColor(openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions);
