@@ -112,11 +112,12 @@ void LobbyProjectApp::keyDown( KeyEvent event )
     mFrameSubtraction.keyDown( event );
 }
 
-void LobbyProjectApp::mouseMove(MouseEvent event){
+void LobbyProjectApp::mouseMove( MouseEvent event )
+{
     mousePos = event.getPos();
 }
 
-void LobbyProjectApp::mouseDown(MouseEvent event)
+void LobbyProjectApp::mouseDown( MouseEvent event )
 {
     nextMeshState = !nextMeshState;
     mouseClick = true;

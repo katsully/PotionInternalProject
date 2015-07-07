@@ -30,7 +30,7 @@ public:
     cv::Mat mPreviousFrame; // track the previous frame which is then used to set the background frame
     cv::Mat mBackground;    // stores the background image which is used for background subtraction to capture motion
     
-        vector<Shape> mTrackedShapes;   // store tracked shapes
+    vector<Shape> mTrackedShapes;   // store tracked shapes
     
 private:
     OpenNI::DeviceRef mDevice;
@@ -50,8 +50,8 @@ private:
     cv::vector<cv::Vec4i> mHierarchy;
     vector<Shape> mShapes;
     
-    void onDepth(openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions);
-    void onColor(openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions);
+    void onDepth( openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions );
+    void onColor( openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions );
     vector< Shape > getEvaluationSet( ContourVector rawContours, int minimalArea, int maxArea );
     Shape* findNearestMatch( Shape trackedShape, vector< Shape > &shapes, float maximumDistance );
     void screenShot();
