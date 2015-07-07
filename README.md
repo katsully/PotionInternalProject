@@ -51,5 +51,5 @@ brew port install libusb --universal
 4. The Copy Files section needs libNiTE2.dylib, libOpenNI2.dylib, NiTE.ini, OpenNI.ini, OpenNI2, and NiTE2 with the destination set to Executables. (For a total of 6 items). Make sure Code Sign on Copy is unchecked.
 5. Copy Bundle Resources should only have CinderApp.icns
 
-![](https://drive.google.com/file/d/0B4W_XFG_8K9OOVZ6SUJieHVtUWs/view?usp=sharing)
+![photo of xcode](images/xcode.png?raw=true)
  
