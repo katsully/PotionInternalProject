@@ -6,7 +6,6 @@
 #include "Mesh.h"
 #include "cinder/Camera.h"
 #include "cinder/params/Params.h"
-#include "dirent.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -41,11 +40,10 @@ class LobbyProjectApp : public AppNative {
     
     FrameSubtraction    mFrameSubtraction;
     Mesh                *myMesh;
-    
-    DIR *dir;
-    struct dirent *ent;
 
     Mesh                *myNextMesh;
+    
+    vector<boost::filesystem::path> assetNames;
 
 };
 
@@ -54,19 +52,21 @@ void LobbyProjectApp::setup(){
     std::cout<<getAppPath()<<std::endl;
     
     addAssetDirectory("../../../../../assets");
-    if(( dir = opendir( "../../../../../assets" )) != NULL ){
-        console() << "here";
-        while ( ( ent = readdir ( dir ) ) != NULL ){
-            printf ("%s\n", ent->d_name );
-        }
-        closedir( dir );
-    } else {
-        perror("");
-        return;
+    
+    // get absolute path to assets' directory
+    fs::path p( getAssetPath( "" ) );
+    // iterate through the asset directory and add all filenames to the vector assetNames
+    for( fs::directory_iterator it( p ); it != fs::directory_iterator(); ++it ) {
+        if( ! is_directory( *it ) )
+            assetNames.push_back( it->path().filename() );
     }
+    console() << assetNames.size();
     try{
-        // fs::path path = getOpenFilePath();
-        mMovie = qtime::MovieGl::create(loadAsset("po.mp4"));
+        // pick a movie at random from the asset directory
+        int randInt = Rand::randInt( 0, assetNames.size() );
+        console() << "randInt " << randInt << std::endl;
+        
+        mMovie = qtime::MovieGl::create(loadAsset(assetNames[randInt]));
         
     } catch( ... ){
         console() << "file is not a valid movie" << std::endl;
