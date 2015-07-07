@@ -32,7 +32,6 @@ public:
     
         vector<Shape> mTrackedShapes;   // store tracked shapes
     
-    
 private:
     OpenNI::DeviceRef mDevice;
     OpenNI::DeviceManagerRef mDeviceManager;

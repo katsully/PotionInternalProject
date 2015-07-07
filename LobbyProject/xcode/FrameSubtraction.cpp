@@ -173,7 +173,6 @@ Shape* FrameSubtraction::findNearestMatch( Shape trackedShape, vector< Shape > &
 
 void FrameSubtraction::update()
 {
-    
 }
 
 void FrameSubtraction::keyDown( KeyEvent event )
@@ -183,5 +182,4 @@ void FrameSubtraction::keyDown( KeyEvent event )
 
 void FrameSubtraction::draw()
 {
-    
 }
