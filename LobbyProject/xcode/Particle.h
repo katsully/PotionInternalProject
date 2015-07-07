@@ -2,7 +2,7 @@
 //  Particle.h
 //  LobbyProject
 //
-//  Created by Kathleen Sullivan on 6/18/15.
+//  Created by Kat Sullivan on 6/18/15.
 //
 //
 

@@ -2,7 +2,7 @@
 //  Shape.cpp
 //  LobbyProject
 //
-//  Created by Kathleen Sullivan on 7/2/15.
+//  Created by Kat Sullivan on 7/2/15.
 //
 //
 

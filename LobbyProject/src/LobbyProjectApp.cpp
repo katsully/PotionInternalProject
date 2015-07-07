@@ -30,7 +30,6 @@ public:
     Quatf               mSceneRot;
     params::InterfaceGl mParams;
     
-    
     float volumeMin;
     bool drawMesh;
     bool nextMeshState, mouseClick;
@@ -44,12 +43,10 @@ public:
     Mesh                *myNextMesh;
     
     vector<boost::filesystem::path> assetNames;
-
 };
 
 void LobbyProjectApp::setup()
 {
-    
     std::cout<<getAppPath()<<std::endl;
 
     addAssetDirectory("../../../../../assets");
@@ -79,7 +76,6 @@ void LobbyProjectApp::setup()
         mMovie->play();
         mMovie->setVolume(0.01f);
     }
-
     
     //init
     mEye = Vec3f(0, 0, 0.75f);
@@ -140,9 +136,6 @@ void LobbyProjectApp::update()
     
     myMesh->update(mousePos, mTexture, mouseClick);
     mouseClick = false;
-    
-
-    
 }
 
 void LobbyProjectApp::draw()

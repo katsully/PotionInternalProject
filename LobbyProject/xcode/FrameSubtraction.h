@@ -2,7 +2,7 @@
 //  FrameSubtraction.h
 //  LobbyProject
 //
-//  Created by Kathleen Sullivan on 6/22/15.
+//  Created by Kat Sullivan on 6/22/15.
 //
 //
 
@@ -31,7 +31,6 @@ public:
     cv::Mat mBackground;    // stores the background image which is used for background subtraction to capture motion
     
         vector<Shape> mTrackedShapes;   // store tracked shapes
-    
     
 private:
     OpenNI::DeviceRef mDevice;
