@@ -27,8 +27,8 @@ Mesh::Mesh(int vertices_x, int vertices_y, int meshType, bool &_isFirstMesh){
    
     
     if (isFirstMesh == true) {
-        stateStable = true;
-        stateStart = false;
+        stateStable = false;
+        stateStart = true;
         stateFly = false;
     }else{
         stateFly  = true;

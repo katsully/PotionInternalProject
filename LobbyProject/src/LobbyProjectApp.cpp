@@ -132,14 +132,14 @@ void LobbyProjectApp::update()
     // will need to call mFrameSubtraction.mTrackedShapes, then iterate through the points of each tracked shape
    // myMesh->getParticle(mFrameSubtraction.mParticleController.mParticles);
     myMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
-    //myNextMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
+    myNextMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
     
     if ( mMovie ){
         mMovieTexture = gl::Texture(mMovie->getTexture());
     }
     
     myMesh->update(mousePos, mTexture, mouseClick);
-    //myNextMesh->update(mousePos, mMovieTexture, mouseClick);
+    myNextMesh->update(mousePos, mMovieTexture, mouseClick);
     mouseClick = false;
 }
 
@@ -150,7 +150,7 @@ void LobbyProjectApp::draw()
     gl::enableDepthRead();
     if (drawMesh) {
         myMesh->draw();
-        //myNextMesh->draw();
+        myNextMesh->draw();
     }
     
     mParams.draw();
