@@ -81,7 +81,7 @@ void LobbyProjectApp::setup()
     mEye            = Vec3f(0, 0, 0.75f);
     mCenter         = Vec3f::zero();
     mUp             = Vec3f::yAxis();
-    volumeMin       = 0.50f;
+    volumeMin       = 0.20f;
     mSceneRot       = ci::Quatf(M_PI, 0, 0);
     drawMesh        = true;
     nextMeshState   = false;
