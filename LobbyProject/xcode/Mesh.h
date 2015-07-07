@@ -15,6 +15,7 @@
 #include "cinder/gl/Texture.h"
 #include "cinder/Perlin.h"
 #include "Particle.h"
+#include "Shape.h"
 
 
 
@@ -29,6 +30,7 @@ public:
     Mesh(int vertices_x, int vertices_y, int meshType, bool &isFirstMesh);
     
     void getParticle(std::list<Particle> &_mParticles);
+    void getTrackedShapes(vector<Shape> &_mTrackedShapes);
     void update(Vec2f &_mousePos, gl::Texture &texture, bool &_mouseClick);
     void draw();
     
@@ -51,6 +53,7 @@ public:
     vector<Vec2f>   particlePos;
     vector<float>   particleRad;
     std::list<Particle> mParticles;
+    vector<Shape> mTrackedShapes;
     
     Vec2f           mousePos;
     Perlin          mPerlin;

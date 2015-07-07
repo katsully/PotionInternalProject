@@ -127,6 +127,7 @@ void LobbyProjectApp::update()
     gl::rotate( mSceneRot);
     // will need to call mFrameSubtraction.mTrackedShapes, then iterate through the points of each tracked shape
    // myMesh->getParticle(mFrameSubtraction.mParticleController.mParticles);
+    myMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
     
     if( mMovie ){
         mMovieTexture = gl::Texture(mMovie->getTexture());

@@ -52,6 +52,13 @@ float Mesh::easeIn(float t,float b , float c, float d){
     return c*((t=t/d-1)*t*t + 1) + b;
 }
 
+void Mesh::getTrackedShapes(vector<Shape> &_mTrackedShapes){
+
+
+
+}
+
+
 //void Mesh::getParticle(std::list<Particle> &_mParticles){
 //    this->mParticles = _mParticles;
 //    particlePos.clear();
