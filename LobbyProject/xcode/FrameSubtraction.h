@@ -46,7 +46,6 @@ private:
     ContourVector mContours;
     int shapeUID;
 
-    cv::Mat mInput;
     cv::vector<cv::Vec4i> mHierarchy;
     vector<Shape> mShapes;
     

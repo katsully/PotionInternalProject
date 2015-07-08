@@ -101,8 +101,6 @@ void FrameSubtraction::onDepth( openni::VideoFrameRef frame, const OpenNI::Devic
             ++it;
         }
     }
-    
-    mInput.copyTo(mPreviousFrame);
 }
 
 void FrameSubtraction::onColor( openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions )
