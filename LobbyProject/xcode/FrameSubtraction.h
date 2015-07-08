@@ -23,7 +23,6 @@ class FrameSubtraction {
 public:
     FrameSubtraction();
     void setup();
-    void keyDown( KeyEvent event );
     void update();
     void draw();
     
@@ -41,10 +40,12 @@ private:
     ci::Surface8u mSurface;
     ci::Surface8u mSurfaceDepth;
     
+    short mNearLimit;
+    short mFarLimit;
+    
     typedef vector< vector<cv::Point > > ContourVector;
     ContourVector mContours;
     int shapeUID;
-    int mBlurAmount;
 
     cv::Mat mInput;
     cv::vector<cv::Vec4i> mHierarchy;
@@ -54,5 +55,6 @@ private:
     void onColor( openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions );
     vector< Shape > getEvaluationSet( ContourVector rawContours, int minimalArea, int maxArea );
     Shape* findNearestMatch( Shape trackedShape, vector< Shape > &shapes, float maximumDistance );
+    cv::Mat removeBlack( cv::Mat input, short nearLimit, short farLimit );
     void screenShot();
 };

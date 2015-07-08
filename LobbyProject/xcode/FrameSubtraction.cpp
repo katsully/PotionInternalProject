@@ -18,7 +18,6 @@ void FrameSubtraction::setup()
     mDeviceManager = OpenNI::DeviceManager::create();
     
     shapeUID = 0;
-    mBlurAmount = 10;
     mTrackedShapes.clear();
     
     if ( mDeviceManager->isInitialized() ) {
@@ -32,33 +31,35 @@ void FrameSubtraction::setup()
         if (mDevice) {
             mDevice->connectDepthEventHandler( &FrameSubtraction::onDepth, this);
             mDevice->connectColorEventHandler( &FrameSubtraction::onColor, this );
-            mPreviousFrame = cv::Mat( 240, 320, CV_16UC1 );
-            mBackground = cv::Mat( 240, 320, CV_16UC1 );
             mDevice->start();
         }
     }
+    
+    // sets threshold to ignore all black pixels and pixels that are far away from the camera
+    mNearLimit = 30;
+    mFarLimit = 4000;
 }
 
 void FrameSubtraction::onDepth( openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions )
 {
+    // convert frame from the camera to an OpenCV matrix
     cv::Mat mInput = toOcv( OpenNI::toChannel16u(frame) );
 
-    cv::Mat mSubtracted;
-    cv::Mat blur;
     cv::Mat thresh;
     cv::Mat eightBit;
     
-    // blur the image to reduce noise
-    cv::blur( mInput, blur, cv::Size( mBlurAmount, mBlurAmount ) );
-    // background subtraction
-    cv::absdiff( mBackground, blur, mSubtracted );
+    cv::Mat withoutBlack;
+    withoutBlack = removeBlack( mInput, mNearLimit, mFarLimit );
     
-    // convert to RGB color space, with some compensation
-    mSubtracted.convertTo( eightBit, CV_8UC1, 0.1/1.0 );
+    // convert matrix from 16 bit to 8 bit with some color compensation
+    withoutBlack.convertTo( eightBit, CV_8UC3, 0.1/1.0 );
+    // invert the image
+    cv::bitwise_not( eightBit, eightBit );
     
     mContours.clear();
     // using a threshold to reduce noise
-    cv::threshold( eightBit, thresh, 75.0, 255.0, CV_8U );
+    cv::threshold( eightBit, thresh, 0.0, 255.0, CV_8U );
+    // draw lines around shapes
     cv::findContours( thresh, mContours, mHierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE );
     
     mShapes.clear();
@@ -88,7 +89,6 @@ void FrameSubtraction::onDepth( openni::VideoFrameRef frame, const OpenNI::Devic
             // add this new shape to tracked shapes
             mTrackedShapes.push_back( mShapes[i] );
             shapeUID++;
-            //std::cout << "adding a new tracked shape with ID: " << mShapes[i].ID << std::endl;
         }
     }
     
@@ -175,9 +175,16 @@ void FrameSubtraction::update()
 {
 }
 
-void FrameSubtraction::keyDown( KeyEvent event )
+cv::Mat FrameSubtraction::removeBlack( cv::Mat input, short nearLimit, short farLimit )
 {
-    mPreviousFrame.copyTo( mBackground );
+    for( int y=0; y<input.rows; y++ ) {
+        for( int x=0; x<input.cols; x++ ) {
+            if( input.at<short>(y,x) < nearLimit || input.at<short>(y,x) > farLimit ) {
+                input.at<short>(y,x) = 4000;
+            }
+        }
+    }
+    return input;
 }
 
 void FrameSubtraction::draw()
