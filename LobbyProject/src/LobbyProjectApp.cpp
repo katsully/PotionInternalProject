@@ -29,6 +29,7 @@ public:
     Vec2f               mousePos;
     Quatf               mSceneRot;
     params::InterfaceGl mParams;
+    int                 meshX, meshY, meshType;
     
     float volumeMin;
     bool drawMesh;
@@ -88,16 +89,21 @@ void LobbyProjectApp::setup()
     mouseClick      = false;
     firstMesh       = true;
     secondMesh      = false;
+    meshX           = 48;
+    meshY           = 27;
+    meshType        = 0;
     
     mParams = params::InterfaceGl("mesh", Vec2i(225, 100));
     mParams.addParam("camera rotation", &mSceneRot);
     mParams.addParam("camera viewing volume min", &volumeMin);
     mParams.addParam("draw mesh", &drawMesh);
     
+    
+    
     mTexture = gl::Texture(loadImage(loadResource("demo.jpg")));
     mFrameSubtraction.setup();
-    myMesh = new Mesh(32, 18, 0, firstMesh);
-    myNextMesh = new Mesh(32 , 18 , 0, secondMesh);
+    myMesh = new Mesh(meshX, meshY, meshType, firstMesh);
+    myNextMesh = new Mesh(meshX , meshY , meshType, secondMesh);
     
 }
 
@@ -137,6 +143,7 @@ void LobbyProjectApp::update()
         mMovieTexture = gl::Texture(mMovie->getTexture());
     }
     
+    
     myMesh->update(mousePos, mTexture, mouseClick);
     myNextMesh->update(mousePos, mMovieTexture, mouseClick);
     mouseClick = false;
@@ -148,8 +155,13 @@ void LobbyProjectApp::draw()
 	gl::clear( Color( 1, 1, 1 ) );
     gl::enableDepthRead();
     if (drawMesh) {
-        myMesh->draw();
-        myNextMesh->draw();
+        if (myMesh->zPct != 1.f) {
+            myMesh->draw();
+        }
+        if (myNextMesh->zPct != 1.f) {
+            myNextMesh->draw();
+        }
+    
     }
     
     mParams.draw();

@@ -27,11 +27,11 @@ using std::vector;
 
 class Mesh{
 public:
-    Mesh(int vertices_x, int vertices_y, int meshType, bool &isFirstMesh);
+    Mesh(int &_vertices_x, int &_vertices_y, int &_meshType, bool &_isFirstMesh);
     
     void getParticle(std::list<Particle> &_mParticles);
     void getTrackedShapes(vector<Shape> &_mTrackedShapes);
-    void update(Vec2f &_mousePos, gl::Texture &texture, bool &_mouseClick);
+    void update(Vec2f &_shapePos, gl::Texture &texture, bool &_mouseClick);
     void draw();
     
     int VERTICES_X, VERTICES_Y;
@@ -49,8 +49,10 @@ public:
     float           zPct, zPctStart, currIter, totalIter, currIterStart, totalIterStart;
     float           easeIn(float t,float b , float c, float d);
     float           transitionSpeed;
+    float           meshType;
     bool            stateStable, stateFly, stateStart;
     bool            isFirstMesh;
+    bool            drawTexture;
     
     
     vector<Vec2f>       particlePos;
@@ -59,7 +61,7 @@ public:
     std::list<Particle> mParticles;
     vector<Shape>       mTrackedShapes;
     
-    Vec2f           mousePos;
+    Vec2f           mShapePos;
     Perlin          mPerlin;
     Perlin          mOsci;
     
