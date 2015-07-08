@@ -109,7 +109,6 @@ void LobbyProjectApp::prepareSettings( Settings* settings )
 
 void LobbyProjectApp::keyDown( KeyEvent event )
 {
-    mFrameSubtraction.keyDown( event );
 }
 
 void LobbyProjectApp::mouseMove( MouseEvent event )
