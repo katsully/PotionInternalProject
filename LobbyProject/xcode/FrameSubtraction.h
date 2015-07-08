@@ -26,8 +26,7 @@ public:
     void update();
     void draw();
     
-    cv::Mat mPreviousFrame; // track the previous frame which is then used to set the background frame
-    cv::Mat mBackground;    // stores the background image which is used for background subtraction to capture motion
+    cv::Mat mInput;
     
     vector<Shape> mTrackedShapes;   // store tracked shapes
     

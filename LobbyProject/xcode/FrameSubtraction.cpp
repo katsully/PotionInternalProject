@@ -43,7 +43,7 @@ void FrameSubtraction::setup()
 void FrameSubtraction::onDepth( openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions )
 {
     // convert frame from the camera to an OpenCV matrix
-    cv::Mat mInput = toOcv( OpenNI::toChannel16u(frame) );
+    mInput = toOcv( OpenNI::toChannel16u(frame) );
 
     cv::Mat thresh;
     cv::Mat eightBit;
