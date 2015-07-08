@@ -48,6 +48,7 @@ public:
     float           zOffset, xOffset, yOffset;
     float           zPct, zPctStart, currIter, totalIter, currIterStart, totalIterStart;
     float           easeIn(float t,float b , float c, float d);
+    float           transitionSpeed;
     bool            stateStable, stateFly, stateStart;
     bool            isFirstMesh;
     

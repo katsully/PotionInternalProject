@@ -78,7 +78,7 @@ void LobbyProjectApp::setup()
     }
     
     //init
-    mEye            = Vec3f(0, 0, 0.75f);
+    mEye            = Vec3f(0, 0, 0.79f);
     mCenter         = Vec3f::zero();
     mUp             = Vec3f::yAxis();
     volumeMin       = 0.20f;
@@ -97,7 +97,7 @@ void LobbyProjectApp::setup()
     mTexture = gl::Texture(loadImage(loadResource("demo.jpg")));
     mFrameSubtraction.setup();
     myMesh = new Mesh(32, 18, 0, firstMesh);
-    myNextMesh = new Mesh(16 , 9 , 0, secondMesh);
+    myNextMesh = new Mesh(32 , 18 , 0, secondMesh);
     
 }
 

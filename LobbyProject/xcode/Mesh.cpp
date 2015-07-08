@@ -23,7 +23,8 @@ Mesh::Mesh(int vertices_x, int vertices_y, int meshType, bool &_isFirstMesh){
     currIterStart = 0.f;
     totalIterStart = 100.f;
     xOffset = 0.48f;
-    yOffset = 0.43f;
+    yOffset = 0.47f;
+    transitionSpeed = 0.5f;
    
     
     if (isFirstMesh == true) {
@@ -267,13 +268,13 @@ void Mesh::update(Vec2f &_mousePos, gl::Texture &texture,  bool &_mouseClick){
     //transi
     if (stateFly) {
         if (currIter< totalIter) {
-            currIter ++;
+            currIter += transitionSpeed;
         }
     }
     
     if (stateStart) {
         if (currIterStart< totalIterStart) {
-            currIterStart ++;
+            currIterStart += transitionSpeed;
         }
     }
     
