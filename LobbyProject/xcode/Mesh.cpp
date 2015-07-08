@@ -291,6 +291,7 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
 void Mesh::draw(){
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //draw only when mesh in visible range
     if (drawTexture) {
         if(mTexture){
             mTexture.enableAndBind();
