@@ -49,6 +49,7 @@ void FrameSubtraction::onDepth( openni::VideoFrameRef frame, const OpenNI::Devic
     cv::Mat eightBit;
     
     cv::Mat withoutBlack;
+    // remove black pixels from frame which get detected as noise
     withoutBlack = removeBlack( mInput, mNearLimit, mFarLimit );
     
     // convert matrix from 16 bit to 8 bit with some color compensation
@@ -118,8 +119,6 @@ vector< Shape > FrameSubtraction::getEvaluationSet( ContourVector rawContours, i
         
         // extract data from contour
         cv::Scalar center = mean(matrix);
-        // get depth value from center point
-        // map 10 4000 to 0 1
         double area = cv::contourArea(matrix);
         
         // reject it if too small
@@ -136,6 +135,9 @@ vector< Shape > FrameSubtraction::getEvaluationSet( ContourVector rawContours, i
         Shape shape;
         shape.area = area;
         shape.centroid = cv::Point( center.val[0], center.val[1] );
+        
+        // get depth value from center point
+        // map 10 4000 to 0 1
         float centerDepth = (float)mInput.at<short>(center.val[1], center.val[0]);
         shape.depth = lmap( centerDepth, (float)mNearLimit, (float)mFarLimit, 0.0f, 1.0f );
         
