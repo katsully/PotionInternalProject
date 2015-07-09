@@ -151,7 +151,6 @@ vector< Shape > FrameSubtraction::getEvaluationSet( ContourVector rawContours, i
         
         // convex hull is the polygon enclosing the contour
         shape.hull = c;
-        console() << "shape points: " << shape.hull.size() << endl;
         shape.matchFound = false;
         vec.push_back(shape);
     }
