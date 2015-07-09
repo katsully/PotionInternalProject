@@ -124,7 +124,7 @@ void LobbyProjectApp::getRandomFile()
         mRemainingAssetNames = mAssetNames;
     }
     
-    // select a random asset
+    // select a random asset from the list of remaining assets
     Rand::randomize();
     int randInt = Rand::randInt( 0, mRemainingAssetNames.size() );
     boost::filesystem::path assetName = mRemainingAssetNames[randInt];
