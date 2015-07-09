@@ -118,6 +118,8 @@ vector< Shape > FrameSubtraction::getEvaluationSet( ContourVector rawContours, i
         
         // extract data from contour
         cv::Scalar center = mean(matrix);
+        // get depth value from center point
+        // map 10 4000 to 0 1
         double area = cv::contourArea(matrix);
         
         // reject it if too small
