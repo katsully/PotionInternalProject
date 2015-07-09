@@ -66,7 +66,7 @@ void FrameSubtraction::onDepth( openni::VideoFrameRef frame, const OpenNI::Devic
     
     vector<cv::Point> approx;
     // approx number of points per contour
-    for( int i=0; i<mContours.size(); i++ ) {
+    for ( int i = 0; i < mContours.size(); i++ ) {
         cv::approxPolyDP(mContours[i], approx, 3, true );
         mApproxContours.push_back( approx );
     }
@@ -76,7 +76,7 @@ void FrameSubtraction::onDepth( openni::VideoFrameRef frame, const OpenNI::Devic
     mShapes = getEvaluationSet( mApproxContours, 75, 100000 );
     
     // find the nearest match for each shape
-    for ( int i=0; i<mTrackedShapes.size(); i++ ) {
+    for ( int i = 0; i < mTrackedShapes.size(); i++ ) {
         Shape* nearestShape = findNearestMatch( mTrackedShapes[i], mShapes, 5000 );
         
         // a tracked shape was found, update that tracked shape with the new shape
@@ -102,7 +102,7 @@ void FrameSubtraction::onDepth( openni::VideoFrameRef frame, const OpenNI::Devic
     }
     
     // if we didn't find a match for x frames, delete the tracked shape
-    for ( vector<Shape>::iterator it=mTrackedShapes.begin(); it!=mTrackedShapes.end(); ) {
+    for ( vector<Shape>::iterator it = mTrackedShapes.begin(); it != mTrackedShapes.end(); ) {
         if ( ci::app::getElapsedFrames() - it->lastFrameSeen > 20 ) {
             // remove the tracked shape
             it = mTrackedShapes.erase(it);
@@ -146,7 +146,7 @@ vector< Shape > FrameSubtraction::getEvaluationSet( ContourVector rawContours, i
         
         // get depth value from center point
         // map 10 4000 to 0 1
-        float centerDepth = (float)mInput.at<short>(center.val[1], center.val[0]);
+        float centerDepth = (float)mInput.at<short>( center.val[1], center.val[0] );
         shape.depth = lmap( centerDepth, (float)mNearLimit, (float)mFarLimit, 0.0f, 1.0f );
         
         // convex hull is the polygon enclosing the contour
@@ -168,7 +168,7 @@ Shape* FrameSubtraction::findNearestMatch( Shape trackedShape, vector< Shape > &
     for ( Shape &candidate : shapes ) {
         // find dist between the center of the contour and the shape
         cv::Point distPoint = trackedShape.centroid - candidate.centroid;
-        float dist = cv::sqrt( distPoint.x*distPoint.x + distPoint.y*distPoint.y );
+        float dist = cv::sqrt( distPoint.x * distPoint.x + distPoint.y * distPoint.y );
         if ( dist > maximumDistance ) {
             continue;
         }
@@ -189,8 +189,8 @@ void FrameSubtraction::update()
 
 cv::Mat FrameSubtraction::removeBlack( cv::Mat input, short nearLimit, short farLimit )
 {
-    for( int y=0; y<input.rows; y++ ) {
-        for( int x=0; x<input.cols; x++ ) {
+    for( int y = 0; y < input.rows; y++ ) {
+        for( int x = 0; x < input.cols; x++ ) {
             if( input.at<short>(y,x) < nearLimit || input.at<short>(y,x) > farLimit ) {
                 input.at<short>(y,x) = 4000;
             }
