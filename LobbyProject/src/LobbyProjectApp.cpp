@@ -126,8 +126,8 @@ void LobbyProjectApp::getRandomFile()
     
     // select a random asset
     Rand::randomize();
-    int randInt = Rand::randInt( 0, mAssetNames.size() );
-    boost::filesystem::path assetName = mAssetNames[randInt];
+    int randInt = Rand::randInt( 0, mRemainingAssetNames.size() );
+    boost::filesystem::path assetName = mRemainingAssetNames[randInt];
     // remove this asset from list of remaining assets
     mRemainingAssetNames.erase(find(mRemainingAssetNames.begin(), mRemainingAssetNames.end(), assetName ) );
     // get the extension of the asset
