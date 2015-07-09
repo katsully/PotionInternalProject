@@ -53,6 +53,7 @@ public:
     bool            stateStable, stateFly, stateStart;
     bool            isFirstMesh;
     bool            drawTexture;
+    bool            resetMovie;
     
     
     vector<Vec2f>       particlePos;

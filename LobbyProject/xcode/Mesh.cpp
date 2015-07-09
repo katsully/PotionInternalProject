@@ -49,9 +49,10 @@ float Mesh::easeIn(float t, float b , float c, float d){
 }
 
 void Mesh::getTrackedShapes(vector<Shape> &_mTrackedShapes){
-    this->mTrackedShapes = _mTrackedShapes;
+    
     shapePos.clear();
     if (drawTexture) {
+        this->mTrackedShapes = _mTrackedShapes;
         if (mTrackedShapes.size() > 0) {
             for (int i = 0; i < mTrackedShapes.size() - 1; i ++) {
                 for (cv::vector<cv::Point>::iterator j = mTrackedShapes[i].hull.begin(); j != mTrackedShapes[i].hull.end() ; ++j ) {
@@ -253,10 +254,18 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
 
             }
             
-            if (position.z <= 0.5f && position.z >= -0.6f){
+            // ----> check if texture is in visible range
+            if (position.z <= 0.4f && position.z >= -0.6f){
                 drawTexture = true;
             }else{
                 drawTexture = false;
+            }
+            
+            // ----> check movie reset time
+            if (position.z == -1.f && stateStart) {
+                resetMovie = true;
+            }else{
+                resetMovie = false;
             }
             
             

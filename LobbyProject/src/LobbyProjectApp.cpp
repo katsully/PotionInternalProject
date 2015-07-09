@@ -29,9 +29,10 @@ public:
     Vec2f               mousePos;
     Quatf               mSceneRot;
     params::InterfaceGl mParams;
+   
     int                 meshX, meshY, meshType;
-    
     float volumeMin;
+    float time, timer;
     bool drawMesh;
     bool nextMeshState, mouseClick;
     bool meshReset, meshStart, nextMeshReset, nextMeshStart;
@@ -134,19 +135,36 @@ void LobbyProjectApp::update()
     mCamera.lookAt(mEye, mCenter, mUp);
     gl::setMatrices( mCamera );
     gl::rotate( mSceneRot);
+    time = getElapsedSeconds();
+    float timeDiff = time - timer;
+    if (timeDiff >= 20.f) {
+        mouseClick = true;
+        timer = time;
+    }
+    
     // will need to call mFrameSubtraction.mTrackedShapes, then iterate through the points of each tracked shape
    // myMesh->getParticle(mFrameSubtraction.mParticleController.mParticles);
     myMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
     myNextMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
     
+    
+    //reset
     if ( mMovie ){
         mMovieTexture = gl::Texture(mMovie->getTexture());
+        if (myMesh->mTexture && myMesh->mTexture.getTarget() == 34037 && myMesh->resetMovie == true ) {
+            mMovie->seekToStart();
+        }
+        if (myNextMesh->mTexture && myNextMesh->mTexture.getTarget() == 34037 && myNextMesh->resetMovie == true) {
+            mMovie->seekToStart();
+        }
+        
     }
     
     
     myMesh->update(mousePos, mTexture, mouseClick);
     myNextMesh->update(mousePos, mMovieTexture, mouseClick);
     mouseClick = false;
+    
 }
 
 void LobbyProjectApp::draw()
