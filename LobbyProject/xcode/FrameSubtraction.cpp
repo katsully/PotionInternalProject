@@ -58,14 +58,22 @@ void FrameSubtraction::onDepth( openni::VideoFrameRef frame, const OpenNI::Devic
     cv::bitwise_not( eightBit, eightBit );
     
     mContours.clear();
+    mApproxContours.clear();
     // using a threshold to reduce noise
     cv::threshold( eightBit, thresh, 0.0, 255.0, CV_8U );
     // draw lines around shapes
     cv::findContours( thresh, mContours, mHierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE );
     
+    vector<cv::Point> approx;
+    // approx number of points per contour
+    for( int i=0; i<mContours.size(); i++ ) {
+        cv::approxPolyDP(mContours[i], approx, 3, true );
+        mApproxContours.push_back( approx );
+    }
+    
     mShapes.clear();
     // get data that we can later compare
-    mShapes = getEvaluationSet( mContours, 75, 100000 );
+    mShapes = getEvaluationSet( mApproxContours, 75, 100000 );
     
     // find the nearest match for each shape
     for ( int i=0; i<mTrackedShapes.size(); i++ ) {
@@ -143,6 +151,7 @@ vector< Shape > FrameSubtraction::getEvaluationSet( ContourVector rawContours, i
         
         // convex hull is the polygon enclosing the contour
         shape.hull = c;
+        console() << "shape points: " << shape.hull.size() << endl;
         shape.matchFound = false;
         vec.push_back(shape);
     }

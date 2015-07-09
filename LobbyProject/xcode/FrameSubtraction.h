@@ -44,6 +44,7 @@ private:
     
     typedef vector< vector<cv::Point > > ContourVector;
     ContourVector mContours;
+    ContourVector mApproxContours;
     int shapeUID;
 
     cv::vector<cv::Vec4i> mHierarchy;
