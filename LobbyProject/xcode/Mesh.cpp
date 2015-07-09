@@ -45,7 +45,8 @@ Mesh::Mesh(int &_vertices_x, int &_vertices_y, int &_meshType, bool &_isFirstMes
 
 
 float Mesh::easeIn(float t, float b , float c, float d){
-    return c*((t=t/d-1)*t*t + 1) + b;
+    if ((t/=d/2) < 1) return c/2*t*t*t + b;
+    return c/2*((t-=2)*t*t + 2) + b;
 }
 
 void Mesh::getTrackedShapes(vector<Shape> &_mTrackedShapes){
@@ -255,7 +256,7 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
             }
             
             // ----> check if texture is in visible range
-            if (position.z <= 0.6f && position.z >= -0.6f){
+            if (position.z <= 0.8f && position.z >= -0.6f){
                 drawTexture = true;
             }else{
                 drawTexture = false;
@@ -287,7 +288,7 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
     
     if (stateStart) {
         if (currIterStart< totalIterStart) {
-            currIterStart += transitionSpeed;
+            currIterStart += transitionSpeed * 0.75f;
         }
     }
     
