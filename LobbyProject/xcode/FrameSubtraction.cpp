@@ -136,6 +136,8 @@ vector< Shape > FrameSubtraction::getEvaluationSet( ContourVector rawContours, i
         Shape shape;
         shape.area = area;
         shape.centroid = cv::Point( center.val[0], center.val[1] );
+        float centerDepth = (float)mInput.at<short>(center.val[1], center.val[0]);
+        shape.depth = lmap( centerDepth, (float)mNearLimit, (float)mFarLimit, 0.0f, 1.0f );
         
         // convex hull is the polygon enclosing the contour
         shape.hull = c;
