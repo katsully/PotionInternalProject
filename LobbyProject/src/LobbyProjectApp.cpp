@@ -18,6 +18,7 @@ public:
 	void keyDown( KeyEvent event );
     void mouseMove( MouseEvent event );
     void mouseDown( MouseEvent event );
+    void getRandomFile();
 	void update();
 	void draw();
     
@@ -47,35 +48,8 @@ public:
 
 void LobbyProjectApp::setup()
 {
-    std::cout<<getAppPath()<<std::endl;
-
     addAssetDirectory("../../../../../assets");
-    
-    // get absolute path to assets' directory
-    fs::path p( getAssetPath( "" ) );
-    // iterate through the asset directory and add all filenames to the vector assetNames
-    for ( fs::directory_iterator it( p ); it != fs::directory_iterator(); ++it ) {
-        if ( ! is_directory( *it ) ) {
-            assetNames.push_back( it->path().filename() );
-        }
-    }
-
-    try{
-        // pick a movie at random from the asset directory
-        int randInt = Rand::randInt( 0, assetNames.size() );
-        mMovie = qtime::MovieGl::create(loadAsset(assetNames[randInt]));
-        
-    } catch( ... ){
-        console() << "file is not a valid movie" << std::endl;
-    }
-    
-    
-    //load movie and play
-    if (mMovie) {
-        mMovie->setLoop();
-        mMovie->play();
-        mMovie->setVolume(0.01f);
-    }
+    getRandomFile();
     
     //init
     mEye            = Vec3f(0, 0, 0.79f);
@@ -94,7 +68,6 @@ void LobbyProjectApp::setup()
     mParams.addParam("camera viewing volume min", &volumeMin);
     mParams.addParam("draw mesh", &drawMesh);
     
-    mTexture = gl::Texture(loadImage(loadResource("demo.jpg")));
     mFrameSubtraction.setup();
     myMesh = new Mesh(32, 18, 0, firstMesh);
     myNextMesh = new Mesh(32 , 18 , 0, secondMesh);
@@ -122,6 +95,47 @@ void LobbyProjectApp::mouseDown( MouseEvent event )
     mouseClick = true;
 }
 
+void LobbyProjectApp::getRandomFile()
+{
+    // get absolute path to assets' directory
+    fs::path p( getAssetPath( "" ) );
+    // iterate through the asset directory and add all filenames to the vector assetNames
+    for ( fs::directory_iterator it( p ); it != fs::directory_iterator(); ++it ) {
+        if ( ! is_directory( *it ) ) {
+            assetNames.push_back( it->path().filename() );
+        }
+    }
+    
+    // select a random asset
+    int randInt = Rand::randInt( 0, assetNames.size() );
+    boost::filesystem::path assetName = assetNames[randInt];
+    // get the extension of the asset
+    boost::filesystem::path ext = assetName.extension();
+    
+    // if it is a movie, load and play the movie
+    if( ext == ".mp4" ) {
+        try{
+            mMovie = qtime::MovieGl::create(loadAsset(assetName));
+        
+        } catch( ... ){
+            console() << "file is not a valid movie" << std::endl;
+        }
+    
+    
+        //load movie and play
+        if (mMovie) {
+            mMovie->setLoop();
+            mMovie->play();
+            mMovie->setVolume(0.01f);
+        }
+    // else load it as a texture
+    } else {
+        console() << assetName;
+        mTexture = gl::Texture(loadImage(loadAsset(assetName)));
+    }
+
+}
+
 void LobbyProjectApp::update()
 {
     mCamera.setPerspective( 60.0f, 1.f, volumeMin, 3000.0f );
@@ -133,7 +147,7 @@ void LobbyProjectApp::update()
     myMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
     myNextMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
     
-    if ( mMovie ){
+    if ( mMovie ) {
         mMovieTexture = gl::Texture(mMovie->getTexture());
     }
     
