@@ -513,6 +513,7 @@
 				);
 				PRODUCT_NAME = LobbyProject;
 				SYMROOT = ./build;
+				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include ../blocks/OpenCV/include ../blocks/OpenCV/include/opencv2 ../blocks/QuickTime/include ../blocks/jsoncpp/dist";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -566,6 +567,7 @@
 				PRODUCT_NAME = LobbyProject;
 				STRIP_INSTALLED_PRODUCT = YES;
 				SYMROOT = ./build;
+				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include ../blocks/OpenCV/include ../blocks/OpenCV/include/opencv2 ../blocks/QuickTime/include ../blocks/jsoncpp/dist";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

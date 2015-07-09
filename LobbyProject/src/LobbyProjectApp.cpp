@@ -6,6 +6,8 @@
 #include "Mesh.h"
 #include "cinder/Camera.h"
 #include "cinder/params/Params.h"
+#include "json/json.h"
+#include <fstream>
 
 using namespace ci;
 using namespace ci::app;
@@ -47,6 +49,9 @@ public:
     
     vector<boost::filesystem::path> mAssetNames;
     vector<boost::filesystem::path> mRemainingAssetNames;
+    
+    Json::Value mData;  // to store GUI params
+    Json::Reader mReader;
 
 };
 
@@ -72,7 +77,7 @@ void LobbyProjectApp::setup()
     mUp             = Vec3f::yAxis();
     volumeMin       = 0.20f;
     mSceneRot       = ci::Quatf(M_PI, 0, 0);
-    drawMesh        = true;
+   // drawMesh        = true;
     nextMeshState   = false;
     mouseClick      = false;
     firstMesh       = true;
@@ -82,11 +87,16 @@ void LobbyProjectApp::setup()
     meshType        = 0;
     timerInterval   = 20.f;
     
+    std::ifstream test("sample.json", std::ifstream::binary);
+    mReader.parse( test, mData, false );
+    drawMesh = mData.get("drawMesh", false).asBool();
+    
     mParams = params::InterfaceGl("mesh", Vec2i(225, 100));
     mParams.addParam("camera rotation", &mSceneRot);
     mParams.addParam("camera viewing volume min", &volumeMin);
     mParams.addParam("draw mesh", &drawMesh);
     mParams.addParam("timer interval", &timerInterval);
+    
     
     
     
