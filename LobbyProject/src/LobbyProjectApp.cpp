@@ -30,8 +30,10 @@ public:
     Vec2f               mousePos;
     Quatf               mSceneRot;
     params::InterfaceGl mParams;
-    
+   
+    int                 meshX, meshY, meshType;
     float volumeMin;
+    float time, timer, timerInterval;
     bool drawMesh;
     bool nextMeshState, mouseClick;
     bool meshReset, meshStart, nextMeshReset, nextMeshStart;
@@ -62,15 +64,22 @@ void LobbyProjectApp::setup()
     mouseClick      = false;
     firstMesh       = true;
     secondMesh      = false;
+    meshX           = 48;
+    meshY           = 27;
+    meshType        = 0;
+    timerInterval   = 20.f;
     
     mParams = params::InterfaceGl("mesh", Vec2i(225, 100));
     mParams.addParam("camera rotation", &mSceneRot);
     mParams.addParam("camera viewing volume min", &volumeMin);
     mParams.addParam("draw mesh", &drawMesh);
+    mParams.addParam("timer interval", &timerInterval);
+    
+    
     
     mFrameSubtraction.setup();
-    myMesh = new Mesh(32, 18, 0, firstMesh);
-    myNextMesh = new Mesh(32 , 18 , 0, secondMesh);
+    myMesh = new Mesh(meshX, meshY, meshType, firstMesh);
+    myNextMesh = new Mesh(meshX , meshY , meshType, secondMesh);
     
 }
 
@@ -142,18 +151,35 @@ void LobbyProjectApp::update()
     mCamera.lookAt(mEye, mCenter, mUp);
     gl::setMatrices( mCamera );
     gl::rotate( mSceneRot);
+    time = getElapsedSeconds();
+    float timeDiff = time - timer;
+    if (timeDiff >= timerInterval) {
+        mouseClick = true;
+        timer = time;
+    }
+    
     // will need to call mFrameSubtraction.mTrackedShapes, then iterate through the points of each tracked shape
    // myMesh->getParticle(mFrameSubtraction.mParticleController.mParticles);
     myMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
     myNextMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
     
-    if ( mMovie ) {
+    //reset
+    if ( mMovie ){
         mMovieTexture = gl::Texture(mMovie->getTexture());
+        if (myMesh->mTexture && myMesh->mTexture.getTarget() == 34037 && myMesh->resetMovie == true ) {
+            mMovie->seekToStart();
+        }
+        if (myNextMesh->mTexture && myNextMesh->mTexture.getTarget() == 34037 && myNextMesh->resetMovie == true) {
+            mMovie->seekToStart();
+        }
+        
     }
+    
     
     myMesh->update(mousePos, mTexture, mouseClick);
     myNextMesh->update(mousePos, mMovieTexture, mouseClick);
     mouseClick = false;
+    
 }
 
 void LobbyProjectApp::draw()
@@ -162,8 +188,13 @@ void LobbyProjectApp::draw()
 	gl::clear( Color( 1, 1, 1 ) );
     gl::enableDepthRead();
     if (drawMesh) {
-        myMesh->draw();
-        myNextMesh->draw();
+        if (myMesh->zPct != 1.f) {
+            myMesh->draw();
+        }
+        if (myNextMesh->zPct != 1.f) {
+            myNextMesh->draw();
+        }
+    
     }
     
     mParams.draw();
