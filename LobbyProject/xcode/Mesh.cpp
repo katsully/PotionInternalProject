@@ -255,7 +255,7 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
             }
             
             // ----> check if texture is in visible range
-            if (position.z <= 0.4f && position.z >= -0.6f){
+            if (position.z <= 0.6f && position.z >= -0.6f){
                 drawTexture = true;
             }else{
                 drawTexture = false;
