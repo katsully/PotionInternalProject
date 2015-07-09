@@ -15,6 +15,7 @@ public:
     
     int ID;
     double area;
+    float depth;
     cv::Point centroid; // center point of the shape
     Boolean matchFound;
     cv::vector<cv::Point> hull; // stores point representing the hull of the shape

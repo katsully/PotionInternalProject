@@ -18,10 +18,11 @@ public:
 	void keyDown( KeyEvent event );
     void mouseMove( MouseEvent event );
     void mouseDown( MouseEvent event );
+    void getRandomFile(int _meshTag);
 	void update();
 	void draw();
     
-    qtime::MovieGlRef   mMovie;
+    qtime::MovieGlRef   mMovie ,mMovie2;
     gl::Texture         mMovieTexture;
     gl::Texture         mTexture;
     CameraPersp         mCamera;
@@ -38,19 +39,20 @@ public:
     bool meshReset, meshStart, nextMeshReset, nextMeshStart;
     bool firstMesh;
     bool secondMesh;
+    bool textureType;
     
     FrameSubtraction    mFrameSubtraction;
     Mesh                *myMesh;
 
     Mesh                *myNextMesh;
     
-    vector<boost::filesystem::path> assetNames;
+    vector<boost::filesystem::path> mAssetNames;
+    vector<boost::filesystem::path> mRemainingAssetNames;
+
 };
 
 void LobbyProjectApp::setup()
 {
-    std::cout<<getAppPath()<<std::endl;
-
     addAssetDirectory("../../../../../assets");
     
     // get absolute path to assets' directory
@@ -58,26 +60,15 @@ void LobbyProjectApp::setup()
     // iterate through the asset directory and add all filenames to the vector assetNames
     for ( fs::directory_iterator it( p ); it != fs::directory_iterator(); ++it ) {
         if ( ! is_directory( *it ) ) {
-            assetNames.push_back( it->path().filename() );
+            if (it->path().filename() != ".DS_Store") {
+                mAssetNames.push_back( it->path().filename() );
+            }
         }
     }
-
-    try{
-        // pick a movie at random from the asset directory
-        int randInt = Rand::randInt( 0, assetNames.size() );
-        mMovie = qtime::MovieGl::create(loadAsset(assetNames[randInt]));
-        
-    } catch( ... ){
-        console() << "file is not a valid movie" << std::endl;
-    }
+    mRemainingAssetNames = mAssetNames;
     
-    
-    //load movie and play
-    if (mMovie) {
-        mMovie->setLoop();
-        mMovie->play();
-        mMovie->setVolume(0.01f);
-    }
+    getRandomFile(0);
+    getRandomFile(1);
     
     //init
     mEye            = Vec3f(0, 0, 0.79f);
@@ -90,6 +81,7 @@ void LobbyProjectApp::setup()
     mouseClick      = false;
     firstMesh       = true;
     secondMesh      = false;
+    textureType     = false;
     meshX           = 48;
     meshY           = 27;
     meshType        = 0;
@@ -103,7 +95,6 @@ void LobbyProjectApp::setup()
     
     
     
-    mTexture = gl::Texture(loadImage(loadResource("demo.jpg")));
     mFrameSubtraction.setup();
     myMesh = new Mesh(meshX, meshY, meshType, firstMesh);
     myNextMesh = new Mesh(meshX , meshY , meshType, secondMesh);
@@ -131,6 +122,75 @@ void LobbyProjectApp::mouseDown( MouseEvent event )
     mouseClick = true;
 }
 
+void LobbyProjectApp::getRandomFile(int _meshTag)
+{
+    // if no remaining assets, start over
+    if ( mRemainingAssetNames.empty() ) {
+        mRemainingAssetNames = mAssetNames;
+    }
+    
+    // select a random asset from the list of remaining assets
+    Rand::randomize();
+    int randInt = Rand::randInt( 0, mRemainingAssetNames.size() );
+    boost::filesystem::path assetName = mRemainingAssetNames[randInt];
+    // remove this asset from list of remaining assets
+    mRemainingAssetNames.erase(find(mRemainingAssetNames.begin(), mRemainingAssetNames.end(), assetName ) );
+    // get the extension of the asset
+    boost::filesystem::path ext = assetName.extension();
+    std::cout<<"now showing"<<assetName<<std::endl;
+    // if it is a movie, load and play the movie
+    if( ext == ".mp4" ) {
+        textureType = false;
+        if (_meshTag == 0) {
+            // if it is a movie, load and play the movie
+            if( ext == ".mp4" ) {
+                try{
+                    mMovie = qtime::MovieGl::create(loadAsset(assetName));
+                    
+                } catch( ... ){
+                    console() << "file is not a valid movie" << std::endl;
+                }
+                
+                
+                //load movie and play
+                if (mMovie) {
+                    mMovie->setLoop();
+                    mMovie->play();
+                    mMovie->setVolume(0.01f);
+                }
+                // else load it as a texture
+            } else {
+                mTexture = gl::Texture(loadImage(loadAsset(assetName)));
+            }
+
+        }else{
+            // if it is a movie, load and play the movie
+            if( ext == ".mp4" ) {
+                try{
+                    mMovie2 = qtime::MovieGl::create(loadAsset(assetName));
+                    
+                } catch( ... ){
+                    console() << "file is not a valid movie" << std::endl;
+                }
+                
+                
+                //load movie and play
+                if (mMovie2) {
+                    mMovie2->setLoop();
+                    mMovie2->play();
+                    mMovie2->setVolume(0.01f);
+                }
+                // else load it as a texture
+            } else {
+                mMovieTexture = gl::Texture(loadImage(loadAsset(assetName)));
+            }
+        }
+    }
+        
+    
+
+}
+
 void LobbyProjectApp::update()
 {
     mCamera.setPerspective( 60.0f, 1.f, volumeMin, 3000.0f );
@@ -143,26 +203,29 @@ void LobbyProjectApp::update()
         mouseClick = true;
         timer = time;
     }
-    
-    // will need to call mFrameSubtraction.mTrackedShapes, then iterate through the points of each tracked shape
-   // myMesh->getParticle(mFrameSubtraction.mParticleController.mParticles);
+
     myMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
     myNextMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
     
-    
     //reset
-    if ( mMovie ){
-        mMovieTexture = gl::Texture(mMovie->getTexture());
-        if (myMesh->mTexture && myMesh->mTexture.getTarget() == 34037 && myMesh->resetMovie == true ) {
-            mMovie->seekToStart();
-        }
-        if (myNextMesh->mTexture && myNextMesh->mTexture.getTarget() == 34037 && myNextMesh->resetMovie == true) {
-            mMovie->seekToStart();
-        }
-        
+   
+    if ( myMesh->resetMovie == true){
+        getRandomFile(0);
+    }
+    if ( mMovie && textureType == false ){
+        mTexture = gl::Texture(mMovie->getTexture());
     }
     
     
+    
+    if ( myNextMesh->resetMovie == true){
+        getRandomFile(1);
+    }
+    if ( mMovie2 && textureType == false ){
+        mMovieTexture = gl::Texture(mMovie2->getTexture());
+    }
+    
+
     myMesh->update(mousePos, mTexture, mouseClick);
     myNextMesh->update(mousePos, mMovieTexture, mouseClick);
     mouseClick = false;
