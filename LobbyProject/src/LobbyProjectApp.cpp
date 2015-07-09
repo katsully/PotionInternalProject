@@ -45,12 +45,25 @@ public:
 
     Mesh                *myNextMesh;
     
-    vector<boost::filesystem::path> assetNames;
+    vector<boost::filesystem::path> mAssetNames;
+    vector<boost::filesystem::path> mRemainingAssetNames;
+
 };
 
 void LobbyProjectApp::setup()
 {
     addAssetDirectory("../../../../../assets");
+    
+    // get absolute path to assets' directory
+    fs::path p( getAssetPath( "" ) );
+    // iterate through the asset directory and add all filenames to the vector assetNames
+    for ( fs::directory_iterator it( p ); it != fs::directory_iterator(); ++it ) {
+        if ( ! is_directory( *it ) ) {
+            mAssetNames.push_back( it->path().filename() );
+        }
+    }
+    mRemainingAssetNames = mAssetNames;
+    
     getRandomFile();
     
     //init
@@ -106,18 +119,17 @@ void LobbyProjectApp::mouseDown( MouseEvent event )
 
 void LobbyProjectApp::getRandomFile()
 {
-    // get absolute path to assets' directory
-    fs::path p( getAssetPath( "" ) );
-    // iterate through the asset directory and add all filenames to the vector assetNames
-    for ( fs::directory_iterator it( p ); it != fs::directory_iterator(); ++it ) {
-        if ( ! is_directory( *it ) ) {
-            assetNames.push_back( it->path().filename() );
-        }
+    // if no remaining assets, start over
+    if ( mRemainingAssetNames.empty() ) {
+        mRemainingAssetNames = mAssetNames;
     }
     
     // select a random asset
-    int randInt = Rand::randInt( 0, assetNames.size() );
-    boost::filesystem::path assetName = assetNames[randInt];
+    Rand::randomize();
+    int randInt = Rand::randInt( 0, mAssetNames.size() );
+    boost::filesystem::path assetName = mAssetNames[randInt];
+    // remove this asset from list of remaining assets
+    mRemainingAssetNames.erase(find(mRemainingAssetNames.begin(), mRemainingAssetNames.end(), assetName ) );
     // get the extension of the asset
     boost::filesystem::path ext = assetName.extension();
     
@@ -139,7 +151,6 @@ void LobbyProjectApp::getRandomFile()
         }
     // else load it as a texture
     } else {
-        console() << assetName;
         mTexture = gl::Texture(loadImage(loadAsset(assetName)));
     }
 
