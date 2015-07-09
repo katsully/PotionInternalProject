@@ -32,7 +32,7 @@ public:
    
     int                 meshX, meshY, meshType;
     float volumeMin;
-    float time, timer;
+    float time, timer, timerInterval;
     bool drawMesh;
     bool nextMeshState, mouseClick;
     bool meshReset, meshStart, nextMeshReset, nextMeshStart;
@@ -93,11 +93,13 @@ void LobbyProjectApp::setup()
     meshX           = 48;
     meshY           = 27;
     meshType        = 0;
+    timerInterval   = 20.f;
     
     mParams = params::InterfaceGl("mesh", Vec2i(225, 100));
     mParams.addParam("camera rotation", &mSceneRot);
     mParams.addParam("camera viewing volume min", &volumeMin);
     mParams.addParam("draw mesh", &drawMesh);
+    mParams.addParam("timer interval", &timerInterval);
     
     
     
@@ -137,7 +139,7 @@ void LobbyProjectApp::update()
     gl::rotate( mSceneRot);
     time = getElapsedSeconds();
     float timeDiff = time - timer;
-    if (timeDiff >= 20.f) {
+    if (timeDiff >= timerInterval) {
         mouseClick = true;
         timer = time;
     }
