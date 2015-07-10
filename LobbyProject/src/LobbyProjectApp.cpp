@@ -52,8 +52,7 @@ public:
     vector<boost::filesystem::path> mRemainingAssetNames;
     
     Json::Value mData;  // to store GUI params
-    Json::Reader mReader;
-
+    Json::Reader mReader;   // this will read the json file where the gui params are stored and parse it to mData
 };
 
 void LobbyProjectApp::setup()
@@ -65,7 +64,7 @@ void LobbyProjectApp::setup()
     // iterate through the asset directory and add all filenames to the vector assetNames
     for ( fs::directory_iterator it( p ); it != fs::directory_iterator(); ++it ) {
         if ( ! is_directory( *it ) ) {
-            if (it->path().filename() != ".DS_Store") {
+            if ( it->path().filename() != ".DS_Store" && it->path().filename() != ".json" ) {
                 mAssetNames.push_back( it->path().filename() );
             }
         }
@@ -79,9 +78,6 @@ void LobbyProjectApp::setup()
     mEye            = Vec3f(0, 0, 0.79f);
     mCenter         = Vec3f::zero();
     mUp             = Vec3f::yAxis();
-    volumeMin       = 0.20f;
-    mSceneRot       = ci::Quatf(M_PI, 0, 0);
-   // drawMesh        = true;
     nextMeshState   = false;
     mouseClick      = false;
     firstMesh       = true;
@@ -90,11 +86,21 @@ void LobbyProjectApp::setup()
     meshX           = 48;
     meshY           = 27;
     meshType        = 0;
-    timerInterval   = 20.f;
     
-    std::ifstream test("sample.json", std::ifstream::binary);
-    mReader.parse( test, mData, false );
-    drawMesh = mData.get("drawMesh", false).asBool();
+    // get filepath to json file
+    string guiParamsFilePath = p.string() + "/gui_params.json";
+    // read the json file
+    ifstream ifile(guiParamsFilePath, std::ifstream::binary);
+    // parse the data to mData
+    bool itworked = mReader.parse( ifile, mData, false );
+    // if succesful, assign variables values based on the json file
+    if (itworked) {
+        Json::Value sceneRotParams = mData.get("mSceneRot", {});
+        mSceneRot = ci::Quatf( sceneRotParams.get( "xRotation", 0.0f ).asFloat(), sceneRotParams.get( "yRotation", 0.0f ).asFloat(), sceneRotParams.get( "zRotation", 0.0f ).asFloat() );
+        volumeMin = mData.get("volumeMin", 0.0f).asFloat();
+        drawMesh = mData.get("drawMesh", false).asBool();
+        timerInterval = mData.get("timerInterval", 0.0f).asFloat();
+    }
     
     mParams = params::InterfaceGl("mesh", Vec2i(225, 100));
     mParams.addParam("camera rotation", &mSceneRot);
@@ -147,7 +153,7 @@ void LobbyProjectApp::getRandomFile(int _meshTag)
     mRemainingAssetNames.erase(find(mRemainingAssetNames.begin(), mRemainingAssetNames.end(), assetName ) );
     // get the extension of the asset
     boost::filesystem::path ext = assetName.extension();
-    std::cout<<"now showing"<<assetName<<std::endl;
+//    std::cout<<"now showing"<<assetName<<std::endl;
     // if it is a movie, load and play the movie
     if( ext == ".mp4" ) {
         textureType = false;
