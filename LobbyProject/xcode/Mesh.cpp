@@ -231,7 +231,8 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
                 position -= Vec3f(xOffset + noise, yOffset + noise2,  0.f);
             }
 
-            float teamPosZ;
+            float tempPosZ;
+            float currentPosZ = position.z;
             if (position.z <= 0.6f && position.z >= -0.4f) {
                 // -----> shape influence
                 if (shapePos.size() > 0) {
@@ -246,13 +247,17 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
                     }
                 }
                 
-                if (isTarget[x * VERTICES_Y + y] == true) {
-                    teamPosZ = position.z;
+                if (timeDiff[x * VERTICES_Y + y] == time) {
+                    tempPosZ = currentPosZ - position.z;
+
                 }
+                
+               // std::cout<<tempPosZ<< std::endl;
                 
                 // -----> influnce timer
                 zPctBounce[x * VERTICES_Y + y] = lmap<float>(easeIn(currIterBounce[x * VERTICES_Y + y], 0.0, 1.0f, totalIterBounce[x * VERTICES_Y + y]), 0.f, 1.f, 1.f, 0);
                 if ((time - timeDiff[x * VERTICES_Y + y] ) < 2.f && isTarget[x * VERTICES_Y + y] == true ) {
+                    //position.z -= tempPosZ* 10.f * zPctBounce[x * VERTICES_Y + y];
                     position.z -= 0.1f * zPctBounce[x * VERTICES_Y + y];
                 }else if((time - timeDiff[x * VERTICES_Y + y]) >= 2.f){
                     isTarget[x * VERTICES_Y + y] = false;
