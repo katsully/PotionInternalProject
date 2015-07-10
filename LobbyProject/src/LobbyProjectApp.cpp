@@ -39,7 +39,7 @@ public:
     bool meshReset, meshStart, nextMeshReset, nextMeshStart;
     bool firstMesh;
     bool secondMesh;
-    bool textureType;
+    bool textureType, textureType2;
     
     FrameSubtraction    mFrameSubtraction;
     Mesh                *myMesh;
@@ -82,6 +82,7 @@ void LobbyProjectApp::setup()
     firstMesh       = true;
     secondMesh      = false;
     textureType     = false;
+    textureType2    = false;
     meshX           = 48;
     meshY           = 27;
     meshType        = 0;
@@ -140,55 +141,53 @@ void LobbyProjectApp::getRandomFile(int _meshTag)
     std::cout<<"now showing"<<assetName<<std::endl;
     // if it is a movie, load and play the movie
     if( ext == ".mp4" ) {
-        textureType = false;
         if (_meshTag == 0) {
-            // if it is a movie, load and play the movie
-            if( ext == ".mp4" ) {
-                try{
-                    mMovie = qtime::MovieGl::create(loadAsset(assetName));
-                    
-                } catch( ... ){
-                    console() << "file is not a valid movie" << std::endl;
-                }
+            textureType = false;
+            try{
+                mMovie = qtime::MovieGl::create(loadAsset(assetName));
                 
-                
-                //load movie and play
-                if (mMovie) {
-                    mMovie->setLoop();
-                    mMovie->play();
-                    mMovie->setVolume(0.01f);
-                }
-                // else load it as a texture
-            } else {
-                mTexture = gl::Texture(loadImage(loadAsset(assetName)));
+            } catch( ... ){
+                console() << "file is not a valid movie" << std::endl;
             }
-
         }else{
-            // if it is a movie, load and play the movie
-            if( ext == ".mp4" ) {
-                try{
-                    mMovie2 = qtime::MovieGl::create(loadAsset(assetName));
-                    
-                } catch( ... ){
-                    console() << "file is not a valid movie" << std::endl;
-                }
+            textureType2 = false;
+            try{
+                mMovie2 = qtime::MovieGl::create(loadAsset(assetName));
                 
-                
-                //load movie and play
-                if (mMovie2) {
-                    mMovie2->setLoop();
-                    mMovie2->play();
-                    mMovie2->setVolume(0.01f);
-                }
-                // else load it as a texture
-            } else {
-                mMovieTexture = gl::Texture(loadImage(loadAsset(assetName)));
+            } catch( ... ){
+                console() << "file is not a valid movie" << std::endl;
             }
+        }
+        
+        //load movie and play
+        if (_meshTag == 0) {
+            textureType = false;
+            if (mMovie) {
+                mMovie->setLoop();
+                mMovie->play();
+                mMovie->setVolume(0.01f);
+            }
+        }else{
+            textureType2 = false;
+            if (mMovie2) {
+                mMovie2->setLoop();
+                mMovie2->play();
+                mMovie2->setVolume(0.01f);
+            }
+        }
+        // else load it as a texture
+    } else {
+        
+        if (_meshTag == 0) {
+            textureType = true;
+            mTexture = gl::Texture(loadImage(loadAsset(assetName)));
+        }
+        if (_meshTag == 1) {
+            textureType2 = true;
+            mMovieTexture = gl::Texture(loadImage(loadAsset(assetName)));
         }
     }
         
-    
-
 }
 
 void LobbyProjectApp::update()
@@ -221,7 +220,7 @@ void LobbyProjectApp::update()
     if ( myNextMesh->resetMovie == true){
         getRandomFile(1);
     }
-    if ( mMovie2 && textureType == false ){
+    if ( mMovie2 && textureType2 == false ){
         mMovieTexture = gl::Texture(mMovie2->getTexture());
     }
     
