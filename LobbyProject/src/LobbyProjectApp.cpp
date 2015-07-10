@@ -64,7 +64,7 @@ void LobbyProjectApp::setup()
     // iterate through the asset directory and add all filenames to the vector assetNames
     for ( fs::directory_iterator it( p ); it != fs::directory_iterator(); ++it ) {
         if ( ! is_directory( *it ) ) {
-            if ( it->path().filename() != ".DS_Store" && it->path().filename() != ".json" ) {
+            if ( it->path().filename() != ".DS_Store" && it->path().filename() != "gui_params.json" ) {
                 mAssetNames.push_back( it->path().filename() );
             }
         }
@@ -196,6 +196,7 @@ void LobbyProjectApp::getRandomFile(int _meshTag)
         
         if (_meshTag == 0) {
             textureType = true;
+            console() << "asset name" << assetName << endl;
             mTexture = gl::Texture(loadImage(loadAsset(assetName)));
         }
         if (_meshTag == 1) {
