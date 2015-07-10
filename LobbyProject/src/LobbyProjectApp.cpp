@@ -6,6 +6,8 @@
 #include "Mesh.h"
 #include "cinder/Camera.h"
 #include "cinder/params/Params.h"
+#include "json/json.h"
+#include <fstream>
 
 using namespace ci;
 using namespace ci::app;
@@ -18,10 +20,12 @@ public:
 	void keyDown( KeyEvent event );
     void mouseMove( MouseEvent event );
     void mouseDown( MouseEvent event );
+    void getRandomFile(int _meshTag);
 	void update();
 	void draw();
+    void shutdown();
     
-    qtime::MovieGlRef   mMovie;
+    qtime::MovieGlRef   mMovie ,mMovie2;
     gl::Texture         mMovieTexture;
     gl::Texture         mTexture;
     CameraPersp         mCamera;
@@ -29,26 +33,34 @@ public:
     Vec2f               mousePos;
     Quatf               mSceneRot;
     params::InterfaceGl mParams;
-    
+   
+    int                 meshX, meshY, meshType;
     float volumeMin;
+    float time, timer, timerInterval;
     bool drawMesh;
     bool nextMeshState, mouseClick;
     bool meshReset, meshStart, nextMeshReset, nextMeshStart;
     bool firstMesh;
     bool secondMesh;
+    bool textureType, textureType2;
     
     FrameSubtraction    mFrameSubtraction;
     Mesh                *myMesh;
 
     Mesh                *myNextMesh;
     
-    vector<boost::filesystem::path> assetNames;
+    vector<boost::filesystem::path> mAssetNames;
+    vector<boost::filesystem::path> mRemainingAssetNames;
+    
+    Json::Value mData;  // to store GUI params
+    Json::Reader mReader;   // this will read the json file where the gui params are stored and parse it to mData
+    
+    // bool for whether app is fullscreen or not
+    bool mFullScreen;
 };
 
 void LobbyProjectApp::setup()
 {
-    std::cout<<getAppPath()<<std::endl;
-
     addAssetDirectory("../../../../../assets");
     
     // get absolute path to assets' directory
@@ -56,48 +68,61 @@ void LobbyProjectApp::setup()
     // iterate through the asset directory and add all filenames to the vector assetNames
     for ( fs::directory_iterator it( p ); it != fs::directory_iterator(); ++it ) {
         if ( ! is_directory( *it ) ) {
-            assetNames.push_back( it->path().filename() );
+            if ( it->path().filename() != ".DS_Store" && it->path().filename() != "gui_params.json" ) {
+                mAssetNames.push_back( it->path().filename() );
+            }
         }
     }
-
-    try{
-        // pick a movie at random from the asset directory
-        int randInt = Rand::randInt( 0, assetNames.size() );
-        mMovie = qtime::MovieGl::create(loadAsset(assetNames[randInt]));
-        
-    } catch( ... ){
-        console() << "file is not a valid movie" << std::endl;
-    }
+    mRemainingAssetNames = mAssetNames;
     
-    
-    //load movie and play
-    if (mMovie) {
-        mMovie->setLoop();
-        mMovie->play();
-        mMovie->setVolume(0.01f);
-    }
+    getRandomFile(0);
+    getRandomFile(1);
     
     //init
     mEye            = Vec3f(0, 0, 0.79f);
     mCenter         = Vec3f::zero();
     mUp             = Vec3f::yAxis();
-    volumeMin       = 0.20f;
-    mSceneRot       = ci::Quatf(M_PI, 0, 0);
-    drawMesh        = true;
     nextMeshState   = false;
     mouseClick      = false;
     firstMesh       = true;
     secondMesh      = false;
+    textureType     = false;
+    textureType2    = false;
+    meshX           = 48;
+    meshY           = 27;
+    meshType        = 0;
+    mFullScreen = true;
+    
+    // set app to fullscreen
+    setFullScreen(mFullScreen);
+    
+    // get filepath to json file
+    string guiParamsFilePath = p.string() + "/gui_params.json";
+    // read the json file
+    ifstream ifile(guiParamsFilePath, std::ifstream::binary);
+    // parse the data to mData
+    bool itworked = mReader.parse( ifile, mData, false );
+    // if succesful, assign variables values based on the json file
+    if (itworked) {
+        Json::Value sceneRotParams = mData.get("mSceneRot", {});
+        mSceneRot = ci::Quatf( sceneRotParams.get( "xRotation", 0.0f ).asFloat(), sceneRotParams.get( "yRotation", 0.0f ).asFloat(), sceneRotParams.get( "zRotation", 0.0f ).asFloat() );
+        volumeMin = mData.get("volumeMin", 0.0f).asFloat();
+        drawMesh = mData.get("drawMesh", false).asBool();
+        timerInterval = mData.get("timerInterval", 0.0f).asFloat();
+    }
     
     mParams = params::InterfaceGl("mesh", Vec2i(225, 100));
     mParams.addParam("camera rotation", &mSceneRot);
     mParams.addParam("camera viewing volume min", &volumeMin);
     mParams.addParam("draw mesh", &drawMesh);
+    mParams.addParam("timer interval", &timerInterval);
     
-    mTexture = gl::Texture(loadImage(loadResource("demo.jpg")));
+    
+    
+    
     mFrameSubtraction.setup();
-    myMesh = new Mesh(32, 18, 0, firstMesh);
-    myNextMesh = new Mesh(32 , 18 , 0, secondMesh);
+    myMesh = new Mesh(meshX, meshY, meshType, firstMesh);
+    myNextMesh = new Mesh(meshX , meshY , meshType, secondMesh);
     
 }
 
@@ -109,6 +134,10 @@ void LobbyProjectApp::prepareSettings( Settings* settings )
 
 void LobbyProjectApp::keyDown( KeyEvent event )
 {
+    if ( event.getChar() == 'f' ) {
+        setFullScreen(!mFullScreen);
+        mFullScreen = !mFullScreen;
+    }
 }
 
 void LobbyProjectApp::mouseMove( MouseEvent event )
@@ -122,24 +151,113 @@ void LobbyProjectApp::mouseDown( MouseEvent event )
     mouseClick = true;
 }
 
+void LobbyProjectApp::getRandomFile(int _meshTag)
+{
+    // if no remaining assets, start over
+    if ( mRemainingAssetNames.empty() ) {
+        mRemainingAssetNames = mAssetNames;
+    }
+    
+    // select a random asset from the list of remaining assets
+    Rand::randomize();
+    int randInt = Rand::randInt( 0, mRemainingAssetNames.size() );
+    boost::filesystem::path assetName = mRemainingAssetNames[randInt];
+    // remove this asset from list of remaining assets
+    mRemainingAssetNames.erase(find(mRemainingAssetNames.begin(), mRemainingAssetNames.end(), assetName ) );
+    // get the extension of the asset
+    boost::filesystem::path ext = assetName.extension();
+//    std::cout<<"now showing"<<assetName<<std::endl;
+    // if it is a movie, load and play the movie
+    if( ext == ".mp4" ) {
+        if (_meshTag == 0) {
+            textureType = false;
+            try{
+                mMovie = qtime::MovieGl::create(loadAsset(assetName));
+                
+            } catch( ... ){
+                console() << "file is not a valid movie" << std::endl;
+            }
+        }else{
+            textureType2 = false;
+            try{
+                mMovie2 = qtime::MovieGl::create(loadAsset(assetName));
+                
+            } catch( ... ){
+                console() << "file is not a valid movie" << std::endl;
+            }
+        }
+        
+        //load movie and play
+        if (_meshTag == 0) {
+            textureType = false;
+            if (mMovie) {
+                mMovie->setLoop();
+                mMovie->play();
+                mMovie->setVolume(0.01f);
+            }
+        }else{
+            textureType2 = false;
+            if (mMovie2) {
+                mMovie2->setLoop();
+                mMovie2->play();
+                mMovie2->setVolume(0.01f);
+            }
+        }
+        // else load it as a texture
+    } else {
+        
+        if (_meshTag == 0) {
+            textureType = true;
+            console() << "asset name" << assetName << endl;
+            mTexture = gl::Texture(loadImage(loadAsset(assetName)));
+        }
+        if (_meshTag == 1) {
+            textureType2 = true;
+            mMovieTexture = gl::Texture(loadImage(loadAsset(assetName)));
+        }
+    }
+        
+}
+
 void LobbyProjectApp::update()
 {
     mCamera.setPerspective( 60.0f, 1.f, volumeMin, 3000.0f );
     mCamera.lookAt(mEye, mCenter, mUp);
     gl::setMatrices( mCamera );
     gl::rotate( mSceneRot);
-    // will need to call mFrameSubtraction.mTrackedShapes, then iterate through the points of each tracked shape
-   // myMesh->getParticle(mFrameSubtraction.mParticleController.mParticles);
+    time = getElapsedSeconds();
+    float timeDiff = time - timer;
+    if (timeDiff >= timerInterval) {
+        mouseClick = true;
+        timer = time;
+    }
+
     myMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
     myNextMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
     
-    if ( mMovie ){
-        mMovieTexture = gl::Texture(mMovie->getTexture());
+    //reset
+   
+    if ( myMesh->resetMovie == true){
+        getRandomFile(0);
+    }
+    if ( mMovie && textureType == false ){
+        mTexture = gl::Texture(mMovie->getTexture());
     }
     
+    
+    
+    if ( myNextMesh->resetMovie == true){
+        getRandomFile(1);
+    }
+    if ( mMovie2 && textureType2 == false ){
+        mMovieTexture = gl::Texture(mMovie2->getTexture());
+    }
+    
+
     myMesh->update(mousePos, mTexture, mouseClick);
     myNextMesh->update(mousePos, mMovieTexture, mouseClick);
     mouseClick = false;
+    
 }
 
 void LobbyProjectApp::draw()
@@ -148,11 +266,20 @@ void LobbyProjectApp::draw()
 	gl::clear( Color( 1, 1, 1 ) );
     gl::enableDepthRead();
     if (drawMesh) {
-        myMesh->draw();
-        myNextMesh->draw();
+        if (myMesh->zPct != 1.f) {
+            myMesh->draw();
+        }
+        if (myNextMesh->zPct != 1.f) {
+            myNextMesh->draw();
+        }
+    
     }
     
     mParams.draw();
+}
+
+void LobbyProjectApp::shutdown(){
+    mFrameSubtraction.shutdown();
 }
 
 CINDER_APP_NATIVE( LobbyProjectApp, RendererGl )

@@ -25,6 +25,7 @@ public:
     void setup();
     void update();
     void draw();
+    void shutdown();
     
     cv::Mat mInput;
     
@@ -44,6 +45,7 @@ private:
     
     typedef vector< vector<cv::Point > > ContourVector;
     ContourVector mContours;
+    ContourVector mApproxContours;
     int shapeUID;
 
     cv::vector<cv::Vec4i> mHierarchy;

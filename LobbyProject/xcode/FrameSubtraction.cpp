@@ -49,6 +49,7 @@ void FrameSubtraction::onDepth( openni::VideoFrameRef frame, const OpenNI::Devic
     cv::Mat eightBit;
     
     cv::Mat withoutBlack;
+    // remove black pixels from frame which get detected as noise
     withoutBlack = removeBlack( mInput, mNearLimit, mFarLimit );
     
     // convert matrix from 16 bit to 8 bit with some color compensation
@@ -57,17 +58,25 @@ void FrameSubtraction::onDepth( openni::VideoFrameRef frame, const OpenNI::Devic
     cv::bitwise_not( eightBit, eightBit );
     
     mContours.clear();
+    mApproxContours.clear();
     // using a threshold to reduce noise
     cv::threshold( eightBit, thresh, 0.0, 255.0, CV_8U );
     // draw lines around shapes
     cv::findContours( thresh, mContours, mHierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE );
     
+    vector<cv::Point> approx;
+    // approx number of points per contour
+    for ( int i = 0; i < mContours.size(); i++ ) {
+        cv::approxPolyDP(mContours[i], approx, 3, true );
+        mApproxContours.push_back( approx );
+    }
+    
     mShapes.clear();
     // get data that we can later compare
-    mShapes = getEvaluationSet( mContours, 75, 100000 );
+    mShapes = getEvaluationSet( mApproxContours, 75, 100000 );
     
     // find the nearest match for each shape
-    for ( int i=0; i<mTrackedShapes.size(); i++ ) {
+    for ( int i = 0; i < mTrackedShapes.size(); i++ ) {
         Shape* nearestShape = findNearestMatch( mTrackedShapes[i], mShapes, 5000 );
         
         // a tracked shape was found, update that tracked shape with the new shape
@@ -93,7 +102,7 @@ void FrameSubtraction::onDepth( openni::VideoFrameRef frame, const OpenNI::Devic
     }
     
     // if we didn't find a match for x frames, delete the tracked shape
-    for ( vector<Shape>::iterator it=mTrackedShapes.begin(); it!=mTrackedShapes.end(); ) {
+    for ( vector<Shape>::iterator it = mTrackedShapes.begin(); it != mTrackedShapes.end(); ) {
         if ( ci::app::getElapsedFrames() - it->lastFrameSeen > 20 ) {
             // remove the tracked shape
             it = mTrackedShapes.erase(it);
@@ -118,8 +127,6 @@ vector< Shape > FrameSubtraction::getEvaluationSet( ContourVector rawContours, i
         
         // extract data from contour
         cv::Scalar center = mean(matrix);
-        // get depth value from center point
-        // map 10 4000 to 0 1
         double area = cv::contourArea(matrix);
         
         // reject it if too small
@@ -136,6 +143,11 @@ vector< Shape > FrameSubtraction::getEvaluationSet( ContourVector rawContours, i
         Shape shape;
         shape.area = area;
         shape.centroid = cv::Point( center.val[0], center.val[1] );
+        
+        // get depth value from center point
+        // map 10 4000 to 0 1
+        float centerDepth = (float)mInput.at<short>( center.val[1], center.val[0] );
+        shape.depth = lmap( centerDepth, (float)mNearLimit, (float)mFarLimit, 0.0f, 1.0f );
         
         // convex hull is the polygon enclosing the contour
         shape.hull = c;
@@ -156,7 +168,7 @@ Shape* FrameSubtraction::findNearestMatch( Shape trackedShape, vector< Shape > &
     for ( Shape &candidate : shapes ) {
         // find dist between the center of the contour and the shape
         cv::Point distPoint = trackedShape.centroid - candidate.centroid;
-        float dist = cv::sqrt( distPoint.x*distPoint.x + distPoint.y*distPoint.y );
+        float dist = cv::sqrt( distPoint.x * distPoint.x + distPoint.y * distPoint.y );
         if ( dist > maximumDistance ) {
             continue;
         }
@@ -177,14 +189,19 @@ void FrameSubtraction::update()
 
 cv::Mat FrameSubtraction::removeBlack( cv::Mat input, short nearLimit, short farLimit )
 {
-    for( int y=0; y<input.rows; y++ ) {
-        for( int x=0; x<input.cols; x++ ) {
+    for( int y = 0; y < input.rows; y++ ) {
+        for( int x = 0; x < input.cols; x++ ) {
             if( input.at<short>(y,x) < nearLimit || input.at<short>(y,x) > farLimit ) {
                 input.at<short>(y,x) = 4000;
             }
         }
     }
     return input;
+}
+
+void FrameSubtraction::shutdown(){
+    // stop the camera after the app quits
+    mDevice->stop();
 }
 
 void FrameSubtraction::draw()

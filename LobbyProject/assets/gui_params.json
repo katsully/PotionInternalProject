@@ -1,0 +1,10 @@
+{  
+   "mSceneRot":{
+      "xRotation":3.14159265358979323846,
+      "yRotation":0,
+      "zRotation":0
+   },
+   "volumeMin":0.20,
+   "drawMesh":true,
+   "timerInterval":20.0
+}
