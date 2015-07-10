@@ -73,7 +73,7 @@ void FrameSubtraction::onDepth( openni::VideoFrameRef frame, const OpenNI::Devic
     vector<cv::Point> approx;
     // approx number of points per contour
     for ( int i = 0; i < mContours.size(); i++ ) {
-        cv::approxPolyDP(mContours[i], approx, 3, true );
+        cv::approxPolyDP(mContours[i], approx, 1, true );
         mApproxContours.push_back( approx );
     }
     
@@ -157,6 +157,7 @@ vector< Shape > FrameSubtraction::getEvaluationSet( ContourVector rawContours, i
         
         // store points around shape
         shape.hull = c;
+//        console() << "shape size " << shape.hull.size() << endl;
         shape.matchFound = false;
         vec.push_back(shape);
     }
