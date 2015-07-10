@@ -45,10 +45,12 @@ Mesh::Mesh(int &_vertices_x, int &_vertices_y, int &_meshType, bool &_isFirstMes
 
 
 float Mesh::easeIn(float t, float b , float c, float d){
-    return c*((t=t/d-1)*t*t + 1) + b;
+    if ((t/=d/2) < 1) return c/2*t*t*t + b;
+    return c/2*((t-=2)*t*t + 2) + b;
 }
 
 void Mesh::getTrackedShapes(vector<Shape> &_mTrackedShapes){
+    
     
     shapePos.clear();
     if (drawTexture) {
@@ -56,7 +58,7 @@ void Mesh::getTrackedShapes(vector<Shape> &_mTrackedShapes){
         if (mTrackedShapes.size() > 0) {
             for (int i = 0; i < mTrackedShapes.size() - 1; i ++) {
                 for (cv::vector<cv::Point>::iterator j = mTrackedShapes[i].hull.begin(); j != mTrackedShapes[i].hull.end() ; ++j ) {
-                    shapePos.push_back(Vec2f(lmap<float>(j->x, 0, 320, 0, getWindowWidth()), lmap<float>(j->y, 0, 240, 0, getWindowHeight())));
+                    shapePos.push_back(Vec3f(lmap<float>(j->x, 0, 320, 0, getWindowWidth()), lmap<float>(j->y, 0, 240, 0, getWindowHeight()),  lmap<float>(mTrackedShapes[i].depth, 0.f, 1.f, 1.f, -1.f)));
                 }
                 
             }
@@ -69,9 +71,7 @@ void Mesh::getTrackedShapes(vector<Shape> &_mTrackedShapes){
 void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
     
     float time = getElapsedSeconds();
-    if (shapePos.size() > 0){
-        this->mShapePos = shapePos[0];
-    }
+
     bool mouseClick = _mouseClick;
     float zPctReverse = lmap<float>(zPct, 0.0, 1.0, 1.0, 0);
     float zPctStarting = lmap<float>(zPct, 0.0, 1.0, -1.0, 0);
@@ -220,22 +220,21 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
                 position -= Vec3f(xOffset + noise, yOffset + noise2,  0.f);
             }
 
-            
-            
-            
-            if (position.z <= 0.2f && position.z >= -0.4f) {
+
+            if (position.z <= 0.6f && position.z >= -0.4f) {
                 // -----> shape influence
                 if (shapePos.size() > 0) {
                     for (int i = 0; i < shapePos.size(); i ++) {
                         Vec2f diff = Vec2f((shapePos[i].x - relPos.x) * 0.001f, (shapePos[i].y - relPos.y)  * 0.001f);
                         float shapeInfluence = diff.lengthSquared();
                         if (shapeInfluence < 0.005f) {
-                            position.z -= shapeInfluence * 0.3;
+                            position.z -= shapeInfluence * 1.f + shapePos[i].z * 0.001f ;
                             isTarget[x * VERTICES_Y + y] = true;
                             timeDiff[x * VERTICES_Y + y] = time;
                         }
                     }
                 }
+                
                 
                 // -----> influnce timer
                 zPctBounce[x * VERTICES_Y + y] = lmap<float>(easeIn(currIterBounce[x * VERTICES_Y + y], 0.0, 1.0f, totalIterBounce[x * VERTICES_Y + y]), 0.f, 1.f, 1.f, 0);
@@ -255,7 +254,7 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
             }
             
             // ----> check if texture is in visible range
-            if (position.z <= 0.6f && position.z >= -0.6f){
+            if (position.z <= 0.8f && position.z >= -0.6f){
                 drawTexture = true;
             }else{
                 drawTexture = false;
@@ -287,7 +286,7 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
     
     if (stateStart) {
         if (currIterStart< totalIterStart) {
-            currIterStart += transitionSpeed;
+            currIterStart += transitionSpeed * 0.75f;
         }
     }
     

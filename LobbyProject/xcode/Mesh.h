@@ -58,11 +58,10 @@ public:
     
     vector<Vec2f>       particlePos;
     vector<float>       particleRad;
-    vector<Vec2f>       shapePos;
+    vector<Vec3f>       shapePos;
     std::list<Particle> mParticles;
     vector<Shape>       mTrackedShapes;
     
-    Vec2f           mShapePos;
     Perlin          mPerlin;
     Perlin          mOsci;
     
