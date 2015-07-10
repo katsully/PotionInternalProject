@@ -57,6 +57,8 @@ public:
     
     bool mFullScreen;   // bool for whether app is fullscreen or not
     bool mShowParams;    // boo for whether gui params are shown
+    
+    int mFrameRate;
 };
 
 void LobbyProjectApp::setup()
@@ -91,6 +93,7 @@ void LobbyProjectApp::setup()
     meshX           = 64;
     meshY           = 36;
     meshType        = 0;
+    mFrameRate = getAverageFps();
     mFullScreen = true;
     mShowParams = false;
     
@@ -112,11 +115,12 @@ void LobbyProjectApp::setup()
         timerInterval = mData.get( "timerInterval", 0.0f ).asFloat();
     }
     
-    mParams = params::InterfaceGl( "mesh", Vec2i( 225, 100 ) );
+    mParams = params::InterfaceGl( "mesh", Vec2i( 225, 125 ) );
     mParams.addParam( "camera rotation", &mSceneRot );
     mParams.addParam( "camera viewing volume min", &volumeMin );
     mParams.addParam( "draw mesh", &drawMesh );
     mParams.addParam( "timer interval", &timerInterval );
+    mParams.addParam( "fps", &mFrameRate );
     
     mFrameSubtraction.setup( mData );
     myMesh = new Mesh( meshX, meshY, meshType, firstMesh );
@@ -222,6 +226,8 @@ void LobbyProjectApp::getRandomFile(int _meshTag)
 
 void LobbyProjectApp::update()
 {
+    mFrameRate = getAverageFps();
+    
     mCamera.setPerspective( 60.0f, 1.f, volumeMin, 3000.0f );
     mCamera.lookAt(mEye, mCenter, mUp);
     gl::setMatrices( mCamera );
