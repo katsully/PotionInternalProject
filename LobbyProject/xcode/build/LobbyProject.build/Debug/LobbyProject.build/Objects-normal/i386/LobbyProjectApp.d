@@ -211,4 +211,5 @@ dependencies: \
   ../../../Cinder/include/cinder/TriMesh.h \
   ../../../Cinder/include/cinder/Perlin.h \
   ../../../Cinder/include/cinder/Camera.h \
-  ../../../Cinder/include/cinder/params/Params.h
+  ../../../Cinder/include/cinder/params/Params.h \
+  ../blocks/jsoncpp/dist/json/json.h
