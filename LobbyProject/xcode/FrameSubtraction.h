@@ -14,6 +14,7 @@
 #include "cinder/Rand.h"
 #include "ParticleControllerController.h"
 #include "Shape.h"
+#include "json/json.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -22,7 +23,7 @@ using namespace std;
 class FrameSubtraction {
 public:
     FrameSubtraction();
-    void setup();
+    void setup( Json::Value data );
     void update();
     void draw();
     void shutdown();
@@ -40,8 +41,13 @@ private:
     ci::Surface8u mSurface;
     ci::Surface8u mSurfaceDepth;
     
+    // all pixels below near limit and above far limit are set to far limit depth
     short mNearLimit;
     short mFarLimit;
+    
+    // threshold for the camera
+    double mThresh;
+    double mMaxVal;
     
     typedef vector< vector<cv::Point > > ContourVector;
     ContourVector mContours;

@@ -12,7 +12,7 @@ FrameSubtraction::FrameSubtraction()
 {
 }
 
-void FrameSubtraction::setup()
+void FrameSubtraction::setup( Json::Value data )
 {
     // setup camera
     mDeviceManager = OpenNI::DeviceManager::create();
@@ -36,8 +36,11 @@ void FrameSubtraction::setup()
     }
     
     // sets threshold to ignore all black pixels and pixels that are far away from the camera
-    mNearLimit = 30;
-    mFarLimit = 4000;
+    // read data from json file
+    mNearLimit = data.get("mNearLimit", 0).asInt();
+    mFarLimit = data.get("mFarLimit", 0).asInt();
+    mThresh = data.get("mThresh", 0.0).asFloat();
+    mMaxVal = data.get("mMaxVal", 0.0).asFloat();
 }
 
 void FrameSubtraction::onDepth( openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions )
@@ -60,7 +63,7 @@ void FrameSubtraction::onDepth( openni::VideoFrameRef frame, const OpenNI::Devic
     mContours.clear();
     mApproxContours.clear();
     // using a threshold to reduce noise
-    cv::threshold( eightBit, thresh, 0.0, 255.0, CV_8U );
+    cv::threshold( eightBit, thresh, mThresh, mMaxVal, CV_8U );
     // draw lines around shapes
     cv::findContours( thresh, mContours, mHierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE );
     
