@@ -50,20 +50,23 @@ void FrameSubtraction::onDepth( openni::VideoFrameRef frame, const OpenNI::Devic
 
     cv::Mat thresh;
     cv::Mat eightBit;
-    
     cv::Mat withoutBlack;
+    
     // remove black pixels from frame which get detected as noise
     withoutBlack = removeBlack( mInput, mNearLimit, mFarLimit );
     
     // convert matrix from 16 bit to 8 bit with some color compensation
     withoutBlack.convertTo( eightBit, CV_8UC3, 0.1/1.0 );
+    
     // invert the image
     cv::bitwise_not( eightBit, eightBit );
     
     mContours.clear();
     mApproxContours.clear();
+    
     // using a threshold to reduce noise
     cv::threshold( eightBit, thresh, mThresh, mMaxVal, CV_8U );
+    
     // draw lines around shapes
     cv::findContours( thresh, mContours, mHierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE );
     
@@ -152,7 +155,7 @@ vector< Shape > FrameSubtraction::getEvaluationSet( ContourVector rawContours, i
         float centerDepth = (float)mInput.at<short>( center.val[1], center.val[0] );
         shape.depth = lmap( centerDepth, (float)mNearLimit, (float)mFarLimit, 0.0f, 1.0f );
         
-        // convex hull is the polygon enclosing the contour
+        // store points around shape
         shape.hull = c;
         shape.matchFound = false;
         vec.push_back(shape);
