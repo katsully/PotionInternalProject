@@ -199,6 +199,11 @@ cv::Mat FrameSubtraction::removeBlack( cv::Mat input, short nearLimit, short far
     return input;
 }
 
+void FrameSubtraction::shutdown(){
+    // stop the camera after the app quits
+    mDevice->stop();
+}
+
 void FrameSubtraction::draw()
 {
 }

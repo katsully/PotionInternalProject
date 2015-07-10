@@ -23,6 +23,7 @@ public:
     void getRandomFile(int _meshTag);
 	void update();
 	void draw();
+    void shutdown();
     
     qtime::MovieGlRef   mMovie ,mMovie2;
     gl::Texture         mMovieTexture;
@@ -275,6 +276,10 @@ void LobbyProjectApp::draw()
     }
     
     mParams.draw();
+}
+
+void LobbyProjectApp::shutdown(){
+    mFrameSubtraction.shutdown();
 }
 
 CINDER_APP_NATIVE( LobbyProjectApp, RendererGl )
