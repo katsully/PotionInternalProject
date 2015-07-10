@@ -57,6 +57,8 @@ public:
     
     bool mFullScreen;   // bool for whether app is fullscreen or not
     bool mShowParams;    // boo for whether gui params are shown
+    
+    int mFrameRate;
 };
 
 void LobbyProjectApp::setup()
@@ -91,6 +93,7 @@ void LobbyProjectApp::setup()
     meshX           = 64;
     meshY           = 36;
     meshType        = 0;
+    mFrameRate = getAverageFps();
     mFullScreen = true;
     mShowParams = false;
     
@@ -105,25 +108,23 @@ void LobbyProjectApp::setup()
     bool itworked = mReader.parse( ifile, mData, false );
     // if succesful, assign variables values based on the json file
     if (itworked) {
-        Json::Value sceneRotParams = mData.get("mSceneRot", {});
+        Json::Value sceneRotParams = mData.get( "mSceneRot", {} );
         mSceneRot = ci::Quatf( sceneRotParams.get( "xRotation", 0.0f ).asFloat(), sceneRotParams.get( "yRotation", 0.0f ).asFloat(), sceneRotParams.get( "zRotation", 0.0f ).asFloat() );
-        volumeMin = mData.get("volumeMin", 0.0f).asFloat();
-        drawMesh = mData.get("drawMesh", false).asBool();
-        timerInterval = mData.get("timerInterval", 0.0f).asFloat();
+        volumeMin = mData.get( "volumeMin", 0.0f ).asFloat();
+        drawMesh = mData.get( "drawMesh", false ).asBool();
+        timerInterval = mData.get( "timerInterval", 0.0f ).asFloat();
     }
     
-    mParams = params::InterfaceGl("mesh", Vec2i(225, 100));
-    mParams.addParam("camera rotation", &mSceneRot);
-    mParams.addParam("camera viewing volume min", &volumeMin);
-    mParams.addParam("draw mesh", &drawMesh);
-    mParams.addParam("timer interval", &timerInterval);
-    
-    
-    
+    mParams = params::InterfaceGl( "mesh", Vec2i( 225, 125 ) );
+    mParams.addParam( "camera rotation", &mSceneRot );
+    mParams.addParam( "camera viewing volume min", &volumeMin );
+    mParams.addParam( "draw mesh", &drawMesh );
+    mParams.addParam( "timer interval", &timerInterval );
+    mParams.addParam( "fps", &mFrameRate );
     
     mFrameSubtraction.setup( mData );
-    myMesh = new Mesh(meshX, meshY, meshType, firstMesh);
-    myNextMesh = new Mesh(meshX , meshY , meshType, secondMesh);
+    myMesh = new Mesh( meshX, meshY, meshType, firstMesh );
+    myNextMesh = new Mesh( meshX , meshY , meshType, secondMesh );
     
 }
 
@@ -165,11 +166,12 @@ void LobbyProjectApp::getRandomFile(int _meshTag)
     Rand::randomize();
     int randInt = Rand::randInt( 0, mRemainingAssetNames.size() );
     boost::filesystem::path assetName = mRemainingAssetNames[randInt];
+   
     // remove this asset from list of remaining assets
     mRemainingAssetNames.erase(find(mRemainingAssetNames.begin(), mRemainingAssetNames.end(), assetName ) );
     // get the extension of the asset
     boost::filesystem::path ext = assetName.extension();
-//    std::cout<<"now showing"<<assetName<<std::endl;
+
     // if it is a movie, load and play the movie
     if( ext == ".mp4" ) {
         if (_meshTag == 0) {
@@ -224,13 +226,15 @@ void LobbyProjectApp::getRandomFile(int _meshTag)
 
 void LobbyProjectApp::update()
 {
+    mFrameRate = getAverageFps();
+    
     mCamera.setPerspective( 60.0f, 1.f, volumeMin, 3000.0f );
     mCamera.lookAt(mEye, mCenter, mUp);
     gl::setMatrices( mCamera );
     gl::rotate( mSceneRot);
     time = getElapsedSeconds();
     float timeDiff = time - timer;
-    if (timeDiff >= timerInterval) {
+    if ( timeDiff >= timerInterval ) {
         mouseClick = true;
         timer = time;
     }
@@ -239,23 +243,19 @@ void LobbyProjectApp::update()
     myNextMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
     
     //reset
-   
-    if ( myMesh->resetMovie == true){
+    if ( myMesh->resetMovie == true) {
         getRandomFile(0);
     }
-    if ( mMovie && textureType == false ){
+    if ( mMovie && textureType == false ) {
         mTexture = gl::Texture(mMovie->getTexture());
     }
     
-    
-    
-    if ( myNextMesh->resetMovie == true){
+    if ( myNextMesh->resetMovie == true) {
         getRandomFile(1);
     }
-    if ( mMovie2 && textureType2 == false ){
+    if ( mMovie2 && textureType2 == false ) {
         mMovieTexture = gl::Texture(mMovie2->getTexture());
     }
-    
 
     myMesh->update(mousePos, mTexture, mouseClick);
     myNextMesh->update(mousePos, mMovieTexture, mouseClick);
