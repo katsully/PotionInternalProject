@@ -206,10 +206,10 @@ dependencies: \
   /Users/kathleen/PotionProject/LobbyProject/xcode/ParticleController.h \
   /Users/kathleen/PotionProject/LobbyProject/xcode/Particle.h \
   /Users/kathleen/PotionProject/LobbyProject/xcode/Shape.h \
+  ../blocks/jsoncpp/dist/json/json.h \
   /Users/kathleen/PotionProject/LobbyProject/xcode/Mesh.h \
   ../../../Cinder/include/cinder/gl/Vbo.h \
   ../../../Cinder/include/cinder/TriMesh.h \
   ../../../Cinder/include/cinder/Perlin.h \
   ../../../Cinder/include/cinder/Camera.h \
-  ../../../Cinder/include/cinder/params/Params.h \
-  ../blocks/jsoncpp/dist/json/json.h
+  ../../../Cinder/include/cinder/params/Params.h

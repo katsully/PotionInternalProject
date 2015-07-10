@@ -6,5 +6,9 @@
    },
    "volumeMin":0.20,
    "drawMesh":true,
-   "timerInterval":20.0
+   "timerInterval":20.0,
+   "mNearLimit":30,
+   "mFarLimit":4000,
+   "mThresh":0.0,
+   "mMaxVal":255.0
 }

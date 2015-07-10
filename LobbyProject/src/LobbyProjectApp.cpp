@@ -55,8 +55,8 @@ public:
     Json::Value mData;  // to store GUI params
     Json::Reader mReader;   // this will read the json file where the gui params are stored and parse it to mData
     
-    // bool for whether app is fullscreen or not
-    bool mFullScreen;
+    bool mFullScreen;   // bool for whether app is fullscreen or not
+    bool mShowParams;    // boo for whether gui params are shown
 };
 
 void LobbyProjectApp::setup()
@@ -88,10 +88,11 @@ void LobbyProjectApp::setup()
     secondMesh      = false;
     textureType     = false;
     textureType2    = false;
-    meshX           = 48;
-    meshY           = 27;
+    meshX           = 64;
+    meshY           = 36;
     meshType        = 0;
     mFullScreen = true;
+    mShowParams = false;
     
     // set app to fullscreen
     setFullScreen(mFullScreen);
@@ -120,7 +121,7 @@ void LobbyProjectApp::setup()
     
     
     
-    mFrameSubtraction.setup();
+    mFrameSubtraction.setup( mData );
     myMesh = new Mesh(meshX, meshY, meshType, firstMesh);
     myNextMesh = new Mesh(meshX , meshY , meshType, secondMesh);
     
@@ -137,6 +138,8 @@ void LobbyProjectApp::keyDown( KeyEvent event )
     if ( event.getChar() == 'f' ) {
         setFullScreen(!mFullScreen);
         mFullScreen = !mFullScreen;
+    } else if ( event.getChar() == 'p' ) {
+        mShowParams = !mShowParams;
     }
 }
 
@@ -275,7 +278,9 @@ void LobbyProjectApp::draw()
     
     }
     
-    mParams.draw();
+    if (mShowParams) {
+        mParams.draw();
+    }
 }
 
 void LobbyProjectApp::shutdown(){
