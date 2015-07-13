@@ -213,4 +213,15 @@ void FrameSubtraction::shutdown(){
 
 void FrameSubtraction::draw()
 {
+    for( int i=0; i<mTrackedShapes.size(); i++){
+        glBegin( GL_POINTS );
+        for( int j=0; j<mTrackedShapes[i].hull.size(); j++ ){
+            gl::color( Color( 0.0f, 1.0f, 0.0f ) );
+            Vec2i v = fromOcv( mTrackedShapes[i].hull[j] );
+            v.x *= ( getWindowHeight() / 240);
+            v.y *= ( getWindowWidth() / 320 );
+            gl::vertex( v );
+        }
+        glEnd();
+    }
 }

@@ -179,15 +179,15 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
     if (mouseClick && stateStable) {
         stateFly = true;
         stateStable = false;
-        std::cout<<"fly and reset"<<std::endl;
+//        std::cout<<"fly and reset"<<std::endl;
     } else if (mouseClick && stateFly && zPct == 1.f){
         stateStart = true;
         stateFly = false;
-        std::cout<<"start"<<std::endl;
+//        std::cout<<"start"<<std::endl;
     } else if (zPctStart == 0.f && stateStart){
         stateStable = true;
         stateStart  = false;
-        std::cout<<"stable"<<std::endl;
+//        std::cout<<"stable"<<std::endl;
     }
     
 
