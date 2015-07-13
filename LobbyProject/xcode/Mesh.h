@@ -31,6 +31,7 @@ public:
     
     void getParticle(std::list<Particle> &_mParticles);
     void getTrackedShapes(vector<Shape> &_mTrackedShapes);
+    void getTexture(gl::Texture &texture);
     void update(Vec2f &_shapePos, gl::Texture &texture, bool &_mouseClick);
     void draw();
     
