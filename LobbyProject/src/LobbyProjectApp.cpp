@@ -90,8 +90,8 @@ void LobbyProjectApp::setup()
     secondMesh      = false;
     textureType     = false;
     textureType2    = false;
-    meshX           = 64;
-    meshY           = 36;
+    meshX           = 48;
+    meshY           = 27;
     meshType        = 0;
     mFrameRate = getAverageFps();
     mFullScreen = true;
@@ -266,7 +266,7 @@ void LobbyProjectApp::update()
 void LobbyProjectApp::draw()
 {
 	// clear out the window with black
-	gl::clear( Color( 1, 1, 1 ) );
+	gl::clear( Color( 0, 0, 0 ) );
     gl::enableDepthRead();
     if (drawMesh) {
         if (myMesh->zPct != 1.f) {
