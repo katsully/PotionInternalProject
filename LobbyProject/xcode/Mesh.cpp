@@ -72,6 +72,12 @@ void Mesh::getTexture(gl::Texture &texture){
         this->mTexture = texture;
     }
     
+    timeDiff.clear();
+    isTarget.clear();
+    currIterBounce.clear();
+    totalIterBounce.clear();
+    zPctBounce.clear();
+
     
     
     vector<uint32_t> indices;
@@ -167,7 +173,11 @@ void Mesh::getTexture(gl::Texture &texture){
 void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
     
     float time = getElapsedSeconds();
+    
+
     getTexture(texture);
+
+    
     
 
     bool mouseClick = _mouseClick;
