@@ -7,6 +7,7 @@
 #include "cinder/Camera.h"
 #include "cinder/params/Params.h"
 #include "json/json.h"
+#include "cinder/gl/Fbo.h"
 #include <fstream>
 
 using namespace ci;
@@ -15,8 +16,8 @@ using namespace std;
 
 class LobbyProjectApp : public AppNative {
 public:
-    void setup();
     void prepareSettings( Settings* settings );
+    void setup();
 	void keyDown( KeyEvent event );
     void mouseMove( MouseEvent event );
     void mouseDown( MouseEvent event );
@@ -59,6 +60,8 @@ public:
     bool mShowParams;    // boo for whether gui params are shown
     
     int mFrameRate;
+    
+    gl::Fbo mFbo;   // use this to draw points on top of mesh
 };
 
 void LobbyProjectApp::setup()
@@ -99,6 +102,9 @@ void LobbyProjectApp::setup()
     
     // set app to fullscreen
     setFullScreen(mFullScreen);
+    
+    // set up frame buffer object
+    mFbo = gl::Fbo( getWindowWidth(), getWindowHeight() );
     
     // get filepath to json file
     string guiParamsFilePath = p.string() + "/gui_params.json";
@@ -263,9 +269,23 @@ void LobbyProjectApp::update()
 
 void LobbyProjectApp::draw()
 {
-	// clear out the window with black
+	// start drawing into the FBO
+    // all draw related commands after this will draw into the FBO
+    mFbo.bindFramebuffer();
+    
+    // clear out the FBO with black
 	gl::clear( Color( 1, 1, 1 ) );
-    gl::enableDepthRead();
+    
+    gl::setMatrices( mCamera );
+    gl::setViewport( mFbo.getBounds() );
+    
+    gl::color( Color::white() );
+    
+    mFrameSubtraction.draw( mFbo );
+    
+    // stop drawing into the FBO
+    
+   // gl::enableDepthRead();
     if (drawMesh) {
         if (myMesh->zPct != 1.f) {
             myMesh->draw();
@@ -276,7 +296,7 @@ void LobbyProjectApp::draw()
     
     }
     
-    mFrameSubtraction.draw();
+    mFbo.getTexture().unbind();
     
     if (mShowParams) {
         mParams.draw();

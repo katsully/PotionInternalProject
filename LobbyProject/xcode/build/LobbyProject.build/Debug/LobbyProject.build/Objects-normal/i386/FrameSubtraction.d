@@ -205,4 +205,5 @@ dependencies: \
   /Users/kathleen/PotionProject/LobbyProject/xcode/ParticleController.h \
   /Users/kathleen/PotionProject/LobbyProject/xcode/Particle.h \
   /Users/kathleen/PotionProject/LobbyProject/xcode/Shape.h \
-  ../blocks/jsoncpp/dist/json/json.h
+  ../blocks/jsoncpp/dist/json/json.h \
+  ../../../Cinder/include/cinder/gl/Fbo.h

@@ -15,6 +15,7 @@
 #include "ParticleControllerController.h"
 #include "Shape.h"
 #include "json/json.h"
+#include "cinder/gl/Fbo.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -25,7 +26,7 @@ public:
     FrameSubtraction();
     void setup( Json::Value data );
     void update();
-    void draw();
+    void draw( gl::Fbo fbo );
     void shutdown();
     
     cv::Mat mInput;

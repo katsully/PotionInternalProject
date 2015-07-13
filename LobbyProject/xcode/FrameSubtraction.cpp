@@ -211,7 +211,7 @@ void FrameSubtraction::shutdown(){
     mDevice->stop();
 }
 
-void FrameSubtraction::draw()
+void FrameSubtraction::draw( gl::Fbo fbo )
 {
     for( int i=0; i<mTrackedShapes.size(); i++){
         glBegin( GL_POINTS );
@@ -224,4 +224,6 @@ void FrameSubtraction::draw()
         }
         glEnd();
     }
+    
+    fbo.unbindFramebuffer();
 }
