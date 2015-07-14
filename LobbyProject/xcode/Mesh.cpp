@@ -255,7 +255,7 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
                 }
                 
                 float timer = time - timeDiff[x * VERTICES_Y + y];
-                oscilateZ[x * VERTICES_Y + y] = sin(timer * 5.f) * (timerMax - timer) * 0.1f;
+                oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.1f;
                 
                 
                 // -----> influnce timer
@@ -268,7 +268,7 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
                 }
                 if (timer == 0) {
                     if (currIterBounce[x * VERTICES_Y + y]< totalIterBounce[x * VERTICES_Y + y]) {
-                        currIterBounce[x * VERTICES_Y + y] ++;
+                        currIterBounce[x * VERTICES_Y + y] += 10.f;
                     }
                 }else{
                     currIterBounce[x * VERTICES_Y + y] = 0.f;
