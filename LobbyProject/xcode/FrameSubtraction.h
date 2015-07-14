@@ -26,7 +26,7 @@ public:
     FrameSubtraction();
     void setup( Json::Value data );
     void update();
-    void draw( gl::Fbo fbo );
+    void draw();
     void shutdown();
     
     cv::Mat mInput;
