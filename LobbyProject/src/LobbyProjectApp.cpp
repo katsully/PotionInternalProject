@@ -279,6 +279,7 @@ void LobbyProjectApp::draw()
         }
     }
 
+    // draw points over mesh
     mFrameSubtraction.draw();
     
     if (mShowParams) {
