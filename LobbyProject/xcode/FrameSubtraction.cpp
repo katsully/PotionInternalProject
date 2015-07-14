@@ -225,5 +225,8 @@ void FrameSubtraction::draw( gl::Fbo fbo )
         glEnd();
     }
     
-    fbo.unbindFramebuffer();
+//    glEnable( GL_TEXTURE_2D );
+//    fbo.bindTexture();
+//    
+//    gl::draw( fbo.getDepthTexture(), Rectf( 96, 0, 96 + 96, 96 ) );
 }

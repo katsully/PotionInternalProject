@@ -106,6 +106,9 @@ void LobbyProjectApp::setup()
     // set up frame buffer object
     mFbo = gl::Fbo( getWindowWidth(), getWindowHeight() );
     
+    gl::enableDepthRead();
+    gl::enableDepthWrite();
+    
     // get filepath to json file
     string guiParamsFilePath = p.string() + "/gui_params.json";
     // read the json file
@@ -225,12 +228,19 @@ void LobbyProjectApp::getRandomFile(int _meshTag)
             mMovieTexture = gl::Texture(loadImage(loadAsset(assetName)));
         }
     }
-        
 }
 
 void LobbyProjectApp::update()
 {
     mFrameRate = getAverageFps();
+    
+    // this will restore the old framebuffer binding when we leave this function
+    // on non-OpenGL ES platforms, you can just call mFbo.unbindFramebuffer() at the end of the function
+    // but this will restore the "screen" FBO on OpenGL ES, and does the right thing on both platforms
+    gl::SaveFramebufferBinding bindingSaver;
+    
+    // bind the framebuffer - now everything we draw will go there
+    mFbo.bindFramebuffer();
     
     mCamera.setPerspective( 60.0f, 1.0, volumeMin, 3000.0f );
     mCamera.lookAt(mEye, mCenter, mUp);
@@ -269,21 +279,17 @@ void LobbyProjectApp::update()
 
 void LobbyProjectApp::draw()
 {
-	// start drawing into the FBO
-    // all draw related commands after this will draw into the FBO
-    mFbo.bindFramebuffer();
+//	// start drawing into the FBO
+//    // all draw related commands after this will draw into the FBO
+//    mFbo.bindFramebuffer();
     
     // clear out the FBO with black
 	gl::clear( Color( 1, 1, 1 ) );
     
-    gl::setMatrices( mCamera );
-    gl::setViewport( mFbo.getBounds() );
+    glEnable( GL_TEXTURE_2D );
+    mFbo.bindTexture();
     
-    gl::color( Color::white() );
-    
-    mFrameSubtraction.draw( mFbo );
-    
-    // stop drawing into the FBO
+//    mFbo.unbindFramebuffer();
     
    // gl::enableDepthRead();
     if (drawMesh) {
@@ -295,6 +301,23 @@ void LobbyProjectApp::draw()
         }
     
     }
+    
+//    mFrameSubtraction.draw( mFbo );
+    // draw points with the FBO
+    for( int i=0; i<mFrameSubtraction.mTrackedShapes.size(); i++){
+        glBegin( GL_POINTS );
+        for( int j=0; j<mFrameSubtraction.mTrackedShapes[i].hull.size(); j++ ){
+            gl::color( Color( 1.0f, 0.0f, 0.0f ) );
+            Vec2i v = fromOcv( mFrameSubtraction.mTrackedShapes[i].hull[j] );
+            v.x *= ( getWindowHeight() / 240);
+            v.y *= ( getWindowWidth() / 320 );
+            gl::vertex( v );
+        }
+        glEnd();
+    }
+    
+    gl::setMatricesWindow( getWindowSize() );
+    gl::draw( mFbo.getTexture(), Rectf( 0, 0, 600, 600 ) );
     
     mFbo.getTexture().unbind();
     
