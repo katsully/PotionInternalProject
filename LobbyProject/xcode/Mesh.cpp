@@ -48,6 +48,7 @@ Mesh::Mesh(int &_vertices_x, int &_vertices_y, int &_meshType, bool &_isFirstMes
     
     
     
+    
 }
 
 
@@ -239,15 +240,16 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
             
             verticesPos[x * VERTICES_Y + y] = position;
             
-            if (position.z <= 0.6f && position.z >= -0.4f) {
+            if (position.z <= 0.8f && position.z >= -0.4f) {
                 
-                // -----> shape influence
+                // -----> calculate shape influence
                 if (shapePos.size() > 0) {
                     for (int i = 0; i < shapePos.size(); i ++) {
                         Vec2f diff = Vec2f((shapePos[i].x - relPos.x) * 0.001f, (shapePos[i].y - relPos.y)  * 0.001f);
                         float shapeInfluence = diff.lengthSquared();
                         if (shapeInfluence < 0.005f ) {
                             //position.z -= shapeInfluence * 1.f + shapePos[i].z * 0.001f ;
+                            //position.z -= shapePos[i].z * 0.01f ;
                             isTarget[x * VERTICES_Y + y] = true;
                             timeDiff[x * VERTICES_Y + y] = time;
                         }
@@ -327,6 +329,7 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
 void Mesh::draw(){
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
     //draw only when mesh in visible range
     if (drawTexture) {
         if(mTexture){
