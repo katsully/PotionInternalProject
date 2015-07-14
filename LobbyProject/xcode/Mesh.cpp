@@ -40,6 +40,12 @@ Mesh::Mesh(int &_vertices_x, int &_vertices_y, int &_meshType, bool &_isFirstMes
         stateStart  = false;
     }
     
+    for (int x = 0; x < VERTICES_X; x++) {
+        for (int y = 0; y < VERTICES_Y; y++) {
+            verticesPos.push_back(Vec3f::zero());
+        }
+    }
+    
     
     
 }
@@ -231,7 +237,8 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
                 position -= Vec3f(xOffset + noise, yOffset + noise2,  0.f);
             }
             
-       
+            verticesPos[x * VERTICES_Y + y] = position;
+            
             if (position.z <= 0.6f && position.z >= -0.4f) {
                 
                 // -----> shape influence
@@ -249,6 +256,7 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
                 
                 float timer = time - timeDiff[x * VERTICES_Y + y];
                 oscilateZ[x * VERTICES_Y + y] = sin(timer * 5.f) * (timerMax - timer) * 0.1f;
+                
                 
                 // -----> influnce timer
                 zPctBounce[x * VERTICES_Y + y] = lmap<float>(easeIn(currIterBounce[x * VERTICES_Y + y], 0.0, 1.0f, totalIterBounce[x * VERTICES_Y + y]), 0.f, 1.f, 1.f, 0);
@@ -290,6 +298,7 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
             
             
             iter.setPosition(position);
+           
             //iter.setColorRGBA(ColorA(1.f, 1.f, 1.f, 1.f));
             
             
