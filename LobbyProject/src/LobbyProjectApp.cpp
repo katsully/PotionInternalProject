@@ -7,6 +7,7 @@
 #include "cinder/Camera.h"
 #include "cinder/params/Params.h"
 #include "json/json.h"
+#include "cinder/gl/Fbo.h"
 #include <fstream>
 
 using namespace ci;
@@ -15,8 +16,8 @@ using namespace std;
 
 class LobbyProjectApp : public AppNative {
 public:
-    void setup();
     void prepareSettings( Settings* settings );
+    void setup();
 	void keyDown( KeyEvent event );
     void mouseMove( MouseEvent event );
     void mouseDown( MouseEvent event );
@@ -99,6 +100,9 @@ void LobbyProjectApp::setup()
     
     // set app to fullscreen
     setFullScreen(mFullScreen);
+    
+    gl::enableDepthRead();
+    gl::enableDepthWrite();
     
     // get filepath to json file
     string guiParamsFilePath = p.string() + "/gui_params.json";
@@ -219,7 +223,6 @@ void LobbyProjectApp::getRandomFile(int _meshTag)
             mMovieTexture = gl::Texture(loadImage(loadAsset(assetName)));
         }
     }
-        
 }
 
 void LobbyProjectApp::update()
@@ -236,7 +239,7 @@ void LobbyProjectApp::update()
         mouseClick = true;
         timer = time;
     }
-
+    
     myMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
     myNextMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
     
@@ -258,13 +261,14 @@ void LobbyProjectApp::update()
     myMesh->update(mousePos, mTexture, mouseClick);
     myNextMesh->update(mousePos, mMovieTexture, mouseClick);
     mouseClick = false;
-    
 }
 
 void LobbyProjectApp::draw()
 {
-	// clear out the window with black
-	gl::clear( Color( 1, 1, 1 ) );
+
+    // clear the window to black
+    gl::clear( Color::black() );
+    
     gl::enableDepthRead();
     if (drawMesh) {
         if (myMesh->zPct != 1.f) {
@@ -273,9 +277,8 @@ void LobbyProjectApp::draw()
         if (myNextMesh->zPct != 1.f) {
             myNextMesh->draw();
         }
-    
     }
-    
+
     mFrameSubtraction.draw();
     
     if (mShowParams) {

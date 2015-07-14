@@ -15,6 +15,7 @@
 #include "ParticleControllerController.h"
 #include "Shape.h"
 #include "json/json.h"
+#include "cinder/gl/Fbo.h"
 
 using namespace ci;
 using namespace ci::app;

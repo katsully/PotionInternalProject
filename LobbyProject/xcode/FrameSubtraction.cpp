@@ -218,9 +218,8 @@ void FrameSubtraction::draw()
         for( int j=0; j<mTrackedShapes[i].hull.size(); j++ ){
             gl::color( Color( 0.0f, 1.0f, 0.0f ) );
             Vec2i v = fromOcv( mTrackedShapes[i].hull[j] );
-            v.x *= ( getWindowHeight() / 240);
-            v.y *= ( getWindowWidth() / 320 );
-            gl::vertex( v );
+            Vec3f pos = Vec3f( v.x / 300.f - 0.55f, v.y / 250.f - 0.5f, -.1 );
+            gl::vertex( pos );
         }
         glEnd();
     }
