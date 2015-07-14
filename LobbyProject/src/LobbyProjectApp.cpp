@@ -49,8 +49,8 @@ public:
 
     Mesh                *myNextMesh;
     
-    vector<boost::filesystem::path> mAssetNames;
-    vector<boost::filesystem::path> mRemainingAssetNames;
+    vector<boost::filesystem::path> mAssetNames;    // list of all asset names
+    int mCurrentAsset;  // keep track of which asset is being shown
     
     Json::Value mData;  // to store GUI params
     Json::Reader mReader;   // this will read the json file where the gui params are stored and parse it to mData
@@ -75,7 +75,7 @@ void LobbyProjectApp::setup()
             }
         }
     }
-    mRemainingAssetNames = mAssetNames;
+    mCurrentAsset = 0;
     
     getRandomFile(0);
     getRandomFile(1);
@@ -157,18 +157,16 @@ void LobbyProjectApp::mouseDown( MouseEvent event )
 
 void LobbyProjectApp::getRandomFile(int _meshTag)
 {
-    // if no remaining assets, start over
-    if ( mRemainingAssetNames.empty() ) {
-        mRemainingAssetNames = mAssetNames;
-    }
+    // select the next available asset
+    boost::filesystem::path assetName = mAssetNames[mCurrentAsset];
+    mCurrentAsset++;
     
-    // select a random asset from the list of remaining assets
-    Rand::randomize();
-    int randInt = Rand::randInt( 0, mRemainingAssetNames.size() );
-    boost::filesystem::path assetName = mRemainingAssetNames[randInt];
+    // if you went through the entire asset directory, start over
+    if ( mCurrentAsset == mAssetNames.size() ) {
+        mCurrentAsset = 0;
+    }
+//    console() << "new asset " << assetName << endl;
    
-    // remove this asset from list of remaining assets
-    mRemainingAssetNames.erase(find(mRemainingAssetNames.begin(), mRemainingAssetNames.end(), assetName ) );
     // get the extension of the asset
     boost::filesystem::path ext = assetName.extension();
 
@@ -213,7 +211,7 @@ void LobbyProjectApp::getRandomFile(int _meshTag)
         
         if (_meshTag == 0) {
             textureType = true;
-            console() << "asset name" << assetName << endl;
+         //   console() << "asset name" << assetName << endl;
             mTexture = gl::Texture(loadImage(loadAsset(assetName)));
         }
         if (_meshTag == 1) {
@@ -228,7 +226,7 @@ void LobbyProjectApp::update()
 {
     mFrameRate = getAverageFps();
     
-    mCamera.setPerspective( 60.0f, 1.f, volumeMin, 3000.0f );
+    mCamera.setPerspective( 60.0f, 1.0, volumeMin, 3000.0f );
     mCamera.lookAt(mEye, mCenter, mUp);
     gl::setMatrices( mCamera );
     gl::rotate( mSceneRot);
@@ -277,6 +275,8 @@ void LobbyProjectApp::draw()
         }
     
     }
+    
+    mFrameSubtraction.draw();
     
     if (mShowParams) {
         mParams.draw();
