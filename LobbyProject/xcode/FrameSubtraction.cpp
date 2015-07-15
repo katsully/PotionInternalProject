@@ -50,27 +50,30 @@ void FrameSubtraction::onDepth( openni::VideoFrameRef frame, const OpenNI::Devic
 
     cv::Mat thresh;
     cv::Mat eightBit;
-    
     cv::Mat withoutBlack;
+    
     // remove black pixels from frame which get detected as noise
     withoutBlack = removeBlack( mInput, mNearLimit, mFarLimit );
     
     // convert matrix from 16 bit to 8 bit with some color compensation
     withoutBlack.convertTo( eightBit, CV_8UC3, 0.1/1.0 );
+    
     // invert the image
     cv::bitwise_not( eightBit, eightBit );
     
     mContours.clear();
     mApproxContours.clear();
+    
     // using a threshold to reduce noise
     cv::threshold( eightBit, thresh, mThresh, mMaxVal, CV_8U );
+    
     // draw lines around shapes
     cv::findContours( thresh, mContours, mHierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE );
     
     vector<cv::Point> approx;
     // approx number of points per contour
     for ( int i = 0; i < mContours.size(); i++ ) {
-        cv::approxPolyDP(mContours[i], approx, 3, true );
+        cv::approxPolyDP(mContours[i], approx, 1, true );
         mApproxContours.push_back( approx );
     }
     
@@ -148,11 +151,11 @@ vector< Shape > FrameSubtraction::getEvaluationSet( ContourVector rawContours, i
         shape.centroid = cv::Point( center.val[0], center.val[1] );
         
         // get depth value from center point
-        // map 10 4000 to 0 1
         float centerDepth = (float)mInput.at<short>( center.val[1], center.val[0] );
+        // map 10 4000 to 0 1
         shape.depth = lmap( centerDepth, (float)mNearLimit, (float)mFarLimit, 0.0f, 1.0f );
         
-        // convex hull is the polygon enclosing the contour
+        // store points around shape
         shape.hull = c;
         shape.matchFound = false;
         vec.push_back(shape);
@@ -194,8 +197,9 @@ cv::Mat FrameSubtraction::removeBlack( cv::Mat input, short nearLimit, short far
 {
     for( int y = 0; y < input.rows; y++ ) {
         for( int x = 0; x < input.cols; x++ ) {
+            // if a shape is too close or too far away, set the depth to a fixed number
             if( input.at<short>(y,x) < nearLimit || input.at<short>(y,x) > farLimit ) {
-                input.at<short>(y,x) = 4000;
+                input.at<short>(y,x) = farLimit;
             }
         }
     }
@@ -209,4 +213,16 @@ void FrameSubtraction::shutdown(){
 
 void FrameSubtraction::draw()
 {
+    // draw points
+    for( int i=0; i<mTrackedShapes.size(); i++){
+        glBegin( GL_POINTS );
+        for( int j=0; j<mTrackedShapes[i].hull.size(); j++ ){
+            gl::color( Color( 0.0f, 1.0f, 0.0f ) );
+            Vec2i v = fromOcv( mTrackedShapes[i].hull[j] );
+            // offset the points to align with the camera used for the mesh
+            Vec3f pos = Vec3f( v.x / 300.f - 0.55f, v.y / 250.f - 0.5f, -.1 );
+            gl::vertex( pos );
+        }
+        glEnd();
+    }
 }

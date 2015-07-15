@@ -14,10 +14,7 @@
 #include "cinder/gl/Vbo.h"
 #include "cinder/gl/Texture.h"
 #include "cinder/Perlin.h"
-#include "Particle.h"
 #include "Shape.h"
-
-
 
 
 using namespace ci;
@@ -29,8 +26,8 @@ class Mesh{
 public:
     Mesh(int &_vertices_x, int &_vertices_y, int &_meshType, bool &_isFirstMesh);
     
-    void getParticle(std::list<Particle> &_mParticles);
     void getTrackedShapes(vector<Shape> &_mTrackedShapes);
+    void getTexture(gl::Texture &texture);
     void update(Vec2f &_shapePos, gl::Texture &texture, bool &_mouseClick);
     void draw();
     
@@ -42,29 +39,26 @@ public:
     
     vector<float>   timeDiff;
     vector<bool>    isTarget;
-    vector<float>   timeDiffP;
-    vector<bool>    isTargetP;
     vector<float>   currIterBounce, totalIterBounce, zPctBounce;
     float           zOffset, xOffset, yOffset;
     float           zPct, zPctStart, currIter, totalIter, currIterStart, totalIterStart;
     float           easeIn(float t,float b , float c, float d);
     float           transitionSpeed;
     float           meshType;
+    float           timerMax;
     bool            stateStable, stateFly, stateStart;
     bool            isFirstMesh;
     bool            drawTexture;
     bool            resetMovie;
     
-    
     vector<Vec2f>       particlePos;
     vector<float>       particleRad;
+    vector<float>       oscilateZ;
     vector<Vec3f>       shapePos;
-    std::list<Particle> mParticles;
     vector<Shape>       mTrackedShapes;
     
     Perlin          mPerlin;
     Perlin          mOsci;
-    
     
 };
 

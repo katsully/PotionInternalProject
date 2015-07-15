@@ -1,12 +1,14 @@
 #include "cinder/app/AppNative.h"
 #include "cinder/gl/gl.h"
 #include "cinder/gl/Texture.h"
+#include "cinder/gl/Light.h"
 #include "cinder/qtime/QuickTime.h"
 #include "FrameSubtraction.h"
 #include "Mesh.h"
 #include "cinder/Camera.h"
 #include "cinder/params/Params.h"
 #include "json/json.h"
+#include "cinder/gl/Fbo.h"
 #include <fstream>
 
 using namespace ci;
@@ -15,8 +17,8 @@ using namespace std;
 
 class LobbyProjectApp : public AppNative {
 public:
-    void setup();
     void prepareSettings( Settings* settings );
+    void setup();
 	void keyDown( KeyEvent event );
     void mouseMove( MouseEvent event );
     void mouseDown( MouseEvent event );
@@ -24,6 +26,7 @@ public:
 	void update();
 	void draw();
     void shutdown();
+
     
     qtime::MovieGlRef   mMovie ,mMovie2;
     gl::Texture         mMovieTexture;
@@ -46,17 +49,18 @@ public:
     
     FrameSubtraction    mFrameSubtraction;
     Mesh                *myMesh;
-
     Mesh                *myNextMesh;
     
-    vector<boost::filesystem::path> mAssetNames;
-    vector<boost::filesystem::path> mRemainingAssetNames;
+    vector<boost::filesystem::path> mAssetNames;    // list of all asset names
+    int mCurrentAsset;  // keep track of which asset is being shown
     
     Json::Value mData;  // to store GUI params
     Json::Reader mReader;   // this will read the json file where the gui params are stored and parse it to mData
     
     bool mFullScreen;   // bool for whether app is fullscreen or not
     bool mShowParams;    // boo for whether gui params are shown
+    
+    int mFrameRate;
 };
 
 void LobbyProjectApp::setup()
@@ -73,7 +77,7 @@ void LobbyProjectApp::setup()
             }
         }
     }
-    mRemainingAssetNames = mAssetNames;
+    mCurrentAsset = 0;
     
     getRandomFile(0);
     getRandomFile(1);
@@ -88,14 +92,18 @@ void LobbyProjectApp::setup()
     secondMesh      = false;
     textureType     = false;
     textureType2    = false;
-    meshX           = 64;
-    meshY           = 36;
+    meshX           = 48;
+    meshY           = 27;
     meshType        = 0;
+    mFrameRate = getAverageFps();
     mFullScreen = true;
     mShowParams = false;
     
     // set app to fullscreen
     setFullScreen(mFullScreen);
+    
+    gl::enableDepthRead();
+    gl::enableDepthWrite();
     
     // get filepath to json file
     string guiParamsFilePath = p.string() + "/gui_params.json";
@@ -105,25 +113,23 @@ void LobbyProjectApp::setup()
     bool itworked = mReader.parse( ifile, mData, false );
     // if succesful, assign variables values based on the json file
     if (itworked) {
-        Json::Value sceneRotParams = mData.get("mSceneRot", {});
+        Json::Value sceneRotParams = mData.get( "mSceneRot", {} );
         mSceneRot = ci::Quatf( sceneRotParams.get( "xRotation", 0.0f ).asFloat(), sceneRotParams.get( "yRotation", 0.0f ).asFloat(), sceneRotParams.get( "zRotation", 0.0f ).asFloat() );
-        volumeMin = mData.get("volumeMin", 0.0f).asFloat();
-        drawMesh = mData.get("drawMesh", false).asBool();
-        timerInterval = mData.get("timerInterval", 0.0f).asFloat();
+        volumeMin = mData.get( "volumeMin", 0.0f ).asFloat();
+        drawMesh = mData.get( "drawMesh", false ).asBool();
+        timerInterval = mData.get( "timerInterval", 0.0f ).asFloat();
     }
     
-    mParams = params::InterfaceGl("mesh", Vec2i(225, 100));
-    mParams.addParam("camera rotation", &mSceneRot);
-    mParams.addParam("camera viewing volume min", &volumeMin);
-    mParams.addParam("draw mesh", &drawMesh);
-    mParams.addParam("timer interval", &timerInterval);
-    
-    
-    
+    mParams = params::InterfaceGl( "mesh", Vec2i( 225, 125 ) );
+    mParams.addParam( "camera rotation", &mSceneRot );
+    mParams.addParam( "camera viewing volume min", &volumeMin );
+    mParams.addParam( "draw mesh", &drawMesh );
+    mParams.addParam( "timer interval", &timerInterval );
+    mParams.addParam( "fps", &mFrameRate );
     
     mFrameSubtraction.setup( mData );
-    myMesh = new Mesh(meshX, meshY, meshType, firstMesh);
-    myNextMesh = new Mesh(meshX , meshY , meshType, secondMesh);
+    myMesh = new Mesh( meshX, meshY, meshType, firstMesh );
+    myNextMesh = new Mesh( meshX , meshY , meshType, secondMesh );
     
 }
 
@@ -156,20 +162,19 @@ void LobbyProjectApp::mouseDown( MouseEvent event )
 
 void LobbyProjectApp::getRandomFile(int _meshTag)
 {
-    // if no remaining assets, start over
-    if ( mRemainingAssetNames.empty() ) {
-        mRemainingAssetNames = mAssetNames;
-    }
+    // select the next available asset
+    boost::filesystem::path assetName = mAssetNames[mCurrentAsset];
+    mCurrentAsset++;
     
-    // select a random asset from the list of remaining assets
-    Rand::randomize();
-    int randInt = Rand::randInt( 0, mRemainingAssetNames.size() );
-    boost::filesystem::path assetName = mRemainingAssetNames[randInt];
-    // remove this asset from list of remaining assets
-    mRemainingAssetNames.erase(find(mRemainingAssetNames.begin(), mRemainingAssetNames.end(), assetName ) );
+    // if you went through the entire asset directory, start over
+    if ( mCurrentAsset == mAssetNames.size() ) {
+        mCurrentAsset = 0;
+    }
+//    console() << "new asset " << assetName << endl;
+   
     // get the extension of the asset
     boost::filesystem::path ext = assetName.extension();
-//    std::cout<<"now showing"<<assetName<<std::endl;
+
     // if it is a movie, load and play the movie
     if( ext == ".mp4" ) {
         if (_meshTag == 0) {
@@ -211,7 +216,7 @@ void LobbyProjectApp::getRandomFile(int _meshTag)
         
         if (_meshTag == 0) {
             textureType = true;
-            console() << "asset name" << assetName << endl;
+         //   console() << "asset name" << assetName << endl;
             mTexture = gl::Texture(loadImage(loadAsset(assetName)));
         }
         if (_meshTag == 1) {
@@ -219,55 +224,55 @@ void LobbyProjectApp::getRandomFile(int _meshTag)
             mMovieTexture = gl::Texture(loadImage(loadAsset(assetName)));
         }
     }
-        
 }
 
 void LobbyProjectApp::update()
 {
-    mCamera.setPerspective( 60.0f, 1.f, volumeMin, 3000.0f );
+    mFrameRate = getAverageFps();
+    
+    mCamera.setPerspective( 60.0f, 1.0, volumeMin, 3000.0f );
     mCamera.lookAt(mEye, mCenter, mUp);
     gl::setMatrices( mCamera );
     gl::rotate( mSceneRot);
     time = getElapsedSeconds();
     float timeDiff = time - timer;
-    if (timeDiff >= timerInterval) {
+    if ( timeDiff >= timerInterval ) {
         mouseClick = true;
         timer = time;
     }
-
+    
     myMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
     myNextMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
     
     //reset
-   
-    if ( myMesh->resetMovie == true){
+    if ( myMesh->resetMovie == true) {
         getRandomFile(0);
     }
-    if ( mMovie && textureType == false ){
+    if ( mMovie && textureType == false ) {
         mTexture = gl::Texture(mMovie->getTexture());
     }
     
-    
-    
-    if ( myNextMesh->resetMovie == true){
+    if ( myNextMesh->resetMovie == true) {
         getRandomFile(1);
     }
-    if ( mMovie2 && textureType2 == false ){
+    if ( mMovie2 && textureType2 == false ) {
         mMovieTexture = gl::Texture(mMovie2->getTexture());
     }
-    
 
     myMesh->update(mousePos, mTexture, mouseClick);
     myNextMesh->update(mousePos, mMovieTexture, mouseClick);
     mouseClick = false;
-    
 }
 
 void LobbyProjectApp::draw()
 {
-	// clear out the window with black
-	gl::clear( Color( 1, 1, 1 ) );
+
+    // clear the window to black
+    gl::clear( Color::black() );
+    
     gl::enableDepthRead();
+    gl::enableDepthWrite();
+ 
     if (drawMesh) {
         if (myMesh->zPct != 1.f) {
             myMesh->draw();
@@ -275,13 +280,18 @@ void LobbyProjectApp::draw()
         if (myNextMesh->zPct != 1.f) {
             myNextMesh->draw();
         }
-    
     }
-    
+
+    // draw points over mesh
+    mFrameSubtraction.draw();
+//    gl::popMatrices();
     if (mShowParams) {
         mParams.draw();
     }
 }
+
+
+
 
 void LobbyProjectApp::shutdown(){
     mFrameSubtraction.shutdown();
