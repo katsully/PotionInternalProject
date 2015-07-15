@@ -40,11 +40,7 @@ Mesh::Mesh(int &_vertices_x, int &_vertices_y, int &_meshType, bool &_isFirstMes
         stateStart  = false;
     }
     
-    for (int x = 0; x < VERTICES_X; x++) {
-        for (int y = 0; y < VERTICES_Y; y++) {
-            verticesPos.push_back(Vec3f::zero());
-        }
-    }
+
     
     for (int x = 0; x < VERTICES_X; x++) {
         for (int y = 0; y < VERTICES_Y; y++) {
@@ -238,7 +234,7 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
                 position -= Vec3f(xOffset + noise, yOffset + noise2,  0.f);
             }
             
-            verticesPos[x * VERTICES_Y + y] = position;
+
             
             if (position.z <= 0.8f && position.z >= -0.4f) {
                 

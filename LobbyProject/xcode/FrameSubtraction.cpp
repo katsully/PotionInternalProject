@@ -151,13 +151,12 @@ vector< Shape > FrameSubtraction::getEvaluationSet( ContourVector rawContours, i
         shape.centroid = cv::Point( center.val[0], center.val[1] );
         
         // get depth value from center point
-        // map 10 4000 to 0 1
         float centerDepth = (float)mInput.at<short>( center.val[1], center.val[0] );
+        // map 10 4000 to 0 1
         shape.depth = lmap( centerDepth, (float)mNearLimit, (float)mFarLimit, 0.0f, 1.0f );
         
         // store points around shape
         shape.hull = c;
-//        console() << "shape size " << shape.hull.size() << endl;
         shape.matchFound = false;
         vec.push_back(shape);
     }
@@ -198,8 +197,9 @@ cv::Mat FrameSubtraction::removeBlack( cv::Mat input, short nearLimit, short far
 {
     for( int y = 0; y < input.rows; y++ ) {
         for( int x = 0; x < input.cols; x++ ) {
+            // if a shape is too close or too far away, set the depth to a fixed number
             if( input.at<short>(y,x) < nearLimit || input.at<short>(y,x) > farLimit ) {
-                input.at<short>(y,x) = 4000;
+                input.at<short>(y,x) = farLimit;
             }
         }
     }
@@ -213,14 +213,15 @@ void FrameSubtraction::shutdown(){
 
 void FrameSubtraction::draw()
 {
+    // draw points
     for( int i=0; i<mTrackedShapes.size(); i++){
         glBegin( GL_POINTS );
         for( int j=0; j<mTrackedShapes[i].hull.size(); j++ ){
             gl::color( Color( 0.0f, 1.0f, 0.0f ) );
             Vec2i v = fromOcv( mTrackedShapes[i].hull[j] );
-            v.x *= ( getWindowHeight() / 240);
-            v.y *= ( getWindowWidth() / 320 );
-            gl::vertex( v );
+            // offset the points to align with the camera used for the mesh
+            Vec3f pos = Vec3f( v.x / 300.f - 0.55f, v.y / 250.f - 0.5f, -.1 );
+            gl::vertex( pos );
         }
         glEnd();
     }
