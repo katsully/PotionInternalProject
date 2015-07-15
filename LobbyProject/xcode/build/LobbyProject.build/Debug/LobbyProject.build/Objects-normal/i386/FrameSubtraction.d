@@ -1,9 +1,9 @@
 dependencies: \
-  /Users/kathleen/PotionProject/LobbyProject/xcode/FrameSubtraction.cpp \
-  /Users/kathleen/PotionProject/LobbyProject/xcode/FrameSubtraction.h \
+  /Users/potion/PotionInternalProject/LobbyProject/xcode/FrameSubtraction.cpp \
+  /Users/potion/PotionInternalProject/LobbyProject/xcode/FrameSubtraction.h \
   ../../../Cinder/include/cinder/app/AppNative.h \
   ../../../Cinder/include/cinder/gl/Texture.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/Cinder-OpenNI.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/Cinder-OpenNI.h \
   ../../../Cinder/boost/boost/ptr_container/ptr_vector.hpp \
   ../../../Cinder/boost/boost/ptr_container/ptr_sequence_adapter.hpp \
   ../../../Cinder/boost/boost/ptr_container/detail/reversible_ptr_container.hpp \
@@ -155,24 +155,24 @@ dependencies: \
   ../../../Cinder/boost/boost/math/special_functions/fpclassify.hpp \
   ../../../Cinder/boost/boost/math/tools/real_cast.hpp \
   ../../../Cinder/boost/boost/container/container_fwd.hpp \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/NiTE/NiTE.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/NiTE/NiteCAPI.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniPlatform.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/OpenNI/MacOSX/OniPlatformMacOSX.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/OpenNI/MacOSX/../Linux-x86/OniPlatformLinux-x86.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniCAPI.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniCTypes.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniCEnums.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniCProperties.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniVersion.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/NiTE/NiteCTypes.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/NiTE/NiteCEnums.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/NiTE/NiteVersion.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OpenNI.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniProperties.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniEnums.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/NiTE/NiteEnums.h \
-  /Users/kathleen/PotionProject/LobbyProject/blocks/OpenCV/include/CinderOpenCV.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/NiTE/NiTE.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/NiTE/NiteCAPI.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniPlatform.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/OpenNI/MacOSX/OniPlatformMacOSX.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/OpenNI/MacOSX/../Linux-x86/OniPlatformLinux-x86.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniCAPI.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniCTypes.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniCEnums.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniCProperties.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniVersion.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/NiTE/NiteCTypes.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/NiTE/NiteCEnums.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/NiTE/NiteVersion.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OpenNI.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniProperties.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniEnums.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/NiTE/NiteEnums.h \
+  /Users/potion/PotionInternalProject/LobbyProject/blocks/OpenCV/include/CinderOpenCV.h \
   ../blocks/OpenCV/include/opencv2/opencv.hpp \
   ../blocks/OpenCV/include/opencv2/core/core_c.h \
   ../blocks/OpenCV/include/opencv2/core/types_c.h \
@@ -201,6 +201,6 @@ dependencies: \
   ../blocks/OpenCV/include/opencv2/contrib/retina.hpp \
   ../blocks/OpenCV/include/opencv2/contrib/openfabmap.hpp \
   ../../../Cinder/include/cinder/Rand.h \
-  /Users/kathleen/PotionProject/LobbyProject/xcode/Shape.h \
+  /Users/potion/PotionInternalProject/LobbyProject/xcode/Shape.h \
   ../blocks/jsoncpp/dist/json/json.h \
   ../../../Cinder/include/cinder/gl/Fbo.h

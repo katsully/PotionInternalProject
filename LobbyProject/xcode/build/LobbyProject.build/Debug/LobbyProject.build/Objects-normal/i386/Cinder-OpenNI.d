@@ -1,6 +1,6 @@
 dependencies: \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/Cinder-OpenNI.cpp \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/Cinder-OpenNI.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/Cinder-OpenNI.cpp \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/Cinder-OpenNI.h \
   ../../../Cinder/boost/boost/ptr_container/ptr_vector.hpp \
   ../../../Cinder/boost/boost/ptr_container/ptr_sequence_adapter.hpp \
   ../../../Cinder/boost/boost/ptr_container/detail/reversible_ptr_container.hpp \
@@ -152,20 +152,20 @@ dependencies: \
   ../../../Cinder/boost/boost/math/special_functions/fpclassify.hpp \
   ../../../Cinder/boost/boost/math/tools/real_cast.hpp \
   ../../../Cinder/boost/boost/container/container_fwd.hpp \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/NiTE/NiTE.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/NiTE/NiteCAPI.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniPlatform.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/OpenNI/MacOSX/OniPlatformMacOSX.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/OpenNI/MacOSX/../Linux-x86/OniPlatformLinux-x86.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniCAPI.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniCTypes.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniCEnums.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniCProperties.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniVersion.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/NiTE/NiteCTypes.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/NiTE/NiteCEnums.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/NiTE/NiteVersion.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OpenNI.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniProperties.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniEnums.h \
-  /Users/kathleen/Cinder/blocks/Cinder-OpenNI/src/NiTE/NiteEnums.h
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/NiTE/NiTE.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/NiTE/NiteCAPI.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniPlatform.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/OpenNI/MacOSX/OniPlatformMacOSX.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/OpenNI/MacOSX/../Linux-x86/OniPlatformLinux-x86.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniCAPI.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniCTypes.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniCEnums.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniCProperties.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniVersion.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/NiTE/NiteCTypes.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/NiTE/NiteCEnums.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/NiTE/NiteVersion.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OpenNI.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniProperties.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/OpenNI/OniEnums.h \
+  /Users/potion/Cinder/blocks/Cinder-OpenNI/src/NiTE/NiteEnums.h

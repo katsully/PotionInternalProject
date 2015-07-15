@@ -58,7 +58,8 @@ public:
     Json::Reader mReader;   // this will read the json file where the gui params are stored and parse it to mData
     
     bool mFullScreen;   // bool for whether app is fullscreen or not
-    bool mShowParams;    // boo for whether gui params are shown
+    bool mShowParams;    // bool for whether gui params are shown
+    bool mOnTop;    // bool for whether the window always remains above all other windows
     
     int mFrameRate;
 };
@@ -98,6 +99,8 @@ void LobbyProjectApp::setup()
     mFrameRate = getAverageFps();
     mFullScreen = true;
     mShowParams = false;
+    mOnTop = true;
+ 
     
     // set app to fullscreen
     setFullScreen(mFullScreen);
@@ -135,6 +138,8 @@ void LobbyProjectApp::setup()
 
 void LobbyProjectApp::prepareSettings( Settings* settings )
 {
+    // sets whether the window always remains above all other windows
+    settings->setAlwaysOnTop();
     settings->setFrameRate( 60.0f );
     settings->setWindowSize( 960, 540 );
 }
@@ -142,10 +147,13 @@ void LobbyProjectApp::prepareSettings( Settings* settings )
 void LobbyProjectApp::keyDown( KeyEvent event )
 {
     if ( event.getChar() == 'f' ) {
-        setFullScreen(!mFullScreen);
         mFullScreen = !mFullScreen;
+        setFullScreen(mFullScreen);
     } else if ( event.getChar() == 'p' ) {
         mShowParams = !mShowParams;
+    } else if( event.getChar() == 't' ) {
+        mOnTop = !mOnTop;
+        getWindow()->setAlwaysOnTop(mOnTop);
     }
 }
 
