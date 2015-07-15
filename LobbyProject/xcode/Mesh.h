@@ -39,14 +39,13 @@ public:
     
     vector<float>   timeDiff;
     vector<bool>    isTarget;
-    vector<float>   timeDiffP;
-    vector<bool>    isTargetP;
     vector<float>   currIterBounce, totalIterBounce, zPctBounce;
     float           zOffset, xOffset, yOffset;
     float           zPct, zPctStart, currIter, totalIter, currIterStart, totalIterStart;
     float           easeIn(float t,float b , float c, float d);
     float           transitionSpeed;
     float           meshType;
+    float           timerMax;
     bool            stateStable, stateFly, stateStart;
     bool            isFirstMesh;
     bool            drawTexture;
@@ -54,6 +53,7 @@ public:
     
     vector<Vec2f>       particlePos;
     vector<float>       particleRad;
+    vector<float>       oscilateZ;
     vector<Vec3f>       shapePos;
     vector<Shape>       mTrackedShapes;
     

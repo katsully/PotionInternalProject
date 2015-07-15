@@ -1,6 +1,7 @@
 #include "cinder/app/AppNative.h"
 #include "cinder/gl/gl.h"
 #include "cinder/gl/Texture.h"
+#include "cinder/gl/Light.h"
 #include "cinder/qtime/QuickTime.h"
 #include "FrameSubtraction.h"
 #include "Mesh.h"
@@ -25,6 +26,7 @@ public:
 	void update();
 	void draw();
     void shutdown();
+
     
     qtime::MovieGlRef   mMovie ,mMovie2;
     gl::Texture         mMovieTexture;
@@ -47,7 +49,6 @@ public:
     
     FrameSubtraction    mFrameSubtraction;
     Mesh                *myMesh;
-
     Mesh                *myNextMesh;
     
     vector<boost::filesystem::path> mAssetNames;    // list of all asset names
@@ -91,8 +92,8 @@ void LobbyProjectApp::setup()
     secondMesh      = false;
     textureType     = false;
     textureType2    = false;
-    meshX           = 64;
-    meshY           = 36;
+    meshX           = 48;
+    meshY           = 27;
     meshType        = 0;
     mFrameRate = getAverageFps();
     mFullScreen = true;
@@ -270,6 +271,8 @@ void LobbyProjectApp::draw()
     gl::clear( Color::black() );
     
     gl::enableDepthRead();
+    gl::enableDepthWrite();
+ 
     if (drawMesh) {
         if (myMesh->zPct != 1.f) {
             myMesh->draw();
@@ -281,11 +284,14 @@ void LobbyProjectApp::draw()
 
     // draw points over mesh
     mFrameSubtraction.draw();
-    
+//    gl::popMatrices();
     if (mShowParams) {
         mParams.draw();
     }
 }
+
+
+
 
 void LobbyProjectApp::shutdown(){
     mFrameSubtraction.shutdown();
