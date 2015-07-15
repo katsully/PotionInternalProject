@@ -26,7 +26,7 @@ Mesh::Mesh(int &_vertices_x, int &_vertices_y, int &_meshType, bool &_isFirstMes
     xOffset         = 0.48f;
     yOffset         = 0.47f;
     transitionSpeed = 0.5f;
-    timerMax        = 5.f;
+    timerMax        = 3.f;
     drawTexture     = true;
    
     
@@ -174,15 +174,12 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
     if (mouseClick && stateStable) {
         stateFly = true;
         stateStable = false;
-//        std::cout<<"fly and reset"<<std::endl;
     } else if (mouseClick && stateFly && zPct == 1.f){
         stateStart = true;
         stateFly = false;
-//        std::cout<<"start"<<std::endl;
     } else if (zPctStart == 0.f && stateStart){
         stateStable = true;
         stateStart  = false;
-//        std::cout<<"stable"<<std::endl;
     }
     
 
@@ -256,26 +253,28 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
                     }
                 }
                 
+                // -----> oscilate every single vertices in z axis.
                 float timer = time - timeDiff[x * VERTICES_Y + y];
                 oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.1f;
                 
                 
                 // -----> influnce timer
-                zPctBounce[x * VERTICES_Y + y] = lmap<float>(easeIn(currIterBounce[x * VERTICES_Y + y], 0.0, 1.0f, totalIterBounce[x * VERTICES_Y + y]), 0.f, 1.f, 1.f, 0);
+                // zPctBounce[x * VERTICES_Y + y] = lmap<float>(easeIn(currIterBounce[x * VERTICES_Y + y], 0.0, 1.0f, totalIterBounce[x * VERTICES_Y + y]), 0.f, 1.f, 1.f, 0);
                 if ( timer < timerMax && isTarget[x * VERTICES_Y + y] == true ) {
-                    //position.z -= tempPosZ* 10.f * zPctBounce[x * VERTICES_Y + y];
-                    position.z -= 0.1f * zPctBounce[x * VERTICES_Y + y] * oscilateZ[x * VERTICES_Y + y] ;
+                    //position.z -= 0.1f * zPctBounce[x * VERTICES_Y + y] * oscilateZ[x * VERTICES_Y + y];
+                    position.z -= 0.1f * oscilateZ[x * VERTICES_Y + y];
                 }else if( timer >= timerMax){
                     isTarget[x * VERTICES_Y + y] = false;
                 }
+                /* useless if oscillation has (timerMax - timer)
                 if (timer == 0) {
-                    if (currIterBounce[x * VERTICES_Y + y]< totalIterBounce[x * VERTICES_Y + y]) {
-                        currIterBounce[x * VERTICES_Y + y] += 10.f;
+                    if (currIterBounce[x * VERTICES_Y + y] < totalIterBounce[x * VERTICES_Y + y]) {
+                        currIterBounce[x * VERTICES_Y + y] += transitionSpeed;
                     }
                 }else{
                     currIterBounce[x * VERTICES_Y + y] = 0.f;
                 }
-                
+                */
             }
             
             // ----> check if texture is in visible range
