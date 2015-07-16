@@ -292,14 +292,14 @@ void LobbyProjectApp::update()
     myNextMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
     
     //reset
-    if ( myMesh->resetMovie == true) {
+    if ( myMesh->resetTexture == true) {
         getRandomFile(0);
     }
     if ( mMovie && textureType == false ) {
         mTexture = gl::Texture(mMovie->getTexture());
     }
     
-    if ( myNextMesh->resetMovie == true) {
+    if ( myNextMesh->resetTexture == true) {
         getRandomFile(1);
     }
     if ( mMovie2 && textureType2 == false ) {

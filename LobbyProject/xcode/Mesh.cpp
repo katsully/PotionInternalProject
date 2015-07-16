@@ -255,9 +255,9 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
             
             //      check texture reset time
             if (position.z == -1.f && stateStart) {
-                resetMovie = true;
+                resetTexture = true;
             }else{
-                resetMovie = false;
+                resetTexture = false;
             }
             
             iter.setPosition(position);
