@@ -56,3 +56,5 @@ To prevent apps from re-opening, do the following:
 
 ### Data
 The assets directory is where the app retrieves all photos and videos that get displayed. Any photo or video added to the assets directory will be added to the rotating display of images. All videos must by mp4. 
+
+Also in the assets directory there is a file called gui_params.json. This contains key value pairs for all initial value of the parameters shown in the params window.
