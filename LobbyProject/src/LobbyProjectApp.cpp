@@ -29,7 +29,7 @@ public:
 
     
     qtime::MovieGlRef   mMovie ,mMovie2;
-    gl::Texture         mMovieTexture;
+    gl::Texture         mNextTexture;
     gl::Texture         mTexture;
     CameraPersp         mCamera;
     Vec3f               mEye, mCenter, mUp;
@@ -94,8 +94,8 @@ void LobbyProjectApp::setup()
     secondMesh      = false;
     textureType     = false;
     textureType2    = false;
-    meshX           = 64;
-    meshY           = 36;
+    meshX           = 48;
+    meshY           = 27;
     meshType        = 0;
     mFrameRate      = getAverageFps();
     mFullScreen     = true;
@@ -228,12 +228,38 @@ void LobbyProjectApp::getRandomFile(int _meshTag)
         
         if (_meshTag == 0) {
             textureType = true;
-         //   console() << "asset name" << assetName << endl;
-            mTexture = gl::Texture(loadImage(loadAsset(assetName)));
+            // if cannot load texture, it will print the error and asset name to the console, then it will increment the asset index counter, and just show the following image
+            try {
+                mTexture = gl::Texture(loadImage(loadAsset(assetName)));
+ 
+            } catch (Exception ex ){
+                std::cout << "something went wrong loading the image " << ex.what() << std::endl;
+                std::cout << "image name " << assetName << std::endl;
+                if ( mCurrentAsset == mAssetNames.size() - 1 ) {
+                    mCurrentAsset = 0;
+                } else {
+                    mCurrentAsset++;
+                }
+                assetName = mAssetNames[mCurrentAsset];
+            }
         }
         if (_meshTag == 1) {
             textureType2 = true;
-            mMovieTexture = gl::Texture(loadImage(loadAsset(assetName)));
+            // if cannot load texture, it will print the error and asset name to the console, then it will increment the asset index counter, and just show the following image
+            try {
+                mNextTexture = gl::Texture(loadImage(loadAsset(assetName)));
+                
+            } catch (Exception ex ){
+                std::cout << "something went wrong loading the image " << ex.what() << std::endl;
+                std::cout << "image name " << assetName << std::endl;
+                if ( mCurrentAsset == mAssetNames.size() - 1 ) {
+                    mCurrentAsset = 0;
+                } else {
+                    mCurrentAsset++;
+                }
+                assetName = mAssetNames[mCurrentAsset];
+            }
+
         }
     }
 }
@@ -268,11 +294,11 @@ void LobbyProjectApp::update()
         getRandomFile(1);
     }
     if ( mMovie2 && textureType2 == false ) {
-        mMovieTexture = gl::Texture(mMovie2->getTexture());
+        mNextTexture = gl::Texture(mMovie2->getTexture());
     }
 
     myMesh->update(mousePos, mTexture, mouseClick);
-    myNextMesh->update(mousePos, mMovieTexture, mouseClick);
+    myNextMesh->update(mousePos, mNextTexture, mouseClick);
     mouseClick = false;
 }
 
