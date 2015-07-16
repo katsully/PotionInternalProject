@@ -67,7 +67,7 @@ public:
 
 void LobbyProjectApp::setup()
 {
-    addAssetDirectory("../../../../../assets");
+    addAssetDirectory( "../../../../../assets" );
     
     // get absolute path to assets' directory
     fs::path p( getAssetPath( "" ) );
@@ -85,7 +85,7 @@ void LobbyProjectApp::setup()
     getRandomFile(1);
     
     //init
-    mEye            = Vec3f(0, 0, 0.79f);
+    mEye            = Vec3f( 0, 0, 0.79f );
     mCenter         = Vec3f::zero();
     mUp             = Vec3f::yAxis();
     nextMeshState   = false;
@@ -182,7 +182,6 @@ void LobbyProjectApp::getRandomFile(int _meshTag)
     if ( mCurrentAsset == mAssetNames.size() ) {
         mCurrentAsset = 0;
     }
-//    console() << "new asset " << assetName << endl;
    
     // get the extension of the asset
     boost::filesystem::path ext = assetName.extension();
@@ -259,7 +258,6 @@ void LobbyProjectApp::getRandomFile(int _meshTag)
                 }
                 assetName = mAssetNames[mCurrentAsset];
             }
-
         }
     }
 }
@@ -312,10 +310,10 @@ void LobbyProjectApp::draw()
     gl::enableDepthWrite();
  
     if (drawMesh) {
-        if (myMesh->zPct != 1.f) {
+        if ( myMesh->zPct != 1.f ) {
             myMesh->draw();
         }
-        if (myNextMesh->zPct != 1.f) {
+        if ( myNextMesh->zPct != 1.f ) {
             myNextMesh->draw();
         }
     }
