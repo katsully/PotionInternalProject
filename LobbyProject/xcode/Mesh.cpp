@@ -23,7 +23,7 @@ Mesh::Mesh(int &_vertices_x, int &_vertices_y, int &_meshType, bool &_isFirstMes
     totalIter       = 100.f;
     currIterStart   = 0.f;
     totalIterStart  = 100.f;
-    xOffset         = 0.48f;
+    xOffset         = 0.49f;
     yOffset         = 0.48f;
     transitionSpeed = 0.5f;
     timerMax        = 3.f;
