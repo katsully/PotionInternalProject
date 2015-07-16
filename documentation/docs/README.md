@@ -54,3 +54,5 @@ To prevent apps from re-opening, do the following:
 2. Navigate to ~/Library/Preferences/ByHost/com.apple.loginwindow.*.plist.
 3. Click Command + I on the file, and lock it using the Locked checkbox.
 
+### Data
+The assets directory is where the app retrieves all photos and videos that get displayed. Any photo or video added to the assets directory will be added to the rotating display of images. All videos must by mp4. 
