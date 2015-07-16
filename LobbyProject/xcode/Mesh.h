@@ -42,7 +42,7 @@ public:
     vector<float>   currIterBounce, totalIterBounce, zPctBounce;
     float           zOffset, xOffset, yOffset;
     float           zPct, zPctStart, currIter, totalIter, currIterStart, totalIterStart;
-    float           easeIn(float t,float b , float c, float d);
+    float           easeInOut(float t,float b , float c, float d);
     float           transitionSpeed;
     float           meshType;
     float           timerMax;

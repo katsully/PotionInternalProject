@@ -29,7 +29,7 @@ Mesh::Mesh(int &_vertices_x, int &_vertices_y, int &_meshType, bool &_isFirstMes
     timerMax        = 3.f;
     drawTexture     = true;
    
-    
+    //  determine if this the first mesh or second
     if (isFirstMesh == true) {
         stateStable = false;
         stateStart  = true;
@@ -39,9 +39,8 @@ Mesh::Mesh(int &_vertices_x, int &_vertices_y, int &_meshType, bool &_isFirstMes
         stateStable = false;
         stateStart  = false;
     }
-    
 
-    
+    //  allocating for vectors
     for (int x = 0; x < VERTICES_X; x++) {
         for (int y = 0; y < VERTICES_Y; y++) {
             
@@ -53,21 +52,17 @@ Mesh::Mesh(int &_vertices_x, int &_vertices_y, int &_meshType, bool &_isFirstMes
             oscilateZ.push_back(0.f);
         }
     }
-    
-    
-    
-    
 }
 
-
-float Mesh::easeIn(float t, float b , float c, float d){
+// ease in and out effect
+float Mesh::easeInOut(float t, float b , float c, float d){
     if ((t/=d/2) < 1) return c/2*t*t*t + b;
     return c/2*((t-=2)*t*t + 2) + b;
 }
 
 void Mesh::getTrackedShapes(vector<Shape> &_mTrackedShapes){
     
-    
+    //  getting all the points from shaoes and their depth values of the centroid
     shapePos.clear();
     if (drawTexture) {
         this->mTrackedShapes = _mTrackedShapes;
@@ -89,10 +84,10 @@ void Mesh::getTexture(gl::Texture &texture){
         this->mTexture = texture;
     }
     
-    
     vector<uint32_t> indices;
     vector<Vec2f> texCoords;
     
+    //   initiating the mesh
     int totalVertices = VERTICES_X * VERTICES_Y;
     int totalQuads = ( VERTICES_X - 1 ) * ( VERTICES_Y - 1 );
     gl::VboMesh::Layout layout;
@@ -110,9 +105,6 @@ void Mesh::getTexture(gl::Texture &texture){
     }else{
         mVboMesh = gl::VboMesh::create(totalVertices, totalQuads*4, layout, GL_QUADS);
     }
-    
-   
-    
     
     //     buffer texCoords and indices
     for (int x = 0; x < VERTICES_X; x++) {
@@ -145,10 +137,7 @@ void Mesh::getTexture(gl::Texture &texture){
             }
         }
     }
-    
-    
-    
-    
+
     mVboMesh->bufferIndices(indices);
     mVboMesh->bufferTexCoords2d(0, texCoords);
     
@@ -158,18 +147,18 @@ void Mesh::getTexture(gl::Texture &texture){
 
 
 void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
+    
     getTexture(texture);
     
     float time = getElapsedSeconds();
-    
     bool mouseClick = _mouseClick;
     float zPctReverse = lmap<float>(zPct, 0.0, 1.0, 1.0, 0);
     float zPctStarting = lmap<float>(zPct, 0.0, 1.0, -1.0, 0);
-    zPct = easeIn(currIter, 0.0, 1.0, totalIter);
-    zPctStart = lmap<float>(easeIn(currIterStart, 0.0, 1.0f, totalIterStart), 0.f, 1.f, 1.f, 0);
+    zPct = easeInOut(currIter, 0.0, 1.0, totalIter);
+    zPctStart = lmap<float>(easeInOut(currIterStart, 0.0, 1.0f, totalIterStart), 0.f, 1.f, 1.f, 0);
     
     
-    
+    //  switching mesh states
     if (mouseClick && stateStable && zPct == 0.f) {
         stateFly = true;
         stateStable = false;
@@ -180,20 +169,15 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
         stateStable = true;
         stateStart  = false;
     }
-    
-
-
-
-    
-    
+  
     //    generate movements
     gl::VboMesh::VertexIter iter = mVboMesh->mapVertexBuffer();
     for( int x = 0; x < VERTICES_X; ++x ) {
         for( int y = 0; y < VERTICES_Y; ++y ) {
             Vec3f position = Vec3f(Vec3f( x / (float)VERTICES_X, y / (float)VERTICES_Y, 0.f));
+            
             //    mapping mesh pos to relative pos to the window
             Vec2f relPos = Vec2f(lmap<float>(position.x, 0, 1, 0, getWindowWidth()), lmap<float>(position.y, 0, 1, 0, getWindowHeight()));
-            
             
             //     generating Perlin Noise
             float noise, noise2;
@@ -212,7 +196,7 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
                 noise2 = 0.f;
             }
             
-            //      transition animation
+            //   transition animation for each states
             if (stateStable) {
                 currIterStart = 0.f;
                 position -= Vec3f(xOffset + noise, yOffset + noise2,  0.f);
@@ -235,17 +219,14 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
             }
             
 
-            
+            //  checking the mesh pos to ensure is in visible range
             if (position.z <= 0.8f && position.z >= -0.5f) {
-                
-                //       calculate shape influence
+                //       calculate shape influence and start counting time for every vertices
                 if (shapePos.size() > 0) {
                     for (int i = 0; i < shapePos.size(); i ++) {
                         Vec2f diff = Vec2f((shapePos[i].x - relPos.x) * 0.001f, (shapePos[i].y - relPos.y)  * 0.001f);
                         float shapeInfluence = diff.lengthSquared();
                         if (shapeInfluence < 0.005f && !isTarget[x * VERTICES_Y + y]) {
-                            //position.z -= shapeInfluence * 1.f + shapePos[i].z * 0.001f ;
-                            //position.z -= shapePos[i].z * 0.01f ;
                             isTarget[x * VERTICES_Y + y] = true;
                             timeDiff[x * VERTICES_Y + y] = time;
                         }
@@ -258,22 +239,11 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
                 
                 
                 //       influnce timer
-                // zPctBounce[x * VERTICES_Y + y] = lmap<float>(easeIn(currIterBounce[x * VERTICES_Y + y], 0.0, 1.0f, totalIterBounce[x * VERTICES_Y + y]), 0.f, 1.f, 1.f, 0);
                 if ( timer < timerMax && isTarget[x * VERTICES_Y + y] == true ) {
-                    //position.z -= 0.1f * zPctBounce[x * VERTICES_Y + y] * oscilateZ[x * VERTICES_Y + y];
                     position.z -= 0.1f * oscilateZ[x * VERTICES_Y + y];
                 }else if( timer >= timerMax){
                     isTarget[x * VERTICES_Y + y] = false;
                 }
-                /* useless if oscillation has (timerMax - timer)
-                if (timer == 0) {
-                    if (currIterBounce[x * VERTICES_Y + y] < totalIterBounce[x * VERTICES_Y + y]) {
-                        currIterBounce[x * VERTICES_Y + y] += transitionSpeed;
-                    }
-                }else{
-                    currIterBounce[x * VERTICES_Y + y] = 0.f;
-                }
-                */
             }
             
             //      check if texture is in visible range
@@ -283,25 +253,19 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
                 drawTexture = false;
             }
             
-            //       check movie reset time
+            //      check texture reset time
             if (position.z == -1.f && stateStart) {
                 resetMovie = true;
             }else{
                 resetMovie = false;
             }
             
-            
             iter.setPosition(position);
-           
-            //iter.setColorRGBA(ColorA(1.f, 1.f, 1.f, 1.f));
-            
-            
             ++iter;
         }
     }
     
-    
-    //transition iter
+    //transition iterations
     if (stateFly) {
         if (currIter< totalIter) {
             currIter += transitionSpeed * 0.5f;
@@ -313,9 +277,6 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
             currIterStart += transitionSpeed * 0.5f;
         }
     }
-    
-    
-    
 }
 
 void Mesh::draw(){
