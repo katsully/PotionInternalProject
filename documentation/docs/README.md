@@ -20,9 +20,28 @@ To keep this running as a pernament installation, the following machine configur
 ```
 defaults write com.apple.finder CreateDesktop -bool false
 ```
-
+To have all the icons appear again, type this
+```
+defaults write com.apple.finder CreateDesktop -bool true
+```
 6. Hide the dock by pressing Option + Command + D while in Finder.
 7. Select Automatic Login when your computer starts.
 8. Add your application to the Login Items of the user you log in with, to ensure your installation will start up automatically.
 9. Disable Bluetooth, Universal Access, and Alert sounds. Also mute the output volume.
+10. Disable dashboard, as this takes up resources (CPU). Type this into the terminal
+```
+defaults write com.apple.dashboard mcx-disabled -boolean YES
+```
+To enable it again, type this
+```
+defaults write com.apple.dashboard mcx-disabled -boolean NO
+```
+11. Disable Spotlight. Type this into your terminal
+```
+sudo mdutil -a -i on
+```
+To enable it again, type this
+```
+sudo mdutil -a -i on
+```
 
