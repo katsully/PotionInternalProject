@@ -46,6 +46,7 @@ public:
     bool firstMesh;
     bool secondMesh;
     bool textureType, textureType2;
+    bool cursorHidden;
     
     FrameSubtraction    mFrameSubtraction;
     Mesh                *myMesh;
@@ -102,11 +103,13 @@ void LobbyProjectApp::setup()
     mShowParams     = false;
     mOnTop          = true;
     mPoints         = false;
+    cursorHidden    = true;
  
     
     // set app to fullscreen
     setFullScreen(mFullScreen);
     
+    hideCursor();
     gl::enableDepthRead();
     gl::enableDepthWrite();
     
@@ -168,8 +171,9 @@ void LobbyProjectApp::mouseMove( MouseEvent event )
 
 void LobbyProjectApp::mouseDown( MouseEvent event )
 {
-    nextMeshState = !nextMeshState;
-    mouseClick = true;
+    nextMeshState   = !nextMeshState;
+    mouseClick      = true;
+    cursorHidden    = !cursorHidden;
 }
 
 void LobbyProjectApp::getRandomFile(int _meshTag)
@@ -276,6 +280,13 @@ void LobbyProjectApp::update()
         mouseClick = true;
         timer = time;
     }
+    
+    if (!cursorHidden){
+        showCursor();
+    }else{
+        hideCursor();
+    }
+    
     
     myMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
     myNextMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
