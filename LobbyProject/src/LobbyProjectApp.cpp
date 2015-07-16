@@ -60,6 +60,7 @@ public:
     bool mFullScreen;   // bool for whether app is fullscreen or not
     bool mShowParams;    // bool for whether gui params are shown
     bool mOnTop;    // bool for whether the window always remains above all other windows
+    bool mPoints;   // bool for whether motion tracking points are shown
     
     int mFrameRate;
 };
@@ -100,6 +101,7 @@ void LobbyProjectApp::setup()
     mFullScreen = true;
     mShowParams = false;
     mOnTop = true;
+    mPoints = false;
  
     
     // set app to fullscreen
@@ -154,6 +156,8 @@ void LobbyProjectApp::keyDown( KeyEvent event )
     } else if( event.getChar() == 't' ) {
         mOnTop = !mOnTop;
         getWindow()->setAlwaysOnTop(mOnTop);
+    } else if( event.getChar() == 'o' ) {
+        mPoints = !mPoints;
     }
 }
 
@@ -291,7 +295,10 @@ void LobbyProjectApp::draw()
     }
 
     // draw points over mesh
-    mFrameSubtraction.draw();
+    if (mPoints) {
+        mFrameSubtraction.draw();
+    }
+    
 //    gl::popMatrices();
     if (mShowParams) {
         mParams.draw();
