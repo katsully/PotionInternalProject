@@ -281,6 +281,13 @@ void LobbyProjectApp::update()
         timer = time;
     }
     
+    if (!cursorHidden){
+        showCursor();
+    }else{
+        hideCursor();
+    }
+    
+    
     myMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
     myNextMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
     
