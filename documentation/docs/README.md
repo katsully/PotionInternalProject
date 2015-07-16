@@ -14,3 +14,12 @@ To keep this running as a pernament installation, the following machine configur
 
 1. Set the desktop background to something neutral. For our installation we chose a still from the assets folder.
 2. Make sure the computer, the display, and the hard disks never sleep. The computer should also start automatically when the computer freezes.
+3. Add a schedule to Energy Save so that the computer starts up and shuts down at a fixed time everyday.
+4. Make sure the screen saver never starts.
+5. Hide all icons on your desktop. To do this, type this into the terminal
+```
+defaults write com.apple.finder CreateDesktop -bool false
+```
+
+6. Hide the dock by pressing Option + Command + D while in Finder.
+7. Select Automatic Login when your computer starts.
