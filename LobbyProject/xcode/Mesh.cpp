@@ -243,7 +243,7 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
                     for (int i = 0; i < shapePos.size(); i ++) {
                         Vec2f diff = Vec2f((shapePos[i].x - relPos.x) * 0.001f, (shapePos[i].y - relPos.y)  * 0.001f);
                         float shapeInfluence = diff.lengthSquared();
-                        if (shapeInfluence < 0.005f ) {
+                        if (shapeInfluence < 0.005f && !isTarget[x * VERTICES_Y + y]) {
                             //position.z -= shapeInfluence * 1.f + shapePos[i].z * 0.001f ;
                             //position.z -= shapePos[i].z * 0.01f ;
                             isTarget[x * VERTICES_Y + y] = true;
