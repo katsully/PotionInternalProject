@@ -45,3 +45,12 @@ To enable it again, type this
 sudo mdutil -a -i on
 ```
 
+
+We also prevented OS X from re-opening apps after a restart. We wanted to do this because it increases the time it takes to start up the machine into a steady state, and it re-opens apps you may not be using anymore.
+
+To prevent apps from re-opening, do the following:
+
+1. Quit all apps
+2. Navigate to ~/Library/Preferences/ByHost/com.apple.loginwindow.*.plist.
+3. Click Command + I on the file, and lock it using the Locked checkbox.
+
