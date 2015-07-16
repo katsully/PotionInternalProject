@@ -299,7 +299,6 @@ void LobbyProjectApp::draw()
         mFrameSubtraction.draw();
     }
     
-//    gl::popMatrices();
     if (mShowParams) {
         mParams.draw();
     }

@@ -24,7 +24,7 @@ Mesh::Mesh(int &_vertices_x, int &_vertices_y, int &_meshType, bool &_isFirstMes
     currIterStart   = 0.f;
     totalIterStart  = 100.f;
     xOffset         = 0.48f;
-    yOffset         = 0.47f;
+    yOffset         = 0.48f;
     transitionSpeed = 0.5f;
     timerMax        = 3.f;
     drawTexture     = true;
@@ -170,7 +170,7 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
     
     
     
-    if (mouseClick && stateStable) {
+    if (mouseClick && stateStable && zPct == 0.f) {
         stateFly = true;
         stateStable = false;
     } else if (mouseClick && stateFly && zPct == 1.f){
@@ -222,7 +222,7 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
                 if(zPct == 1.f){
                     position -= Vec3f(xOffset + noise, yOffset + noise2,  1.f);
                 }else{
-                    position -= Vec3f(xOffset + noise, yOffset + noise2,  -1.f * zPct);
+                    position -= Vec3f(xOffset + noise, yOffset + noise2,  -2.f * zPct);
                     iter.setColorRGBA(ColorA(1.f, 1.f, 1.f, zPctReverse));
                 }
             }else if (stateStart) {
@@ -236,7 +236,7 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
             
 
             
-            if (position.z <= 0.8f && position.z >= -0.4f) {
+            if (position.z <= 0.8f && position.z >= -0.5f) {
                 
                 //       calculate shape influence
                 if (shapePos.size() > 0) {
@@ -277,7 +277,7 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
             }
             
             //      check if texture is in visible range
-            if (position.z <= 0.8f && position.z >= -0.6f){
+            if (position.z <= 0.9f && position.z >= -0.7f){
                 drawTexture = true;
             }else{
                 drawTexture = false;
@@ -304,13 +304,13 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
     //transition iter
     if (stateFly) {
         if (currIter< totalIter) {
-            currIter += transitionSpeed;
+            currIter += transitionSpeed * 0.5f;
         }
     }
     
     if (stateStart) {
         if (currIterStart< totalIterStart) {
-            currIterStart += transitionSpeed * 0.75f;
+            currIterStart += transitionSpeed * 0.5f;
         }
     }
     
