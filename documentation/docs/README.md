@@ -23,3 +23,6 @@ defaults write com.apple.finder CreateDesktop -bool false
 
 6. Hide the dock by pressing Option + Command + D while in Finder.
 7. Select Automatic Login when your computer starts.
+8. Add your application to the Login Items of the user you log in with, to ensure your installation will start up automatically.
+9. Disable Bluetooth, Universal Access, and Alert sounds. Also mute the output volume.
+
