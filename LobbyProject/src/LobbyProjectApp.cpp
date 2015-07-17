@@ -3,7 +3,7 @@
 #include "cinder/gl/Texture.h"
 #include "cinder/gl/Light.h"
 #include "cinder/qtime/QuickTime.h"
-#include "FrameSubtraction.h"
+#include "ShapeDetection.h"
 #include "Mesh.h"
 #include "cinder/Camera.h"
 #include "cinder/params/Params.h"
@@ -46,9 +46,8 @@ public:
     bool firstMesh;
     bool secondMesh;
     bool textureType, textureType2;
-    bool cursorHidden;
     
-    FrameSubtraction    mFrameSubtraction;
+    ShapeDetection    mShapeDetection;
     Mesh                *myMesh;
     Mesh                *myNextMesh;
     
@@ -62,6 +61,7 @@ public:
     bool mShowParams;    // bool for whether gui params are shown
     bool mOnTop;    // bool for whether the window always remains above all other windows
     bool mPoints;   // bool for whether motion tracking points are shown
+    bool mCursorHidden;  // bool for whether mouse is showing
     
     int mFrameRate;
 };
@@ -103,13 +103,15 @@ void LobbyProjectApp::setup()
     mShowParams     = false;
     mOnTop          = true;
     mPoints         = false;
-    cursorHidden    = true;
+    mCursorHidden    = true;
  
     
     // set app to fullscreen
     setFullScreen(mFullScreen);
     
+    // hide mouse cursor
     hideCursor();
+    
     gl::enableDepthRead();
     gl::enableDepthWrite();
     
@@ -137,7 +139,7 @@ void LobbyProjectApp::setup()
     mParams.addParam( "fps", &mFrameRate );
     mParams.addParam( "mesh density", &meshResolution);
     
-    mFrameSubtraction.setup( mData );
+    mShapeDetection.setup( mData );
     myMesh = new Mesh(meshType, firstMesh );
     myNextMesh = new Mesh(meshType, secondMesh );
     
@@ -175,7 +177,13 @@ void LobbyProjectApp::mouseDown( MouseEvent event )
 {
     nextMeshState   = !nextMeshState;
     mouseClick      = true;
-    cursorHidden    = !cursorHidden;
+
+    mCursorHidden    = !mCursorHidden;
+    if (mCursorHidden) {
+        hideCursor();
+    } else {
+        showCursor();
+    }
 }
 
 void LobbyProjectApp::getRandomFile(int _meshTag)
@@ -283,15 +291,8 @@ void LobbyProjectApp::update()
         timer = time;
     }
     
-    if (!cursorHidden){
-        showCursor();
-    }else{
-        hideCursor();
-    }
-    
-    
-    myMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
-    myNextMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
+    myMesh->getTrackedShapes(mShapeDetection.mTrackedShapes);
+    myNextMesh->getTrackedShapes(mShapeDetection.mTrackedShapes);
     
     //reset
     if ( myMesh->resetTexture == true) {
@@ -341,7 +342,7 @@ void LobbyProjectApp::draw()
 
     // draw points over mesh
     if (mPoints) {
-        mFrameSubtraction.draw();
+        mShapeDetection.draw();
     }
     
     if (mShowParams) {
@@ -353,7 +354,7 @@ void LobbyProjectApp::draw()
 
 
 void LobbyProjectApp::shutdown(){
-    mFrameSubtraction.shutdown();
+    mShapeDetection.shutdown();
 }
 
 CINDER_APP_NATIVE( LobbyProjectApp, RendererGl )

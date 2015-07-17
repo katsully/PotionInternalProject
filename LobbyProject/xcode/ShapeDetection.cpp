@@ -1,18 +1,18 @@
 //
-//  FrameSubtraction.cpp
+//  ShapeDetection.cpp
 //  LobbyProject
 //
 //  Created by Kat Sullivan on 6/22/15.
 //
 //
 
-#include "FrameSubtraction.h"
+#include "ShapeDetection.h"
 
-FrameSubtraction::FrameSubtraction()
+ShapeDetection::ShapeDetection()
 {
 }
 
-void FrameSubtraction::setup( Json::Value data )
+void ShapeDetection::setup( Json::Value data )
 {
     // setup camera
     mDeviceManager = OpenNI::DeviceManager::create();
@@ -29,8 +29,8 @@ void FrameSubtraction::setup( Json::Value data )
         }
         
         if (mDevice) {
-            mDevice->connectDepthEventHandler( &FrameSubtraction::onDepth, this);
-            mDevice->connectColorEventHandler( &FrameSubtraction::onColor, this );
+            mDevice->connectDepthEventHandler( &ShapeDetection::onDepth, this);
+            mDevice->connectColorEventHandler( &ShapeDetection::onColor, this );
             mDevice->start();
         }
     }
@@ -43,7 +43,7 @@ void FrameSubtraction::setup( Json::Value data )
     mMaxVal = data.get("mMaxVal", 0.0).asFloat();
 }
 
-void FrameSubtraction::onDepth( openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions )
+void ShapeDetection::onDepth( openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions )
 {
     // convert frame from the camera to an OpenCV matrix
     mInput = toOcv( OpenNI::toChannel16u(frame) );
@@ -118,13 +118,13 @@ void FrameSubtraction::onDepth( openni::VideoFrameRef frame, const OpenNI::Devic
     }
 }
 
-void FrameSubtraction::onColor( openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions )
+void ShapeDetection::onColor( openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions )
 {
     mSurface = OpenNI::toSurface8u(frame);
     cv::Mat mInput( toOcv( OpenNI::toSurface8u(frame), 0 ) );
 }
 
-vector< Shape > FrameSubtraction::getEvaluationSet( ContourVector rawContours, int minimalArea, int maxArea )
+vector< Shape > ShapeDetection::getEvaluationSet( ContourVector rawContours, int minimalArea, int maxArea )
 {
     vector< Shape > vec;
     for ( vector< cv::Point > &c : rawContours ) {
@@ -163,7 +163,7 @@ vector< Shape > FrameSubtraction::getEvaluationSet( ContourVector rawContours, i
     return vec;
 }
 
-Shape* FrameSubtraction::findNearestMatch( Shape trackedShape, vector< Shape > &shapes, float maximumDistance )
+Shape* ShapeDetection::findNearestMatch( Shape trackedShape, vector< Shape > &shapes, float maximumDistance )
 {
     Shape* closestShape = NULL;
     float nearestDist = 1e5;
@@ -189,11 +189,11 @@ Shape* FrameSubtraction::findNearestMatch( Shape trackedShape, vector< Shape > &
     return closestShape;
 }
 
-void FrameSubtraction::update()
+void ShapeDetection::update()
 {
 }
 
-cv::Mat FrameSubtraction::removeBlack( cv::Mat input, short nearLimit, short farLimit )
+cv::Mat ShapeDetection::removeBlack( cv::Mat input, short nearLimit, short farLimit )
 {
     for( int y = 0; y < input.rows; y++ ) {
         for( int x = 0; x < input.cols; x++ ) {
@@ -206,12 +206,12 @@ cv::Mat FrameSubtraction::removeBlack( cv::Mat input, short nearLimit, short far
     return input;
 }
 
-void FrameSubtraction::shutdown(){
+void ShapeDetection::shutdown(){
     // stop the camera after the app quits
     mDevice->stop();
 }
 
-void FrameSubtraction::draw()
+void ShapeDetection::draw()
 {
     // draw points
     for( int i=0; i<mTrackedShapes.size(); i++){
