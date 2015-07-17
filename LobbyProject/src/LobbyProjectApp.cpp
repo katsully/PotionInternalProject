@@ -41,16 +41,23 @@ public:
     float volumeMin;
     float time, timer, timerInterval;
     bool drawMesh;
-    bool nextMeshState, mouseClick;
+    bool nextMeshState, mouseClick, switchMesh;
     bool meshReset, meshStart, nextMeshReset, nextMeshStart;
     bool firstMesh;
     bool secondMesh;
     bool textureType, textureType2;
     
+    std::string timerValue;
+    std::string timeRightNow;
+    std::string timeDiffValue;
+    std::string switchMeshTrigger;
+    
     ShapeDetection    mShapeDetection;
     Mesh                *myMesh;
     Mesh                *myNextMesh;
     
+    std::ofstream oStream;
+
     vector<boost::filesystem::path> mAssetNames;    // list of all asset names
     int mCurrentAsset;  // keep track of which asset is being shown
     
@@ -104,6 +111,7 @@ void LobbyProjectApp::setup()
     mOnTop          = true;
     mPoints         = false;
     mCursorHidden    = true;
+    switchMesh      = true;
  
     
     // set app to fullscreen
@@ -114,6 +122,13 @@ void LobbyProjectApp::setup()
     
     gl::enableDepthRead();
     gl::enableDepthWrite();
+    
+    
+    std::string myPath = "errorlog.txt";
+    
+    oStream.open(myPath);
+    oStream << "hello!!!!!!!" << std::endl;
+    
     
     // get filepath to json file
     string guiParamsFilePath = p.string() + "/gui_params.json";
@@ -286,10 +301,33 @@ void LobbyProjectApp::update()
     gl::rotate( mSceneRot);
     time = getElapsedSeconds();
     float timeDiff = time - timer;
+    
+//    timeRightNow = "the time right now is " + toString(time);
+//    timerValue   = "timer set at" + toString(timer);
+//    timeDiffValue = "time difference is " + toString(timeDiff);
+//    
+//    
+//    oStream << timeRightNow << std::endl;
+//    oStream << timerValue << std::endl;
+//    oStream << timeDiffValue << std::endl;
+    
     if ( timeDiff >= timerInterval ) {
-        mouseClick = true;
+        
+        
+        switchMesh = true;
+        
+        
+        
         timer = time;
+        
     }
+    
+//    switchMeshTrigger = "switch mesh now" + toString(switchMesh);
+//    oStream << switchMeshTrigger << std::endl;
+//    
+    
+    
+
     
     myMesh->getTrackedShapes(mShapeDetection.mTrackedShapes);
     myNextMesh->getTrackedShapes(mShapeDetection.mTrackedShapes);
@@ -313,13 +351,41 @@ void LobbyProjectApp::update()
     int meshVetX = meshMinX * meshResolution;
     int meshVetY = meshMinY * meshResolution;
     if (meshResolution > 0){
-        myMesh->update(mousePos, mTexture, mouseClick, meshVetX, meshVetY);
-        myNextMesh->update(mousePos, mNextTexture, mouseClick, meshVetX, meshVetY);
+        myMesh->update(mousePos, mTexture, switchMesh, meshVetX, meshVetY);
+        myNextMesh->update(mousePos, mNextTexture, switchMesh, meshVetX, meshVetY);
     }else{
-        myMesh->update(mousePos, mTexture, mouseClick, meshMinX, meshMinY);
-        myNextMesh->update(mousePos, mNextTexture, mouseClick, meshMinX, meshMinY);
+        myMesh->update(mousePos, mTexture, switchMesh, meshMinX, meshMinY);
+        myNextMesh->update(mousePos, mNextTexture, switchMesh, meshMinX, meshMinY);
     }
-    mouseClick = false;
+//    
+//    if(myMesh->stateFly){
+//        std::string firstMeshFly = "first mesh flying away";
+//        oStream << firstMeshFly << std::endl;
+//    }else if(myMesh->stateStable){
+//        std::string firstMeshStable = "first mesh is stable";
+//        oStream << firstMeshStable << std::endl;
+//    }else if(myMesh->stateStart){
+//        std::string firstMeshStart = "first mesh is coming";
+//        oStream << firstMeshStart << std::endl;
+//    }
+//    
+//    if(myNextMesh->stateFly){
+//        std::string secondMeshFly = "second mesh flying away";
+//        oStream << secondMeshFly << std::endl;
+//    }else if(myNextMesh->stateStable){
+//        std::string secondMeshStable = "second mesh is stable";
+//        oStream << secondMeshStable << std::endl;
+//    }else if(myNextMesh->stateStart){
+//        std::string secondMeshStart = "second mesh is coming";
+//        oStream << secondMeshStart << std::endl;
+//    }
+//    
+//    
+//    
+    
+    
+    // TODO put mouseclick in mousedown function
+    switchMesh = false;
 }
 
 void LobbyProjectApp::draw()
@@ -355,6 +421,7 @@ void LobbyProjectApp::draw()
 
 void LobbyProjectApp::shutdown(){
     mShapeDetection.shutdown();
+    oStream.close();
 }
 
 CINDER_APP_NATIVE( LobbyProjectApp, RendererGl )
