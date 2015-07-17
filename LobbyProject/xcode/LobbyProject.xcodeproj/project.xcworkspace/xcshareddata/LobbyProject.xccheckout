@@ -7,18 +7,18 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>488F962A-6238-4E35-986A-5F4D01D8D754</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>LobbyProject</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>24A3E1FBD1E6307898B81291166E85892EE9AB53</key>
 		<string>https://github.com/wieden-kennedy/Cinder-OpenNI.git</string>
 		<key>479B3E70971849F95B77C1C873619D824F467270</key>
-		<string>https://github.com/katsully/PotionInternalProject.git</string>
+		<string>github.com:katsully/PotionInternalProject.git</string>
 		<key>AD4B458D0D225ED63FAE0155615993B7D3ECE020</key>
 		<string>https://github.com/cinder/Cinder.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>LobbyProject/xcode/LobbyProject.xcodeproj/project.xcworkspace</string>
+	<string>LobbyProject/xcode/LobbyProject.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>24A3E1FBD1E6307898B81291166E85892EE9AB53</key>
@@ -29,7 +29,7 @@
 		<string>../../../../../Cinder</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/katsully/PotionInternalProject.git</string>
+	<string>github.com:katsully/PotionInternalProject.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
@@ -58,7 +58,7 @@
 			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>479B3E70971849F95B77C1C873619D824F467270</string>
 			<key>IDESourceControlWCCName</key>
-			<string>PotionInternalProject</string>
+			<string>PotionProject</string>
 		</dict>
 	</array>
 </dict>

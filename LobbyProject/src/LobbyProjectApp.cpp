@@ -3,7 +3,7 @@
 #include "cinder/gl/Texture.h"
 #include "cinder/gl/Light.h"
 #include "cinder/qtime/QuickTime.h"
-#include "FrameSubtraction.h"
+#include "ShapeDetection.h"
 #include "Mesh.h"
 #include "cinder/Camera.h"
 #include "cinder/params/Params.h"
@@ -48,7 +48,7 @@ public:
     bool textureType, textureType2;
     bool cursorHidden;
     
-    FrameSubtraction    mFrameSubtraction;
+    ShapeDetection    mShapeDetection;
     Mesh                *myMesh;
     Mesh                *myNextMesh;
     
@@ -135,7 +135,7 @@ void LobbyProjectApp::setup()
     mParams.addParam( "timer interval", &timerInterval );
     mParams.addParam( "fps", &mFrameRate );
     
-    mFrameSubtraction.setup( mData );
+    mShapeDetection.setup( mData );
     myMesh = new Mesh( meshX, meshY, meshType, firstMesh );
     myNextMesh = new Mesh( meshX , meshY , meshType, secondMesh );
     
@@ -288,8 +288,8 @@ void LobbyProjectApp::update()
     }
     
     
-    myMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
-    myNextMesh->getTrackedShapes(mFrameSubtraction.mTrackedShapes);
+    myMesh->getTrackedShapes(mShapeDetection.mTrackedShapes);
+    myNextMesh->getTrackedShapes(mShapeDetection.mTrackedShapes);
     
     //reset
     if ( myMesh->resetTexture == true) {
@@ -331,7 +331,7 @@ void LobbyProjectApp::draw()
 
     // draw points over mesh
     if (mPoints) {
-        mFrameSubtraction.draw();
+        mShapeDetection.draw();
     }
     
     if (mShowParams) {
@@ -343,7 +343,7 @@ void LobbyProjectApp::draw()
 
 
 void LobbyProjectApp::shutdown(){
-    mFrameSubtraction.shutdown();
+    mShapeDetection.shutdown();
 }
 
 CINDER_APP_NATIVE( LobbyProjectApp, RendererGl )

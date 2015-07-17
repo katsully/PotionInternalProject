@@ -24,7 +24,7 @@
 		148004701B386624003C5DCB /* OpenNI.ini in CopyFiles */ = {isa = PBXBuildFile; fileRef = 148002801B386588003C5DCB /* OpenNI.ini */; };
 		148004711B386625003C5DCB /* OpenNI2 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 148002811B386588003C5DCB /* OpenNI2 */; };
 		148004741B386B85003C5DCB /* Mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 148004721B386B85003C5DCB /* Mesh.cpp */; };
-		148004771B386C70003C5DCB /* FrameSubtraction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 148004751B386C70003C5DCB /* FrameSubtraction.cpp */; };
+		148004771B386C70003C5DCB /* ShapeDetection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 148004751B386C70003C5DCB /* ShapeDetection.cpp */; };
 		5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
 		5323E6B60EAFCA7E003A9687 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B50EAFCA7E003A9687 /* QTKit.framework */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -100,8 +100,8 @@
 		148003C01B3865DA003C5DCB /* OniPlatformWin32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OniPlatformWin32.h; sourceTree = "<group>"; };
 		148004721B386B85003C5DCB /* Mesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Mesh.cpp; sourceTree = "<group>"; };
 		148004731B386B85003C5DCB /* Mesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mesh.h; sourceTree = "<group>"; };
-		148004751B386C70003C5DCB /* FrameSubtraction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FrameSubtraction.cpp; sourceTree = "<group>"; };
-		148004761B386C70003C5DCB /* FrameSubtraction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FrameSubtraction.h; sourceTree = "<group>"; };
+		148004751B386C70003C5DCB /* ShapeDetection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShapeDetection.cpp; sourceTree = "<group>"; };
+		148004761B386C70003C5DCB /* ShapeDetection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShapeDetection.h; sourceTree = "<group>"; };
 		21EE54D0A9454669926C1178 /* LobbyProjectApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = LobbyProjectApp.cpp; path = ../src/LobbyProjectApp.cpp; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
@@ -156,8 +156,8 @@
 				21EE54D0A9454669926C1178 /* LobbyProjectApp.cpp */,
 				148004721B386B85003C5DCB /* Mesh.cpp */,
 				148004731B386B85003C5DCB /* Mesh.h */,
-				148004751B386C70003C5DCB /* FrameSubtraction.cpp */,
-				148004761B386C70003C5DCB /* FrameSubtraction.h */,
+				148004751B386C70003C5DCB /* ShapeDetection.cpp */,
+				148004761B386C70003C5DCB /* ShapeDetection.h */,
 				146B90D41B457CDD009D4CC8 /* Shape.cpp */,
 				146B90D51B457CDD009D4CC8 /* Shape.h */,
 			);
@@ -440,7 +440,7 @@
 				146B90D61B457CDD009D4CC8 /* Shape.cpp in Sources */,
 				148004741B386B85003C5DCB /* Mesh.cpp in Sources */,
 				1480045E1B3865DA003C5DCB /* Cinder-OpenNI.cpp in Sources */,
-				148004771B386C70003C5DCB /* FrameSubtraction.cpp in Sources */,
+				148004771B386C70003C5DCB /* ShapeDetection.cpp in Sources */,
 				D19FD4D130254193837AE4D2 /* LobbyProjectApp.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -1,5 +1,5 @@
 //
-//  FrameSubtraction.h
+//  ShapeDetection.h
 //  LobbyProject
 //
 //  Created by Kat Sullivan on 6/22/15.
@@ -20,9 +20,9 @@ using namespace ci;
 using namespace ci::app;
 using namespace std;
 
-class FrameSubtraction {
+class ShapeDetection {
 public:
-    FrameSubtraction();
+    ShapeDetection();
     void setup( Json::Value data );
     void update();
     void draw();
