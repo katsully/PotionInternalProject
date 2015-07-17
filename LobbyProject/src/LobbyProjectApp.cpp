@@ -37,7 +37,7 @@ public:
     Quatf               mSceneRot;
     params::InterfaceGl mParams;
    
-    int                 meshX, meshY, meshType;
+    int                 meshMinX, meshMinY, meshType, meshResolution;
     float volumeMin;
     float time, timer, timerInterval;
     bool drawMesh;
@@ -95,8 +95,8 @@ void LobbyProjectApp::setup()
     secondMesh      = false;
     textureType     = false;
     textureType2    = false;
-    meshX           = 48;
-    meshY           = 27;
+    meshMinX        = 16;
+    meshMinY        = 9;
     meshType        = 0;
     mFrameRate      = getAverageFps();
     mFullScreen     = true;
@@ -122,22 +122,24 @@ void LobbyProjectApp::setup()
     // if succesful, assign variables values based on the json file
     if (itworked) {
         Json::Value sceneRotParams = mData.get( "mSceneRot", {} );
-        mSceneRot = ci::Quatf( sceneRotParams.get( "xRotation", 0.0f ).asFloat(), sceneRotParams.get( "yRotation", 0.0f ).asFloat(), sceneRotParams.get( "zRotation", 0.0f ).asFloat() );
-        volumeMin = mData.get( "volumeMin", 0.0f ).asFloat();
-        drawMesh = mData.get( "drawMesh", false ).asBool();
-        timerInterval = mData.get( "timerInterval", 0.0f ).asFloat();
+        mSceneRot       = ci::Quatf( sceneRotParams.get( "xRotation", 0.0f ).asFloat(), sceneRotParams.get( "yRotation", 0.0f ).asFloat(), sceneRotParams.get( "zRotation", 0.0f ).asFloat() );
+        volumeMin       = mData.get( "volumeMin", 0.0f ).asFloat();
+        drawMesh        = mData.get( "drawMesh", false ).asBool();
+        timerInterval   = mData.get( "timerInterval", 0.0f ).asFloat();
+        meshResolution  = mData.get( "meshResolution", 0).asInt();
     }
     
-    mParams = params::InterfaceGl( "mesh", Vec2i( 225, 125 ) );
+    mParams = params::InterfaceGl( "mesh", Vec2i( 225, 150 ) );
     mParams.addParam( "camera rotation", &mSceneRot );
     mParams.addParam( "camera viewing volume min", &volumeMin );
     mParams.addParam( "draw mesh", &drawMesh );
     mParams.addParam( "timer interval", &timerInterval );
     mParams.addParam( "fps", &mFrameRate );
+    mParams.addParam( "mesh density", &meshResolution);
     
     mFrameSubtraction.setup( mData );
-    myMesh = new Mesh( meshX, meshY, meshType, firstMesh );
-    myNextMesh = new Mesh( meshX , meshY , meshType, secondMesh );
+    myMesh = new Mesh(meshType, firstMesh );
+    myNextMesh = new Mesh(meshType, secondMesh );
     
 }
 
@@ -305,9 +307,17 @@ void LobbyProjectApp::update()
     if ( mMovie2 && textureType2 == false ) {
         mNextTexture = gl::Texture(mMovie2->getTexture());
     }
-
-    myMesh->update(mousePos, mTexture, mouseClick);
-    myNextMesh->update(mousePos, mNextTexture, mouseClick);
+    
+    //  changing mesh resolution here. if meshResolution is 0, then use base resolution instead
+    int meshVetX = meshMinX * meshResolution;
+    int meshVetY = meshMinY * meshResolution;
+    if (meshResolution > 0){
+        myMesh->update(mousePos, mTexture, mouseClick, meshVetX, meshVetY);
+        myNextMesh->update(mousePos, mNextTexture, mouseClick, meshVetX, meshVetY);
+    }else{
+        myMesh->update(mousePos, mTexture, mouseClick, meshMinX, meshMinY);
+        myNextMesh->update(mousePos, mNextTexture, mouseClick, meshMinX, meshMinY);
+    }
     mouseClick = false;
 }
 

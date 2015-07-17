@@ -11,9 +11,8 @@
 
 
 
-Mesh::Mesh(int &_vertices_x, int &_vertices_y, int &_meshType, bool &_isFirstMesh){
-    this->VERTICES_X    = _vertices_x ;
-    this->VERTICES_Y    = _vertices_y;
+Mesh::Mesh(int &_meshType, bool &_isFirstMesh){
+
     this->isFirstMesh   = _isFirstMesh;
     this->meshType      = _meshType;
     
@@ -40,19 +39,7 @@ Mesh::Mesh(int &_vertices_x, int &_vertices_y, int &_meshType, bool &_isFirstMes
         stateStart  = false;
     }
 
-    //  allocating for vectors
-    for (int x = 0; x < VERTICES_X; x++) {
-        for (int y = 0; y < VERTICES_Y; y++) {
-            
-            timeDiff.push_back(0);
-            isTarget.push_back(false);
-            currIterBounce.push_back(0);
-            totalIterBounce.push_back(100.f);
-            zPctBounce.push_back(0);
-            oscilateZ.push_back(0.f);
-        }
-    }
-}
+   }
 
 // ease in and out effect
 float Mesh::easeInOut(float t, float b , float c, float d){
@@ -146,8 +133,34 @@ void Mesh::getTexture(gl::Texture &texture){
 
 
 
-void Mesh::update(Vec2f &_shapePos, gl::Texture &texture,  bool &_mouseClick){
+void Mesh::update(Vec2f &_shapePos, gl::Texture &texture, bool &_mouseClick, int &_vertices_x, int &_vertices_y){
+    this->VERTICES_X    = _vertices_x ;
+    this->VERTICES_Y    = _vertices_y;
     
+    //  allocating for vectors
+    for (int x = 0; x < VERTICES_X; x++) {
+        for (int y = 0; y < VERTICES_Y; y++) {
+            if (timeDiff.size() < VERTICES_X * VERTICES_Y) {
+                timeDiff.push_back(0);
+            }
+            if (isTarget.size() < VERTICES_X * VERTICES_Y) {
+                isTarget.push_back(false);
+            }
+            if (currIterBounce.size() < VERTICES_X * VERTICES_Y) {
+                 currIterBounce.push_back(0);
+            }
+            if (totalIterBounce.size() < VERTICES_X * VERTICES_Y) {
+                totalIterBounce.push_back(100.f);
+            }
+            if (zPctBounce.size() < VERTICES_X * VERTICES_Y) {
+                zPctBounce.push_back(0);
+            }
+            if (oscilateZ.size() < VERTICES_X * VERTICES_Y) {
+                oscilateZ.push_back(0.f);
+            }
+        }
+    }
+
     getTexture(texture);
     
     float time = getElapsedSeconds();

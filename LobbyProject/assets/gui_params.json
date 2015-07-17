@@ -10,5 +10,6 @@
    "mNearLimit":30,
    "mFarLimit":4000,
    "mThresh":0.0,
-   "mMaxVal":255.0
+   "mMaxVal":255.0,
+   "meshResolution":3
 }

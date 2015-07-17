@@ -24,11 +24,11 @@ using std::vector;
 
 class Mesh{
 public:
-    Mesh(int &_vertices_x, int &_vertices_y, int &_meshType, bool &_isFirstMesh);
+    Mesh(int &_meshType, bool &_isFirstMesh);
     
     void getTrackedShapes(vector<Shape> &_mTrackedShapes);
     void getTexture(gl::Texture &texture);
-    void update(Vec2f &_shapePos, gl::Texture &texture, bool &_mouseClick);
+    void update(Vec2f &_shapePos, gl::Texture &texture, bool &_mouseClick, int &_vertices_x, int &_vertices_y);
     void draw();
     
     int VERTICES_X, VERTICES_Y;
