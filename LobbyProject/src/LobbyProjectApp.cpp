@@ -46,7 +46,6 @@ public:
     bool firstMesh;
     bool secondMesh;
     bool textureType, textureType2;
-    bool cursorHidden;
     
     ShapeDetection    mShapeDetection;
     Mesh                *myMesh;
@@ -62,6 +61,7 @@ public:
     bool mShowParams;    // bool for whether gui params are shown
     bool mOnTop;    // bool for whether the window always remains above all other windows
     bool mPoints;   // bool for whether motion tracking points are shown
+    bool mCursorHidden;  // bool for whether mouse is showing
     
     int mFrameRate;
 };
@@ -103,13 +103,15 @@ void LobbyProjectApp::setup()
     mShowParams     = false;
     mOnTop          = true;
     mPoints         = false;
-    cursorHidden    = true;
+    mCursorHidden    = true;
  
     
     // set app to fullscreen
     setFullScreen(mFullScreen);
     
+    // hide mouse cursor
     hideCursor();
+    
     gl::enableDepthRead();
     gl::enableDepthWrite();
     
@@ -173,7 +175,13 @@ void LobbyProjectApp::mouseDown( MouseEvent event )
 {
     nextMeshState   = !nextMeshState;
     mouseClick      = true;
-    cursorHidden    = !cursorHidden;
+
+    mCursorHidden    = !mCursorHidden;
+    if (mCursorHidden) {
+        hideCursor();
+    } else {
+        showCursor();
+    }
 }
 
 void LobbyProjectApp::getRandomFile(int _meshTag)
@@ -280,13 +288,6 @@ void LobbyProjectApp::update()
         mouseClick = true;
         timer = time;
     }
-    
-    if (!cursorHidden){
-        showCursor();
-    }else{
-        hideCursor();
-    }
-    
     
     myMesh->getTrackedShapes(mShapeDetection.mTrackedShapes);
     myNextMesh->getTrackedShapes(mShapeDetection.mTrackedShapes);
