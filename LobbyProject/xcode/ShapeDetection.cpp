@@ -93,10 +93,6 @@ void ShapeDetection::onDepth( openni::VideoFrameRef frame, const OpenNI::DeviceO
             mTrackedShapes[i].hull.clear();
             mTrackedShapes[i].hull = nearestShape->hull;
             mTrackedShapes[i].moving = nearestShape->moving;
-            if(mTrackedShapes[i].moving){
-                cout << " SHAPE " << mTrackedShapes[i].ID;
-                cout << " IS MOVING " << endl;
-            }
         }
     }
     
@@ -196,11 +192,9 @@ Shape* ShapeDetection::findNearestMatch( Shape trackedShape, vector< Shape > &sh
             finalDist = dist;
         }
     }
-    cout << " shape " << trackedShape.ID;
-    cout << " has dist " << finalDist << endl;
     // if shape isn't moving
     if(closestShape){
-        if (finalDist < 20) {
+        if (finalDist < 15) {
             closestShape->moving = false;
         } else {
             closestShape->moving = true;
