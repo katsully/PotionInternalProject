@@ -33,6 +33,14 @@ public:
     
     vector<Shape> mTrackedShapes;   // store tracked shapes
     
+    // all pixels below near limit and above far limit are set to far limit depth
+    short mNearLimit;
+    short mFarLimit;
+    
+    // threshold for the camera
+    double mThresh;
+    double mMaxVal;
+    
 private:
     OpenNI::DeviceRef mDevice;
     OpenNI::DeviceManagerRef mDeviceManager;
@@ -42,14 +50,6 @@ private:
     ci::Surface8u mSurface;
     ci::Surface8u mSurfaceDepth;
     ci::Surface8u mSurfaceSubtract;
-    
-    // all pixels below near limit and above far limit are set to far limit depth
-    short mNearLimit;
-    short mFarLimit;
-    
-    // threshold for the camera
-    double mThresh;
-    double mMaxVal;
     
     typedef vector< vector<cv::Point > > ContourVector;
     ContourVector mContours;

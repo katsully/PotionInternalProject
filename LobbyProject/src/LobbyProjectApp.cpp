@@ -8,7 +8,6 @@
 #include "cinder/Camera.h"
 #include "cinder/params/Params.h"
 #include "json/json.h"
-#include "cinder/gl/Fbo.h"
 #include <fstream>
 
 using namespace ci;
@@ -56,6 +55,8 @@ public:
     
     Json::Value mData;  // to store GUI params
     Json::Reader mReader;   // this will read the json file where the gui params are stored and parse it to mData
+    Json::StyledStreamWriter writer;    // write json values back to json file
+    string mGuiParamsFilePath;   // string representing the path to the json gui params file
     
     bool mFullScreen;   // bool for whether app is fullscreen or not
     bool mShowParams;    // bool for whether gui params are shown
@@ -118,9 +119,9 @@ void LobbyProjectApp::setup()
     gl::enableDepthWrite();
     
     // get filepath to json file
-    string guiParamsFilePath = p.string() + "/gui_params.json";
+    mGuiParamsFilePath = p.string() + "/gui_params.json";
     // read the json file
-    ifstream ifile(guiParamsFilePath, std::ifstream::binary);
+    ifstream ifile(mGuiParamsFilePath, std::ifstream::binary);
     // parse the data to mData
     bool itworked = mReader.parse( ifile, mData, false );
     // if succesful, assign variables values based on the json file
@@ -132,19 +133,24 @@ void LobbyProjectApp::setup()
         timerInterval   = mData.get( "timerInterval", 0.0f ).asFloat();
         meshResolution  = mData.get( "meshResolution", 0).asInt();
     }
+    // close the stream
+    ifile.close();
     
-    mParams = params::InterfaceGl( "mesh", Vec2i( 225, 150 ) );
+    mParams = params::InterfaceGl( "mesh", Vec2i( 400, 150 ) );
     mParams.addParam( "camera rotation", &mSceneRot );
     mParams.addParam( "camera viewing volume min", &volumeMin );
     mParams.addParam( "draw mesh", &drawMesh );
     mParams.addParam( "timer interval", &timerInterval );
     mParams.addParam( "fps", &mFrameRate );
     mParams.addParam( "mesh density", &meshResolution);
+    mParams.addParam( "near limit", &mShapeDetection.mNearLimit );
+    mParams.addParam( "far limit", &mShapeDetection.mFarLimit );
+    mParams.addParam( "minimun threshold", &mShapeDetection.mThresh );
+    mParams.addParam( "maximum threshold", &mShapeDetection.mMaxVal );
     
     mShapeDetection.setup( mData );
     myMesh = new Mesh(meshType, firstMesh );
     myNextMesh = new Mesh(meshType, secondMesh );
-    
 }
 
 void LobbyProjectApp::prepareSettings( Settings* settings )
@@ -359,10 +365,20 @@ void LobbyProjectApp::draw()
     }
 }
 
-
-
-
 void LobbyProjectApp::shutdown(){
+    // write param values back to json file
+    ofstream ofile(mGuiParamsFilePath);
+    mData["drawMesh"] = drawMesh;
+    mData["mFarLimit"] = mShapeDetection.mFarLimit;
+    mData["mMaxVal"] = mShapeDetection.mMaxVal;
+    mData["mNearLimit"] = mShapeDetection.mNearLimit;
+    mData["mThresh"] = mShapeDetection.mThresh;
+    mData["meshResolution"] = meshResolution;
+    mData["timerInterval"] = timerInterval;
+    mData["volumeMin"] = volumeMin;
+    writer.write(ofile, mData);
+    ofile.close();
+    
     mShapeDetection.shutdown();
 }
 

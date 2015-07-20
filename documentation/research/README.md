@@ -32,9 +32,11 @@ python amalgamate.py
 ```
 
 This generates a single header and source file that make it easier to include into your project. Once you run the script, you add 
+
 ```
 #include json/json.h 
 ```
+
 to your project. You may also need to add ../blocks/jsoncpp/dist to user header search paths in your build settings.
 
 
