@@ -91,6 +91,10 @@ void ShapeDetection::onDepth( openni::VideoFrameRef frame, const OpenNI::DeviceO
         if ( nearestShape != NULL ) {
             nearestShape->matchFound = true;
             mTrackedShapes[i].centroid = nearestShape->centroid;
+            // get depth value from center point
+            float centerDepth = (float)mInput.at<short>( mTrackedShapes[i].centroid.x, mTrackedShapes[i].centroid.y );
+            // map 10 4000 to 0 1
+            mTrackedShapes[i].depth = lmap( centerDepth, (float)mNearLimit, (float)mFarLimit, 0.0f, 1.0f );
             mTrackedShapes[i].lastFrameSeen = ci::app::getElapsedFrames();
             mTrackedShapes[i].hull.clear();
             mTrackedShapes[i].hull = nearestShape->hull;
@@ -155,7 +159,7 @@ vector< Shape > ShapeDetection::getEvaluationSet( ContourVector rawContours, int
         shape.centroid = cv::Point( center.val[0], center.val[1] );
         
         // get depth value from center point
-        float centerDepth = (float)mInput.at<short>( center.val[1], center.val[0] );
+        float centerDepth = (float)mInput.at<short>( center.val[0], center.val[1] );
         // map 10 4000 to 0 1
         shape.depth = lmap( centerDepth, (float)mNearLimit, (float)mFarLimit, 0.0f, 1.0f );
         
