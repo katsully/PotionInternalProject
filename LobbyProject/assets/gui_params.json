@@ -6,7 +6,7 @@
 	"mNearLimit" : 30,
 	"mSceneRot" : 
 	{
-		"xRotation" : 3.14159265359,
+		"xRotation" : 3.1415926535900001,
 		"yRotation" : 0,
 		"zRotation" : 0
 	},

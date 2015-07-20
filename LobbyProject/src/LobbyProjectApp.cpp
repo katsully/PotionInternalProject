@@ -176,11 +176,10 @@ void LobbyProjectApp::keyDown( KeyEvent event )
     if ( event.getChar() == 'f' ) {
         mFullScreen = !mFullScreen;
         setFullScreen(mFullScreen);
-    } else if ( event.getChar() == 'p' ) {
-        mShowParams = !mShowParams;
-    } else if( event.getChar() == 't' ) {
         mOnTop = !mOnTop;
         getWindow()->setAlwaysOnTop(mOnTop);
+    } else if ( event.getChar() == 'p' ) {
+        mShowParams = !mShowParams;
     } else if( event.getChar() == 'o' ) {
         mPoints = !mPoints;
     } else if( event.getChar() == 'c' ){
