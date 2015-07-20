@@ -52,7 +52,8 @@ public:
     
     std::ofstream oStream;
 
-    vector<boost::filesystem::path> mAssetNames;    // list of all asset names
+//    vector<boost::filesystem::path> mAssetNames;    // list of all asset names
+    vector<gl::Texture> mAssets;
     int mCurrentAsset;  // keep track of which asset is being shown
     
     Json::Value mData;  // to store GUI params
@@ -76,11 +77,18 @@ void LobbyProjectApp::setup()
     
     // get absolute path to assets' directory
     fs::path p( getAssetPath( "" ) );
-    // iterate through the asset directory and add all filenames to the vector assetNames
+    // iterate through the asset directory and add load all assets as Textures
     for ( fs::directory_iterator it( p ); it != fs::directory_iterator(); ++it ) {
         if ( ! is_directory( *it ) ) {
+            // ignore non image files
             if ( it->path().filename() != ".DS_Store" && it->path().filename() != "gui_params.json" ) {
-                mAssetNames.push_back( it->path().filename() );
+                // if cannot load texture, it will print the error and asset name to the console, then it will increment the asset index counter, and just show the following image
+                try {
+                    mAssets.push_back(loadImage(loadAsset( it->path().filename() ) ));
+                } catch (Exception ex ){
+                    std::cout << "exception caught while loading image " << ex.what() << std::endl;
+                    std::cout << "asset name " << it->path().filename() << std::endl;
+                }
             }
         }
     }
@@ -210,90 +218,61 @@ void LobbyProjectApp::mouseDown( MouseEvent event )
 void LobbyProjectApp::getRandomFile(int _meshTag)
 {
     // select the next available asset
-    boost::filesystem::path assetName = mAssetNames[mCurrentAsset];
+    gl::Texture asset = mAssets[mCurrentAsset];
     mCurrentAsset++;
     
     // if you went through the entire asset directory, start over
-    if ( mCurrentAsset == mAssetNames.size() ) {
+    if ( mCurrentAsset == mAssets.size() ) {
         mCurrentAsset = 0;
     }
-   
-    // get the extension of the asset
-    boost::filesystem::path ext = assetName.extension();
 
     // if it is a movie, load and play the movie
-    if( ext == ".mp4" ) {
-        if (_meshTag == 0) {
-            textureType = false;
-            try{
-                mMovie = qtime::MovieGl::create(loadAsset(assetName));
-                
-            } catch( ... ){
-                console() << "file is not a valid movie: " << assetName << std::endl;
-            }
-        }else{
-            textureType2 = false;
-            try{
-                mMovie2 = qtime::MovieGl::create(loadAsset(assetName));
-                
-            } catch( ... ){
-                console() << "file is not a valid movie: " << assetName << std::endl;
-            }
-        }
-        
-        //load movie and play
-        if (_meshTag == 0) {
-            textureType = false;
-            if (mMovie) {
-                mMovie->setLoop();
-                mMovie->play();
-                mMovie->setVolume(0.01f);
-            }
-        }else{
-            textureType2 = false;
-            if (mMovie2) {
-                mMovie2->setLoop();
-                mMovie2->play();
-                mMovie2->setVolume(0.01f);
-            }
-        }
-        // else load it as a texture
-    } else {
-        
-        if (_meshTag == 0) {
-            textureType = true;
-            // if cannot load texture, it will print the error and asset name to the console, then it will increment the asset index counter, and just show the following image
-            try {
-                mTexture = gl::Texture(loadImage(loadAsset(assetName)));
- 
-            } catch (Exception ex ){
-                std::cout << "something went wrong loading the image " << ex.what() << std::endl;
-                std::cout << "image name " << assetName << std::endl;
-                if ( mCurrentAsset == mAssetNames.size() - 1 ) {
-                    mCurrentAsset = 0;
-                } else {
-                    mCurrentAsset++;
-                }
-                assetName = mAssetNames[mCurrentAsset];
-            }
-        }
-        if (_meshTag == 1) {
-            textureType2 = true;
-            // if cannot load texture, it will print the error and asset name to the console, then it will increment the asset index counter, and just show the following image
-            try {
-                mNextTexture = gl::Texture(loadImage(loadAsset(assetName)));
-                
-            } catch (Exception ex ){
-                std::cout << "something went wrong loading the image " << ex.what() << std::endl;
-                std::cout << "image name " << assetName << std::endl;
-                if ( mCurrentAsset == mAssetNames.size() - 1 ) {
-                    mCurrentAsset = 0;
-                } else {
-                    mCurrentAsset++;
-                }
-                assetName = mAssetNames[mCurrentAsset];
-            }
-        }
+    // CURRENTLY NOT USING MOVIES
+//    if( ext == ".mp4" ) {
+//        if (_meshTag == 0) {
+//            textureType = false;
+//            try{
+//                mMovie = qtime::MovieGl::create(loadAsset(assetName));
+//                
+//            } catch( ... ){
+//                console() << "file is not a valid movie: " << assetName << std::endl;
+//            }
+//        }else{
+//            textureType2 = false;
+//            try{
+//                mMovie2 = qtime::MovieGl::create(loadAsset(assetName));
+//                
+//            } catch( ... ){
+//                console() << "file is not a valid movie: " << assetName << std::endl;
+//            }
+//        }
+//        
+//        //load movie and play
+//        if (_meshTag == 0) {
+//            textureType = false;
+//            if (mMovie) {
+//                mMovie->setLoop();
+//                mMovie->play();
+//                mMovie->setVolume(0.01f);
+//            }
+//        }else{
+//            textureType2 = false;
+//            if (mMovie2) {
+//                mMovie2->setLoop();
+//                mMovie2->play();
+//                mMovie2->setVolume(0.01f);
+//            }
+//        }
+//        // else load it as a texture
+//    } else {
+    
+    if (_meshTag == 0) {
+        textureType = true;
+        mTexture = asset;
+    }
+    if (_meshTag == 1) {
+        textureType2 = true;
+        mNextTexture = asset;
     }
 }
 
@@ -349,7 +328,6 @@ void LobbyProjectApp::update()
 
 void LobbyProjectApp::draw()
 {
-
     // clear the window to black
     gl::clear( Color::black() );
     
