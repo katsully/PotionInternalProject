@@ -37,6 +37,7 @@ public:
     gl::VboMeshRef  mVboMesh;
     gl::Texture  mTexture;
     
+    vector<float>   depthOffset;
     vector<float>   timeDiff;
     vector<bool>    isTarget;
     vector<float>   currIterBounce, totalIterBounce, zPctBounce;

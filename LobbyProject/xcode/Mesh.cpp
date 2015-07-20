@@ -147,7 +147,7 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture, bool &_mouseClick, int
                 isTarget.push_back(false);
             }
             if (currIterBounce.size() < VERTICES_X * VERTICES_Y) {
-                 currIterBounce.push_back(0);
+                currIterBounce.push_back(0);
             }
             if (totalIterBounce.size() < VERTICES_X * VERTICES_Y) {
                 totalIterBounce.push_back(100.f);
@@ -157,6 +157,9 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture, bool &_mouseClick, int
             }
             if (oscilateZ.size() < VERTICES_X * VERTICES_Y) {
                 oscilateZ.push_back(0.f);
+            }
+            if (depthOffset.size() < VERTICES_X * VERTICES_Y) {
+                depthOffset.push_back(0.f);
             }
         }
     }
@@ -231,7 +234,6 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture, bool &_mouseClick, int
                 position -= Vec3f(xOffset + noise, yOffset + noise2,  0.f);
             }
             
-
             //  checking the mesh pos to ensure is in visible range
             if (position.z <= 0.8f && position.z >= -0.5f) {
                 //       calculate shape influence and start counting time for every vertices
@@ -242,13 +244,27 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture, bool &_mouseClick, int
                         if (shapeInfluence < 0.005f && !isTarget[x * VERTICES_Y + y]) {
                             isTarget[x * VERTICES_Y + y] = true;
                             timeDiff[x * VERTICES_Y + y] = time;
+                            if (depthOffset[x * VERTICES_Y + y] == 0.f) {
+                               // depthOffset[x * VERTICES_Y + y] = shapePos[i].z;
+                            }
                         }
                     }
                 }
+              
+                //std::cout << depthOffset[x * VERTICES_Y + y] << std::endl;
                 
                 //       oscilate every single vertices in z axis.
                 float timer = time - timeDiff[x * VERTICES_Y + y];
                 oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.1f;
+                //depth?
+//                if (depthOffset[x * VERTICES_Y + y] >= 0.7f) {
+//                    oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.5f;
+//                }else if(depthOffset[x * VERTICES_Y + y] >= 0.3f){
+//                    oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.1f;
+//                }else if(depthOffset[x * VERTICES_Y + y] >= 0.3f){
+//                    oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.05f;
+//                }
+                
                 
                 
                 //       influnce timer
@@ -256,6 +272,7 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture, bool &_mouseClick, int
                     position.z -= 0.1f * oscilateZ[x * VERTICES_Y + y];
                 }else if( timer >= timerMax){
                     isTarget[x * VERTICES_Y + y] = false;
+                  //  depthOffset[x * VERTICES_Y + y] = 0.f;
                 }
             }
             
