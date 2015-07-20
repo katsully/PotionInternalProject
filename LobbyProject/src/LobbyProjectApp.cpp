@@ -146,7 +146,7 @@ void LobbyProjectApp::setup()
     // close the stream
     ifile.close();
     
-    mParams = params::InterfaceGl( "mesh", Vec2i( 400, 150 ) );
+    mParams = params::InterfaceGl( "mesh", Vec2i( 400, 220 ) );
     mParams.addParam( "camera rotation", &mSceneRot );
     mParams.addParam( "camera viewing volume min", &volumeMin );
     mParams.addParam( "draw mesh", &drawMesh );
