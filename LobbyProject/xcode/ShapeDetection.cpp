@@ -25,6 +25,7 @@ void ShapeDetection::setup( Json::Value data )
             mDevice = mDeviceManager->createDevice( OpenNI::DeviceOptions().enableColor() );
         } catch ( OpenNI::ExcDeviceNotAvailable ex ){
             ci::app::console() << ex.what() << endl;
+            mCameraPresent = false;
             return;
         }
         
@@ -32,6 +33,7 @@ void ShapeDetection::setup( Json::Value data )
             mDevice->connectDepthEventHandler( &ShapeDetection::onDepth, this);
             mDevice->connectColorEventHandler( &ShapeDetection::onColor, this );
             mDevice->start();
+            mCameraPresent = true;
         }
     }
     
@@ -209,8 +211,10 @@ cv::Mat ShapeDetection::removeBlack( cv::Mat input, short nearLimit, short farLi
 }
 
 void ShapeDetection::shutdown(){
-    // stop the camera after the app quits
-    mDevice->stop();
+    // stop the camera after the app quits, if the camera is connected
+    if(mCameraPresent){
+        mDevice->stop();
+    }
 }
 
 void ShapeDetection::drawSurface(){

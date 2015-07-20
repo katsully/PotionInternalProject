@@ -44,6 +44,7 @@ public:
 private:
     OpenNI::DeviceRef mDevice;
     OpenNI::DeviceManagerRef mDeviceManager;
+    bool mCameraPresent;     // bool for whether camera was started without error
     gl::TextureRef mTexture;
     gl::TextureRef mTextureDepth;
 
