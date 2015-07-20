@@ -47,11 +47,6 @@ public:
     bool secondMesh;
     bool textureType, textureType2;
     
-    std::string timerValue;
-    std::string timeRightNow;
-    std::string timeDiffValue;
-    std::string switchMeshTrigger;
-    
     ShapeDetection    mShapeDetection;
     Mesh                *myMesh;
     Mesh                *myNextMesh;
@@ -69,6 +64,7 @@ public:
     bool mOnTop;    // bool for whether the window always remains above all other windows
     bool mPoints;   // bool for whether motion tracking points are shown
     bool mCursorHidden;  // bool for whether mouse is showing
+    bool mShowDepthCamera;  // bool for whether depth camera is showing, displays surface after removing 'noisy' pixels, and converted to eightBit
     
     int mFrameRate;
 };
@@ -112,6 +108,8 @@ void LobbyProjectApp::setup()
     mCursorHidden   = true;
     switchMesh      = true;
     timer           = 1.0f;
+    mCursorHidden    = true;
+    mShowDepthCamera = false;
  
     
     // set app to fullscreen
@@ -179,6 +177,8 @@ void LobbyProjectApp::keyDown( KeyEvent event )
         getWindow()->setAlwaysOnTop(mOnTop);
     } else if( event.getChar() == 'o' ) {
         mPoints = !mPoints;
+    } else if( event.getChar() == 'c' ){
+        mShowDepthCamera = !mShowDepthCamera;
     }
 }
 
@@ -359,6 +359,11 @@ void LobbyProjectApp::draw()
             myNextMesh->draw();
         }
     }
+    
+    // show depth camera's view
+    if(mShowDepthCamera) {
+        mShapeDetection.drawSurface();
+    }
 
     // draw points over mesh
     if (mPoints) {
@@ -375,7 +380,6 @@ void LobbyProjectApp::draw()
 
 void LobbyProjectApp::shutdown(){
     mShapeDetection.shutdown();
-    oStream.close();
 }
 
 CINDER_APP_NATIVE( LobbyProjectApp, RendererGl )

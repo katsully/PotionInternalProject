@@ -25,6 +25,7 @@ public:
     ShapeDetection();
     void setup( Json::Value data );
     void update();
+    void drawSurface();
     void draw();
     void shutdown();
     
@@ -40,6 +41,7 @@ private:
 
     ci::Surface8u mSurface;
     ci::Surface8u mSurfaceDepth;
+    ci::Surface8u mSurfaceSubtract;
     
     // all pixels below near limit and above far limit are set to far limit depth
     short mNearLimit;

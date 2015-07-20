@@ -8,6 +8,8 @@
 
 'o' - toggle the motion tracking points on and off
 
+'c' - toggle showing subview of depth camera
+
 ### Installation
 
 To keep this running as a pernament installation, the following machine configurations were made:
