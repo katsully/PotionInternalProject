@@ -40,7 +40,7 @@ public:
     float volumeMin;
     float time, timer, timerInterval;
     bool drawMesh;
-    bool nextMeshState, mouseClick;
+    bool nextMeshState, switchMesh;
     bool meshReset, meshStart, nextMeshReset, nextMeshStart;
     bool firstMesh;
     bool secondMesh;
@@ -50,6 +50,8 @@ public:
     Mesh                *myMesh;
     Mesh                *myNextMesh;
     
+    std::ofstream oStream;
+
     vector<boost::filesystem::path> mAssetNames;    // list of all asset names
     int mCurrentAsset;  // keep track of which asset is being shown
     
@@ -92,7 +94,6 @@ void LobbyProjectApp::setup()
     mCenter         = Vec3f::zero();
     mUp             = Vec3f::yAxis();
     nextMeshState   = false;
-    mouseClick      = false;
     firstMesh       = true;
     secondMesh      = false;
     textureType     = false;
@@ -105,6 +106,9 @@ void LobbyProjectApp::setup()
     mShowParams     = false;
     mOnTop          = true;
     mPoints         = false;
+    mCursorHidden   = true;
+    switchMesh      = true;
+    timer           = 1.0f;
     mCursorHidden    = true;
     mShowDepthCamera = false;
  
@@ -117,6 +121,12 @@ void LobbyProjectApp::setup()
     
     gl::enableDepthRead();
     gl::enableDepthWrite();
+    
+    
+//    std::string myPath = "errorlog.txt";
+//    oStream.open(myPath);
+//    oStream << "error log in here" << std::endl;
+    
     
     // get filepath to json file
     mGuiParamsFilePath = p.string() + "/gui_params.json";
@@ -186,7 +196,9 @@ void LobbyProjectApp::mouseMove( MouseEvent event )
 void LobbyProjectApp::mouseDown( MouseEvent event )
 {
     nextMeshState   = !nextMeshState;
-    mouseClick      = true;
+    if (event.isLeft()) {
+        switchMesh = true;
+    }
 
     mCursorHidden    = !mCursorHidden;
     if (mCursorHidden) {
@@ -295,10 +307,13 @@ void LobbyProjectApp::update()
     gl::setMatrices( mCamera );
     gl::rotate( mSceneRot);
     time = getElapsedSeconds();
+  
     float timeDiff = time - timer;
+    
     if ( timeDiff >= timerInterval ) {
-        mouseClick = true;
+        switchMesh = true;
         timer = time;
+        
     }
     
     myMesh->getTrackedShapes(mShapeDetection.mTrackedShapes);
@@ -323,13 +338,14 @@ void LobbyProjectApp::update()
     int meshVetX = meshMinX * meshResolution;
     int meshVetY = meshMinY * meshResolution;
     if (meshResolution > 0){
-        myMesh->update(mousePos, mTexture, mouseClick, meshVetX, meshVetY);
-        myNextMesh->update(mousePos, mNextTexture, mouseClick, meshVetX, meshVetY);
+        myMesh->update(mousePos, mTexture, switchMesh, meshVetX, meshVetY);
+        myNextMesh->update(mousePos, mNextTexture, switchMesh, meshVetX, meshVetY);
     }else{
-        myMesh->update(mousePos, mTexture, mouseClick, meshMinX, meshMinY);
-        myNextMesh->update(mousePos, mNextTexture, mouseClick, meshMinX, meshMinY);
+        myMesh->update(mousePos, mTexture, switchMesh, meshMinX, meshMinY);
+        myNextMesh->update(mousePos, mNextTexture, switchMesh, meshMinX, meshMinY);
     }
-    mouseClick = false;
+
+    switchMesh = false;
 }
 
 void LobbyProjectApp::draw()
