@@ -55,13 +55,18 @@ void Mesh::getTrackedShapes(vector<Shape> &_mTrackedShapes){
         this->mTrackedShapes = _mTrackedShapes;
         if (mTrackedShapes.size() > 0) {
             for (int i = 0; i < mTrackedShapes.size() - 1; i ++) {
+                std::cout<<mTrackedShapes[0].depth<<std::endl;
                 for (cv::vector<cv::Point>::iterator j = mTrackedShapes[i].hull.begin(); j != mTrackedShapes[i].hull.end() ; ++j ) {
-                    shapePos.push_back(Vec3f(lmap<float>(j->x, 0, 320, 0, getWindowWidth()), lmap<float>(j->y, 0, 240, 0, getWindowHeight()),  lmap<float>(mTrackedShapes[i].depth, 0.f, 1.f, 1.f, -1.f)));
+                    shapePos.push_back(Vec3f(lmap<float>(j->x, 0, 320, 0, getWindowWidth()), lmap<float>(j->y, 0, 240, 0, getWindowHeight()), mTrackedShapes[i].depth));
+                    
                 }
-                
             }
         }
     }
+//    
+//    if (shapePos.size() > 0){
+//        std::cout<<shapePos[0].z<<std::endl;
+//    }
     
 }
 
@@ -241,11 +246,12 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture, bool &_mouseClick, int
                     for (int i = 0; i < shapePos.size(); i ++) {
                         Vec2f diff = Vec2f((shapePos[i].x - relPos.x) * 0.001f, (shapePos[i].y - relPos.y)  * 0.001f);
                         float shapeInfluence = diff.lengthSquared();
+                       // position.z -= shapePos[i].z;
                         if (shapeInfluence < 0.005f && !isTarget[x * VERTICES_Y + y]) {
                             isTarget[x * VERTICES_Y + y] = true;
                             timeDiff[x * VERTICES_Y + y] = time;
                             if (depthOffset[x * VERTICES_Y + y] == 0.f) {
-                               // depthOffset[x * VERTICES_Y + y] = shapePos[i].z;
+                                depthOffset[x * VERTICES_Y + y] = shapePos[i].z;
                             }
                         }
                     }
@@ -255,15 +261,15 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture, bool &_mouseClick, int
                 
                 //       oscilate every single vertices in z axis.
                 float timer = time - timeDiff[x * VERTICES_Y + y];
-                oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.1f;
+               // oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.1f;
                 //depth?
-//                if (depthOffset[x * VERTICES_Y + y] >= 0.7f) {
-//                    oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.5f;
-//                }else if(depthOffset[x * VERTICES_Y + y] >= 0.3f){
-//                    oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.1f;
-//                }else if(depthOffset[x * VERTICES_Y + y] >= 0.3f){
-//                    oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.05f;
-//                }
+                if (depthOffset[x * VERTICES_Y + y] >= 0.7f) {
+                    oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.5f;
+                }else if(depthOffset[x * VERTICES_Y + y] >= 0.3f){
+                    oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.1f;
+                }else if(depthOffset[x * VERTICES_Y + y] >= 0.3f){
+                    oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.05f;
+                }
                 
                 
                 
@@ -272,7 +278,7 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture, bool &_mouseClick, int
                     position.z -= 0.1f * oscilateZ[x * VERTICES_Y + y];
                 }else if( timer >= timerMax){
                     isTarget[x * VERTICES_Y + y] = false;
-                  //  depthOffset[x * VERTICES_Y + y] = 0.f;
+                    depthOffset[x * VERTICES_Y + y] = 0.f;
                 }
             }
             
