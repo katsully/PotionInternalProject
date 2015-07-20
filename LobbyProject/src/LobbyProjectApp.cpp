@@ -229,7 +229,7 @@ void LobbyProjectApp::getRandomFile(int _meshTag)
                 mMovie = qtime::MovieGl::create(loadAsset(assetName));
                 
             } catch( ... ){
-                console() << "file is not a valid movie" << std::endl;
+                console() << "file is not a valid movie: " << assetName << std::endl;
             }
         }else{
             textureType2 = false;
@@ -237,7 +237,7 @@ void LobbyProjectApp::getRandomFile(int _meshTag)
                 mMovie2 = qtime::MovieGl::create(loadAsset(assetName));
                 
             } catch( ... ){
-                console() << "file is not a valid movie" << std::endl;
+                console() << "file is not a valid movie: " << assetName << std::endl;
             }
         }
         
