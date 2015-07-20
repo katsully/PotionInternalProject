@@ -116,6 +116,8 @@ void ShapeDetection::onDepth( openni::VideoFrameRef frame, const OpenNI::DeviceO
             ++it;
         }
     }
+    mSurfaceDepth = Surface8u( fromOcv( mInput  ) );
+    mSurfaceSubtract = Surface8u( fromOcv(eightBit) );
 }
 
 void ShapeDetection::onColor( openni::VideoFrameRef frame, const OpenNI::DeviceOptions& deviceOptions )
@@ -209,6 +211,22 @@ cv::Mat ShapeDetection::removeBlack( cv::Mat input, short nearLimit, short farLi
 void ShapeDetection::shutdown(){
     // stop the camera after the app quits
     mDevice->stop();
+}
+
+void ShapeDetection::drawSurface(){
+    glMatrixMode(GL_TEXTURE);
+    gl::pushMatrices();
+    gl::scale(.02, .02);
+    gl::translate(-1,-17,-.1);
+    if( mSurfaceSubtract ){
+        if( mTextureDepth ){
+            mTextureDepth->update( Channel32f( mSurfaceSubtract ) );
+        } else {
+            mTextureDepth = gl::Texture::create( Channel32f( mSurfaceSubtract ) );
+        }
+        gl::draw( mTextureDepth, Area(-1.55, -1.5, 20, 20)) ;
+    }
+    gl::popMatrices();
 }
 
 void ShapeDetection::draw()
