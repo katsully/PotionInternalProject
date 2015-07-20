@@ -92,6 +92,11 @@ void ShapeDetection::onDepth( openni::VideoFrameRef frame, const OpenNI::DeviceO
             mTrackedShapes[i].lastFrameSeen = ci::app::getElapsedFrames();
             mTrackedShapes[i].hull.clear();
             mTrackedShapes[i].hull = nearestShape->hull;
+            mTrackedShapes[i].moving = nearestShape->moving;
+            if(mTrackedShapes[i].moving){
+                cout << " SHAPE " << mTrackedShapes[i].ID;
+                cout << " IS MOVING " << endl;
+            }
         }
     }
     
@@ -101,6 +106,7 @@ void ShapeDetection::onDepth( openni::VideoFrameRef frame, const OpenNI::DeviceO
             // assign an unique ID
             mShapes[i].ID = shapeUID;
             mShapes[i].lastFrameSeen = ci::app::getElapsedFrames();
+            mShapes[i].moving = false;
             // add this new shape to tracked shapes
             mTrackedShapes.push_back( mShapes[i] );
             shapeUID++;
@@ -151,6 +157,7 @@ vector< Shape > ShapeDetection::getEvaluationSet( ContourVector rawContours, int
         Shape shape;
         shape.area = area;
         shape.centroid = cv::Point( center.val[0], center.val[1] );
+        shape.moving = false;
         
         // get depth value from center point
         float centerDepth = (float)mInput.at<short>( center.val[1], center.val[0] );
@@ -168,11 +175,11 @@ vector< Shape > ShapeDetection::getEvaluationSet( ContourVector rawContours, int
 Shape* ShapeDetection::findNearestMatch( Shape trackedShape, vector< Shape > &shapes, float maximumDistance )
 {
     Shape* closestShape = NULL;
-    float nearestDist = 1e5;
+    float nearestDist = 1e3;
     if ( shapes.empty() ) {
         return NULL;
     }
-    
+    float finalDist;
     for ( Shape &candidate : shapes ) {
         // find dist between the center of the contour and the shape
         cv::Point distPoint = trackedShape.centroid - candidate.centroid;
@@ -186,6 +193,17 @@ Shape* ShapeDetection::findNearestMatch( Shape trackedShape, vector< Shape > &sh
         if ( dist < nearestDist ) {
             nearestDist = dist;
             closestShape = &candidate;
+            finalDist = dist;
+        }
+    }
+    cout << " shape " << trackedShape.ID;
+    cout << " has dist " << finalDist << endl;
+    // if shape isn't moving
+    if(closestShape){
+        if (finalDist < 20) {
+            closestShape->moving = false;
+        } else {
+            closestShape->moving = true;
         }
     }
     return closestShape;
@@ -233,13 +251,15 @@ void ShapeDetection::draw()
 {
     // draw points
     for( int i=0; i<mTrackedShapes.size(); i++){
-        glBegin( GL_POINTS );
+        glBegin( GL_POLYGON );
         for( int j=0; j<mTrackedShapes[i].hull.size(); j++ ){
-            gl::color( Color( 0.0f, 1.0f, 0.0f ) );
-            Vec2i v = fromOcv( mTrackedShapes[i].hull[j] );
-            // offset the points to align with the camera used for the mesh
-            Vec3f pos = Vec3f( v.x / 300.f - 0.55f, v.y / 250.f - 0.5f, -.1 );
-            gl::vertex( pos );
+            if(mTrackedShapes[i].moving){
+                gl::color( Color( 0.0f, 1.0f, 0.0f ) );
+                Vec2i v = fromOcv( mTrackedShapes[i].hull[j] );
+                // offset the points to align with the camera used for the mesh
+                Vec3f pos = Vec3f( v.x / 300.f - 0.55f, v.y / 250.f - 0.5f, -.1 );
+                gl::vertex( pos );
+            }
         }
         glEnd();
     }

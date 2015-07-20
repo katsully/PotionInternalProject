@@ -12,6 +12,7 @@ Shape::Shape() :
 centroid( cv::Point() ),
 ID(-1),
 lastFrameSeen(-1),
-matchFound(false)
+matchFound(false),
+moving(true)
 {
 }

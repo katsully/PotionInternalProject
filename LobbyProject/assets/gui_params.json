@@ -1,6 +1,6 @@
 
 {
-	"drawMesh" : true,
+	"drawMesh" : false,
 	"mFarLimit" : 4000,
 	"mMaxVal" : 255,
 	"mNearLimit" : 30,
