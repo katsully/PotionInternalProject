@@ -175,7 +175,7 @@ vector< Shape > ShapeDetection::getEvaluationSet( ContourVector rawContours, int
 Shape* ShapeDetection::findNearestMatch( Shape trackedShape, vector< Shape > &shapes, float maximumDistance )
 {
     Shape* closestShape = NULL;
-    float nearestDist = 1e3;
+    float nearestDist = 1e5;
     if ( shapes.empty() ) {
         return NULL;
     }
@@ -200,7 +200,7 @@ Shape* ShapeDetection::findNearestMatch( Shape trackedShape, vector< Shape > &sh
     cout << " has dist " << finalDist << endl;
     // if shape isn't moving
     if(closestShape){
-        if (finalDist < 17) {
+        if (finalDist < 13) {
             closestShape->moving = false;
         } else {
             closestShape->moving = true;
