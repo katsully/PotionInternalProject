@@ -263,9 +263,10 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture, bool &_mouseClick, int
                 float timer = time - timeDiff[x * VERTICES_Y + y];
                // oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.1f;
                 //depth?
+                
                 if (depthOffset[x * VERTICES_Y + y] >= 0.7f) {
                     oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.05f;
-                }else if(depthOffset[x * VERTICES_Y + y] >= 0.3f){
+                }else if(depthOffset[x * VERTICES_Y + y] >= 0.4f){
                     oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.1f;
                 }else if(depthOffset[x * VERTICES_Y + y] > 0.01f){
                     oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.25f;

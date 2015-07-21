@@ -110,7 +110,7 @@ void LobbyProjectApp::setup()
     meshMinY        = 9;
     meshType        = 0;
     mFrameRate      = getAverageFps();
-    mFullScreen     = true;
+    mFullScreen     = false;
     mShowParams     = false;
     mOnTop          = true;
     mPoints         = false;
