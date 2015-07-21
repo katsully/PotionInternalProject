@@ -92,7 +92,7 @@ void ShapeDetection::onDepth( openni::VideoFrameRef frame, const OpenNI::DeviceO
             nearestShape->matchFound = true;
             mTrackedShapes[i].centroid = nearestShape->centroid;
             // get depth value from center point
-            float centerDepth = (float)mInput.at<short>( mTrackedShapes[i].centroid.x, mTrackedShapes[i].centroid.y );
+            float centerDepth = (float)mInput.at<short>( mTrackedShapes[i].centroid.y, mTrackedShapes[i].centroid.x );
             // map 10 4000 to 0 1
             mTrackedShapes[i].depth = lmap( centerDepth, (float)mNearLimit, (float)mFarLimit, 0.0f, 1.0f );
             mTrackedShapes[i].lastFrameSeen = ci::app::getElapsedFrames();
