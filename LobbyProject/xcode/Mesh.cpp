@@ -264,17 +264,15 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture, bool &_mouseClick, int
                // oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.1f;
                 //depth?
                 if (depthOffset[x * VERTICES_Y + y] >= 0.7f) {
-                    oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.1f;
-                }else if(depthOffset[x * VERTICES_Y + y] >= 0.3f){
                     oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.05f;
-                }else if(depthOffset[x * VERTICES_Y + y] >= 0.0f){
-                    oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.01f;
+                }else if(depthOffset[x * VERTICES_Y + y] >= 0.3f){
+                    oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.1f;
+                }else if(depthOffset[x * VERTICES_Y + y] > 0.01f){
+                    oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.25f;
                 }
-                
-                
-                
+        
                 //       influnce timer
-                if ( timer < timerMax && isTarget[x * VERTICES_Y + y] == true ) {
+                if ( timer < timerMax && isTarget[x * VERTICES_Y + y] == true && depthOffset[x * VERTICES_Y + y] != 0.f) {
                     position.z -= 0.1f * oscilateZ[x * VERTICES_Y + y];
                 }else if( timer >= timerMax){
                     isTarget[x * VERTICES_Y + y] = false;
