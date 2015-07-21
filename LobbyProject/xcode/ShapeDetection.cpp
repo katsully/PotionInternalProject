@@ -159,7 +159,7 @@ vector< Shape > ShapeDetection::getEvaluationSet( ContourVector rawContours, int
         shape.centroid = cv::Point( center.val[0], center.val[1] );
         
         // get depth value from center point
-        float centerDepth = (float)mInput.at<short>( shape.centroid.y, shape.centroid.x );
+        float centerDepth = (float)mInput.at<short>( shape.centroid.x, shape.centroid.y );
         // map 10 4000 to 0 1
         shape.depth = lmap( centerDepth, (float)mNearLimit, (float)mFarLimit, 0.0f, 1.0f );
         
