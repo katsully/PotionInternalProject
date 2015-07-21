@@ -251,7 +251,7 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture, bool &_mouseClick, int
                             isTarget[x * VERTICES_Y + y] = true;
                             timeDiff[x * VERTICES_Y + y] = time;
                             if (depthOffset[x * VERTICES_Y + y] == 0.f) {
-                                depthOffset[x * VERTICES_Y + y] = shapePos[i].z;
+                               // depthOffset[x * VERTICES_Y + y] = shapePos[i].z;
                             }
                         }
                     }
@@ -261,16 +261,16 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture, bool &_mouseClick, int
                 
                 //       oscilate every single vertices in z axis.
                 float timer = time - timeDiff[x * VERTICES_Y + y];
-               // oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.1f;
+                oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.1f;
                 //depth?
                 
-                if (depthOffset[x * VERTICES_Y + y] >= 0.7f) {
-                    oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.05f;
-                }else if(depthOffset[x * VERTICES_Y + y] >= 0.4f){
-                    oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.1f;
-                }else if(depthOffset[x * VERTICES_Y + y] > 0.01f){
-                    oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.25f;
-                }
+//                if (depthOffset[x * VERTICES_Y + y] >= 0.7f) {
+//                    oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.05f;
+//                }else if(depthOffset[x * VERTICES_Y + y] >= 0.4f){
+//                    oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.1f;
+//                }else if(depthOffset[x * VERTICES_Y + y] > 0.01f){
+//                    oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.25f;
+//                }
         
                 //       influnce timer
                 if ( timer < timerMax && isTarget[x * VERTICES_Y + y] == true && depthOffset[x * VERTICES_Y + y] != 0.f) {
