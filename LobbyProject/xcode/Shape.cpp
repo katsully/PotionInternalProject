@@ -13,6 +13,7 @@ centroid( cv::Point() ),
 ID(-1),
 lastFrameSeen(-1),
 matchFound(false),
-moving(true)
+moving(false),
+stillness(0)
 {
 }

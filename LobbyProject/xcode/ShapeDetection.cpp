@@ -93,10 +93,10 @@ void ShapeDetection::onDepth( openni::VideoFrameRef frame, const OpenNI::DeviceO
             mTrackedShapes[i].hull.clear();
             mTrackedShapes[i].hull = nearestShape->hull;
             mTrackedShapes[i].moving = nearestShape->moving;
-            if(mTrackedShapes[i].moving){
-                cout << " SHAPE " << mTrackedShapes[i].ID;
-                cout << " IS MOVING " << endl;
-            }
+//            if(mTrackedShapes[i].moving){
+//                cout << " SHAPE " << mTrackedShapes[i].ID;
+//                cout << " IS MOVING " << endl;
+//            }
         }
     }
     
@@ -196,14 +196,22 @@ Shape* ShapeDetection::findNearestMatch( Shape trackedShape, vector< Shape > &sh
             finalDist = dist;
         }
     }
-    cout << " shape " << trackedShape.ID;
-    cout << " has dist " << finalDist << endl;
-    // if shape isn't moving
+
     if(closestShape){
-        if (finalDist < 13) {
-            closestShape->moving = false;
+        // if the shape isn't moving
+        if ( finalDist < 3 ) {
+            trackedShape.stillness++;
+            // if they haven't moved for 100 frames, mark the shape as not moving and reset the stillness counter
+            if(trackedShape.stillness > 200){
+                closestShape->moving = false;
+                trackedShape.stillness = 0;
+            }
         } else {
-            closestShape->moving = true;
+            // ensures objects that are still and have some noise are labeled as moving and reset stillness counter
+            if ( finalDist > 25 || trackedShape.moving == true ) {
+                closestShape->moving = true;
+                trackedShape.stillness = 0;
+            }
         }
     }
     return closestShape;
