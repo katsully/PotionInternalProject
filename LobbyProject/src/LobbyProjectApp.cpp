@@ -364,10 +364,19 @@ void LobbyProjectApp::shutdown(){
     // write param values back to json file
     ofstream ofile(mGuiParamsFilePath);
     mData["drawMesh"] = drawMesh;
-    mData["mFarLimit"] = mShapeDetection.mFarLimit;
-    mData["mMaxVal"] = mShapeDetection.mMaxVal;
-    mData["mNearLimit"] = mShapeDetection.mNearLimit;
-    mData["mThresh"] = mShapeDetection.mThresh;
+    // if statements are to ensure no crazy values are written to the json file which will make the camera useless
+    if ( mShapeDetection.mFarLimit <= 10000 && mShapeDetection.mFarLimit >= 0 ) {
+        mData["mFarLimit"] = mShapeDetection.mFarLimit;
+    }
+    if ( mShapeDetection.mMaxVal <= 255 && mShapeDetection.mThresh >= 0 ){
+        mData["mMaxVal"] = mShapeDetection.mMaxVal;
+    }
+    if ( mShapeDetection.mNearLimit <= 10000 && mShapeDetection.mNearLimit >= 0 ) {
+        mData["mNearLimit"] = mShapeDetection.mNearLimit;
+    }
+    if ( mShapeDetection.mThresh <= 255 && mShapeDetection.mThresh >= 0) {
+        mData["mThresh"] = mShapeDetection.mThresh;
+    }
     mData["meshResolution"] = meshResolution;
     mData["timerInterval"] = timerInterval;
     mData["volumeMin"] = volumeMin;

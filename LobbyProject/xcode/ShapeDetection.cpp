@@ -215,7 +215,7 @@ Shape* ShapeDetection::findNearestMatch( Shape trackedShape, vector< Shape > &sh
                 closestShape->moving = false;
                 closestShape->motion = 0;
             }
-        } else if ( finalDist > 20 || trackedShape.moving == true ) {
+        } else if ( finalDist > 19 || trackedShape.moving == true ) {
                 closestShape->moving = true;
                 closestShape->motion = finalDist;
         }
