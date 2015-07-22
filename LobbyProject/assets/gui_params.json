@@ -2,16 +2,16 @@
 {
 	"drawMesh" : true,
 	"mFarLimit" : 4000,
-	"mMaxVal" : 255.0,
+	"mMaxVal" : 255,
 	"mNearLimit" : 30,
 	"mSceneRot" : 
 	{
-		"xRotation" : 3.141592653590,
+		"xRotation" : 3.1415926535900001,
 		"yRotation" : 0,
 		"zRotation" : 0
 	},
-	"mThresh" : 0.0,
+	"mThresh" : 0,
 	"meshResolution" : 3,
-	"timerInterval" : 40.0,
-	"volumeMin" : 0.2000000029802322
+	"timerInterval" : 40,
+	"volumeMin" : 0.20000000298023224
 }

@@ -110,7 +110,7 @@ void LobbyProjectApp::setup()
     meshMinY        = 9;
     meshType        = 0;
     mFrameRate      = getAverageFps();
-    mFullScreen     = false;
+    mFullScreen     = true;
     mShowParams     = false;
     mOnTop          = true;
     mPoints         = false;
@@ -120,7 +120,6 @@ void LobbyProjectApp::setup()
     mCursorHidden    = true;
     mShowDepthCamera = false;
  
-    
     // set app to fullscreen
     setFullScreen(mFullScreen);
     
