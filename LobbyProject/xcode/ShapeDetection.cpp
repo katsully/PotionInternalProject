@@ -35,6 +35,9 @@ void ShapeDetection::setup( Json::Value data )
         }
     }
     
+    // start off drawing points, not shapes
+    mDrawShapes = false;
+    
     // sets threshold to ignore all black pixels and pixels that are far away from the camera
     // read data from json file
     mNearLimit = data.get("mNearLimit", 0).asInt();
@@ -93,10 +96,7 @@ void ShapeDetection::onDepth( openni::VideoFrameRef frame, const OpenNI::DeviceO
             mTrackedShapes[i].hull.clear();
             mTrackedShapes[i].hull = nearestShape->hull;
             mTrackedShapes[i].moving = nearestShape->moving;
-//            if(mTrackedShapes[i].moving){
-//                cout << " SHAPE " << mTrackedShapes[i].ID;
-//                cout << " IS MOVING " << endl;
-//            }
+            mTrackedShapes[i].motion = nearestShape->motion;
         }
     }
     
@@ -106,7 +106,7 @@ void ShapeDetection::onDepth( openni::VideoFrameRef frame, const OpenNI::DeviceO
             // assign an unique ID
             mShapes[i].ID = shapeUID;
             mShapes[i].lastFrameSeen = ci::app::getElapsedFrames();
-            mShapes[i].moving = false;
+            mShapes[i].moving = true;
             // add this new shape to tracked shapes
             mTrackedShapes.push_back( mShapes[i] );
             shapeUID++;
@@ -157,7 +157,6 @@ vector< Shape > ShapeDetection::getEvaluationSet( ContourVector rawContours, int
         Shape shape;
         shape.area = area;
         shape.centroid = cv::Point( center.val[0], center.val[1] );
-        shape.moving = false;
         
         // get depth value from center point
         float centerDepth = (float)mInput.at<short>( center.val[1], center.val[0] );
@@ -179,7 +178,9 @@ Shape* ShapeDetection::findNearestMatch( Shape trackedShape, vector< Shape > &sh
     if ( shapes.empty() ) {
         return NULL;
     }
+    // finalDist keeps track of the distance between the trackedShape and the chosen candidate
     float finalDist;
+    
     for ( Shape &candidate : shapes ) {
         // find dist between the center of the contour and the shape
         cv::Point distPoint = trackedShape.centroid - candidate.centroid;
@@ -197,21 +198,20 @@ Shape* ShapeDetection::findNearestMatch( Shape trackedShape, vector< Shape > &sh
         }
     }
 
+    // if a candidate was matched to the tracked shape
     if(closestShape){
         // if the shape isn't moving
-        if ( finalDist < 3 ) {
-            trackedShape.stillness++;
-            // if they haven't moved for 100 frames, mark the shape as not moving and reset the stillness counter
-            if(trackedShape.stillness > 200){
+        if ( finalDist < 1.5 ) {
+            // 'dilute' motion
+            closestShape->motion = trackedShape.motion * .995;
+            // if diluted motion is under the threshold or it was already not moving, the object is not moving
+            if ( closestShape->motion < 1.5 || trackedShape.moving == false ) {
                 closestShape->moving = false;
-                trackedShape.stillness = 0;
+                closestShape->motion = 0;
             }
-        } else {
-            // ensures objects that are still and have some noise are labeled as moving and reset stillness counter
-            if ( finalDist > 25 || trackedShape.moving == true ) {
+        } else if ( finalDist > 20 || trackedShape.moving == true ) {
                 closestShape->moving = true;
-                trackedShape.stillness = 0;
-            }
+                closestShape->motion = finalDist;
         }
     }
     return closestShape;
@@ -259,7 +259,11 @@ void ShapeDetection::draw()
 {
     // draw points
     for( int i=0; i<mTrackedShapes.size(); i++){
-        glBegin( GL_POLYGON );
+        if(mDrawShapes){
+            glBegin( GL_POLYGON );
+        } else{
+            glBegin(GL_POINTS);
+        }
         for( int j=0; j<mTrackedShapes[i].hull.size(); j++ ){
             if(mTrackedShapes[i].moving){
                 gl::color( Color( 0.0f, 1.0f, 0.0f ) );

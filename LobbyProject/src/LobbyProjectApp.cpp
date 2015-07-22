@@ -182,8 +182,10 @@ void LobbyProjectApp::keyDown( KeyEvent event )
         mShowParams = !mShowParams;
     } else if( event.getChar() == 'o' ) {
         mPoints = !mPoints;
-    } else if( event.getChar() == 'c' ){
+    } else if( event.getChar() == 'c' ) {
         mShowDepthCamera = !mShowDepthCamera;
+    } else if (event.getChar() == 's' ) {
+        mShapeDetection.mDrawShapes = !mShapeDetection.mDrawShapes;
     }
 }
 

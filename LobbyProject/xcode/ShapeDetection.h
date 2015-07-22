@@ -41,6 +41,8 @@ public:
     double mThresh;
     double mMaxVal;
     
+    bool mDrawShapes;   // boolean for whether you draw shapes or points
+    
 private:
     OpenNI::DeviceRef mDevice;
     OpenNI::DeviceManagerRef mDeviceManager;
