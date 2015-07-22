@@ -31,5 +31,5 @@ mThresh - the lower threshold for the camera
 
 mMaxVal - the upper threshold for the camera (the max this can be is 255)
 
-meshResolution - 
+meshResolution - this is an int that represents different ascept ratios. The default is 3 which represents 16 9 aspect ratio.
 
