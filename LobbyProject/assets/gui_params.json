@@ -12,6 +12,6 @@
 	},
 	"mThresh" : 0,
 	"meshResolution" : 3,
-	"timerInterval" : 30,
+	"timerInterval" : 40,
 	"volumeMin" : 0.20000000298023224
 }
