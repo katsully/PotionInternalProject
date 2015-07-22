@@ -43,10 +43,11 @@ public:
     
     bool mDrawShapes;   // boolean for whether you draw shapes or points
     
+    bool mCameraPresent;    // bool for whether camera was started without error
+    
 private:
     OpenNI::DeviceRef mDevice;
     OpenNI::DeviceManagerRef mDeviceManager;
-    bool mCameraPresent;     // bool for whether camera was started without error
     gl::TextureRef mTexture;
     gl::TextureRef mTextureDepth;
 
