@@ -246,10 +246,7 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture, bool &_mouseClick, int
                         if (shapeInfluence < 0.005f && !isTarget[x * VERTICES_Y + y]) {
                             isTarget[x * VERTICES_Y + y] = true;
                             timeDiff[x * VERTICES_Y + y] = time;
-                            if (depthOffset[x * VERTICES_Y + y] == 0.f) {
-                                depthOffset[x * VERTICES_Y + y] = shapePos[i].z;
-                            }
-                        }
+	                        }
                     }
                 }
               
@@ -257,28 +254,28 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture, bool &_mouseClick, int
                 
                 //       oscilate every single vertices in z axis.
                 float timer = time - timeDiff[x * VERTICES_Y + y];
-               // oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.1f;
+                oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.1f;
                 //depth?
                 
          
                 
-                if (depthOffset[x * VERTICES_Y + y] >= 0.7f) {
-                    oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.05f;
-                }else if(depthOffset[x * VERTICES_Y + y] >= 0.4f){
-                    oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.1f;
-                }else if(depthOffset[x * VERTICES_Y + y] > 0.01f){
-                    oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.20f;
-                }
+//                if (depthOffset[x * VERTICES_Y + y] >= 0.7f) {
+//                    oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.05f;
+//                }else if(depthOffset[x * VERTICES_Y + y] >= 0.4f){
+//                    oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.1f;
+//                }else if(depthOffset[x * VERTICES_Y + y] > 0.01f){
+//                    oscilateZ[x * VERTICES_Y + y] = sin(timer * 8.f) * (timerMax - timer) * 0.20f;
+//                }
         
                 //       influnce timer
-                if ( timer < timerMax && isTarget[x * VERTICES_Y + y] == true && depthOffset[x * VERTICES_Y + y] != 0.f) {
+                if ( timer < timerMax && isTarget[x * VERTICES_Y + y] == true) {
                     if (relPos.x > getWindowWidth() * 0.05 && relPos.x < getWindowWidth()* 0.95 && relPos.y > getWindowHeight() * 0.05 && relPos.y < getWindowHeight() * 0.95 ) {
                         position.z -= 0.1f * oscilateZ[x * VERTICES_Y + y];
                     }
                     
                 }else if( timer >= timerMax){
                     isTarget[x * VERTICES_Y + y] = false;
-                    depthOffset[x * VERTICES_Y + y] = 0.f;
+                    //depthOffset[x * VERTICES_Y + y] = 0.f;
                 }
             }
             
