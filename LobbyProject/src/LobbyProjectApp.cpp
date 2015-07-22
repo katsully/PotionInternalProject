@@ -120,7 +120,6 @@ void LobbyProjectApp::setup()
     mCursorHidden    = true;
     mShowDepthCamera = false;
  
-    
     // set app to fullscreen
     setFullScreen(mFullScreen);
     
