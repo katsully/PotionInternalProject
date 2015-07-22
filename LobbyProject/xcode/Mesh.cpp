@@ -55,19 +55,15 @@ void Mesh::getTrackedShapes(vector<Shape> &_mTrackedShapes){
         this->mTrackedShapes = _mTrackedShapes;
         if (mTrackedShapes.size() > 0) {
             for (int i = 0; i < mTrackedShapes.size() - 1; i ++) {
-                //std::cout<<mTrackedShapes[0].depth<<std::endl;
-                for (cv::vector<cv::Point>::iterator j = mTrackedShapes[i].hull.begin(); j != mTrackedShapes[i].hull.end() ; ++j ) {
-                    shapePos.push_back(Vec3f(lmap<float>(j->x, 0, 320, 0, getWindowWidth()), lmap<float>(j->y, 0, 240, 0, getWindowHeight()), mTrackedShapes[i].depth));
-                    
+                if (mTrackedShapes[i].moving) {
+                    for (cv::vector<cv::Point>::iterator j = mTrackedShapes[i].hull.begin(); j != mTrackedShapes[i].hull.end() ; ++j ) {
+                        shapePos.push_back(Vec3f(lmap<float>(j->x, 0, 320, 0, getWindowWidth()), lmap<float>(j->y, 0, 240, 0, getWindowHeight()),  lmap<float>(mTrackedShapes[i].depth, 0.f, 1.f, 1.f, -1.f)));
+                    }
+
                 }
             }
         }
     }
-//    
-//    if (shapePos.size() > 0){
-//        std::cout<<shapePos[0].z<<std::endl;
-//    }
-    
 }
 
 void Mesh::getTexture(gl::Texture &texture){
