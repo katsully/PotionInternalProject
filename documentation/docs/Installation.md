@@ -34,6 +34,7 @@ To enable it again, type this
 ```
 sudo mdutil -a -i on
 ```
+12. Disable the Require Password After Sleep in the General tab under Security & Privacy to prevent the system from asking password after a scheduled system start up.
 
 
 We also prevented OS X from re-opening apps after a restart. We wanted to do this because it increases the time it takes to start up the machine into a steady state, and it re-opens apps you may not be using anymore.
