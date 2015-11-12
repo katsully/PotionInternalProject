@@ -81,7 +81,7 @@ void LobbyProjectApp::setup()
     for ( fs::directory_iterator it( p ); it != fs::directory_iterator(); ++it ) {
         if ( ! is_directory( *it ) ) {
             // ignore non image files
-            if ( it->path().filename() != ".DS_Store" && it->path().filename() != "gui_params.json" ) {
+            if ( it->path().filename() != ".DS_Store" && it->path().filename() != "gui_params.json" && it->path().filename() != ".com.apple.timemachine.supported") {
                 // if cannot load texture, it will print the error and asset name to the console, then it will increment the asset index counter, and just show the following image
                 try {
                     mAssets.push_back(loadImage(loadAsset( it->path().filename() ) ));

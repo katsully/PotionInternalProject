@@ -43,4 +43,6 @@ DerivedData/
 
 # assets
 */.jpg
+.com.apple.timemachine.*
+*.png
 

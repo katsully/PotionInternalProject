@@ -159,9 +159,9 @@ void Mesh::update(Vec2f &_shapePos, gl::Texture &texture, bool &_mouseClick, int
             if (oscilateZ.size() < VERTICES_X * VERTICES_Y) {
                 oscilateZ.push_back(0.f);
             }
-            if (depthOffset.size() < VERTICES_X * VERTICES_Y) {
-                depthOffset.push_back(0.f);
-            }
+//            if (depthOffset.size() < VERTICES_X * VERTICES_Y) {
+//                depthOffset.push_back(0.f);
+//            }
         }
     }
 
