@@ -7,15 +7,15 @@ This project was developed to create a more interactive and inviting lobby space
 
 ## Getting Started
 
-###CINDER
+### CINDER
 
 Cinder must be cloned in the same directory as the Potion Internal Project, and you need to be on the release branch (as of 07/06/15). 
 
-###CINDER BLOCKS
+### CINDER BLOCKS
 
 Clone Cinder-OpenNI (https://github.com/wieden-kennedy/Cinder-OpenNI) and Cinder-OpenCV (https://github.com/cinder/Cinder-OpenCV) into Cinder/blocks. Then rename Cinder-OpenCV to just OpenCV.
 
-###HOW TO SETUP A MAC TO USE THE CAMERA
+### HOW TO SETUP A MAC TO USE THE CAMERA
 
 1. Upgrade Xcode by opening the application and selecting the menu option *Xcode/Open Developer Tool/More Developer Tools..*. Clicking this will take you to the Apple Developer website. Log in and continue until you see the **Downloads for Apple Developers** screen. In the list of downloads, search for the most recent version of *Command Line Tools for Xcode*. Click on the blue disk image link to the right of the description to download.
 ![picture](../../images/install-mavericks-command-line-tools.png?raw=true)
